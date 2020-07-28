@@ -1,0 +1,11 @@
+
+L
+java:S2093\"*Change this "try" to a try-with-resources.(΅»Άόωÿÿÿÿ8λΔ².
+H
+java:S14815"+Remove this unused "writer" local variable.(΄βλ8λΔ².
+W
+java:S18545":Remove this useless assignment to local variable "writer".(΄βλ8λΔ².
+V
+java:S2864A"4Iterate over the "entrySet" instead of the "keySet".(ίÿ‘ϊÿÿÿÿ8λΔ².
+e
+java:S20955"HUse try-with-resources or close this "FileWriter" in a "finally" clause.(΄βλ8λΔ².

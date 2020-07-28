@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="4837cc29-0aa4-4994-abef-84493e34c24b" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="1eLgffEeZQAFF3NxMHUp7uoAnDT" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/utility" />
+    <property name="project.structure.last.edited" value="SDKs" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="utility" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/java/utility" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="UtilityMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="UtilityMain" />
+      <module name="utility" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.UtilityMain" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4837cc29-0aa4-4994-abef-84493e34c24b" name="Default Changelist" comment="" />
+      <created>1594106391177</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1594106391177</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="440" y="202" key="#Project_Structure" timestamp="1594107039275">
+      <screen x="0" y="23" width="1680" height="1027" />
+    </state>
+    <state x="440" y="202" key="#Project_Structure/0.23.1680.1027/-1920.23.1920.1057@0.23.1680.1027" timestamp="1594107039275" />
+    <state x="-1174" y="266" key="#com.intellij.ide.util.MemberChooser" timestamp="1594193643190">
+      <screen x="-1920" y="23" width="1920" height="1057" />
+    </state>
+    <state x="-1174" y="266" key="#com.intellij.ide.util.MemberChooser/0.23.1680.1027/-1920.23.1920.1057@-1920.23.1920.1057" timestamp="1594193643190" />
+    <state x="653" y="259" key="#com.intellij.ide.util.MemberChooser/0.23.1680.1027/-1920.23.1920.1057@0.23.1680.1027" timestamp="1594108353230" />
+    <state width="918" height="356" key="GridCell.Tab.0.bottom" timestamp="1594346007774">
+      <screen x="-1920" y="23" width="1920" height="1057" />
+    </state>
+    <state width="1398" height="275" key="GridCell.Tab.0.bottom/0.23.1440.877@0.23.1440.877" timestamp="1594137929314" />
+    <state width="918" height="356" key="GridCell.Tab.0.bottom/0.23.1680.1027/-1920.23.1920.1057@-1920.23.1920.1057" timestamp="1594346007774" />
+    <state width="1638" height="279" key="GridCell.Tab.0.bottom/0.23.1680.1027/-1920.23.1920.1057@0.23.1680.1027" timestamp="1594109052989" />
+    <state width="918" height="356" key="GridCell.Tab.0.center" timestamp="1594346007774">
+      <screen x="-1920" y="23" width="1920" height="1057" />
+    </state>
+    <state width="1398" height="275" key="GridCell.Tab.0.center/0.23.1440.877@0.23.1440.877" timestamp="1594137929307" />
+    <state width="918" height="356" key="GridCell.Tab.0.center/0.23.1680.1027/-1920.23.1920.1057@-1920.23.1920.1057" timestamp="1594346007774" />
+    <state width="1638" height="279" key="GridCell.Tab.0.center/0.23.1680.1027/-1920.23.1920.1057@0.23.1680.1027" timestamp="1594109052988" />
+    <state width="918" height="356" key="GridCell.Tab.0.left" timestamp="1594346007773">
+      <screen x="-1920" y="23" width="1920" height="1057" />
+    </state>
+    <state width="1398" height="275" key="GridCell.Tab.0.left/0.23.1440.877@0.23.1440.877" timestamp="1594137929291" />
+    <state width="918" height="356" key="GridCell.Tab.0.left/0.23.1680.1027/-1920.23.1920.1057@-1920.23.1920.1057" timestamp="1594346007773" />
+    <state width="1638" height="279" key="GridCell.Tab.0.left/0.23.1680.1027/-1920.23.1920.1057@0.23.1680.1027" timestamp="1594109052987" />
+    <state width="918" height="356" key="GridCell.Tab.0.right" timestamp="1594346007774">
+      <screen x="-1920" y="23" width="1920" height="1057" />
+    </state>
+    <state width="1398" height="275" key="GridCell.Tab.0.right/0.23.1440.877@0.23.1440.877" timestamp="1594137929307" />
+    <state width="918" height="356" key="GridCell.Tab.0.right/0.23.1680.1027/-1920.23.1920.1057@-1920.23.1920.1057" timestamp="1594346007774" />
+    <state width="1638" height="279" key="GridCell.Tab.0.right/0.23.1680.1027/-1920.23.1920.1057@0.23.1680.1027" timestamp="1594109052988" />
+    <state width="918" height="356" key="GridCell.Tab.1.bottom" timestamp="1594346007775">
+      <screen x="-1920" y="23" width="1920" height="1057" />
+    </state>
+    <state width="918" height="356" key="GridCell.Tab.1.bottom/0.23.1680.1027/-1920.23.1920.1057@-1920.23.1920.1057" timestamp="1594346007775" />
+    <state width="918" height="356" key="GridCell.Tab.1.center" timestamp="1594346007775">
+      <screen x="-1920" y="23" width="1920" height="1057" />
+    </state>
+    <state width="918" height="356" key="GridCell.Tab.1.center/0.23.1680.1027/-1920.23.1920.1057@-1920.23.1920.1057" timestamp="1594346007775" />
+    <state width="918" height="356" key="GridCell.Tab.1.left" timestamp="1594346007774">
+      <screen x="-1920" y="23" width="1920" height="1057" />
+    </state>
+    <state width="918" height="356" key="GridCell.Tab.1.left/0.23.1680.1027/-1920.23.1920.1057@-1920.23.1920.1057" timestamp="1594346007774" />
+    <state width="918" height="356" key="GridCell.Tab.1.right" timestamp="1594346007775">
+      <screen x="-1920" y="23" width="1920" height="1057" />
+    </state>
+    <state width="918" height="356" key="GridCell.Tab.1.right/0.23.1680.1027/-1920.23.1920.1057@-1920.23.1920.1057" timestamp="1594346007775" />
+    <state x="-1280" y="308" width="639" height="486" key="find.popup" timestamp="1594196793575">
+      <screen x="-1920" y="23" width="1920" height="1057" />
+    </state>
+    <state x="-1280" y="308" width="639" height="486" key="find.popup/0.23.1680.1027/-1920.23.1920.1057@-1920.23.1920.1057" timestamp="1594196793575" />
+    <state x="-1252" y="174" key="refactoring.ChangeSignatureDialog" timestamp="1594168677281">
+      <screen x="-1920" y="23" width="1920" height="1057" />
+    </state>
+    <state x="-1252" y="174" key="refactoring.ChangeSignatureDialog/0.23.1680.1027/-1920.23.1920.1057@-1920.23.1920.1057" timestamp="1594168677281" />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="jsons.get(key)" language="JAVA" />
+        <watch expression="&quot;\&quot;&quot;+v+&quot;\&quot;&quot;" language="JAVA" />
+      </configuration>
+    </watches-manager>
+  </component>
+</project>
