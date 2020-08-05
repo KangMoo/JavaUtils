@@ -85,6 +85,13 @@ public class StringUtil {
         return (a.equals(b));
     }
 
+    /**
+     * 문자열 에서 "{}" 내의 문자열을 날자에 맞게 변환
+     * ex) {yyyyMMDD}Test -> 20200804Test
+     * @param in 변환할 문자열
+     * @param date 설정할 날
+     * @return
+     */
     public static String getDateFormString(String in, Date date){
         String[] splitStr = in.split("\\{");
 
@@ -106,10 +113,13 @@ public class StringUtil {
         return sb.toString();
     }
 
+    /**
+     * 문자열 에서 "{}" 내의 문자열을 현재 날짜에 맞게 변환
+     * ex) {yyyyMMDD}Test -> 20200804Test
+     * @param in 변환할 문자열
+     * @return
+     */
     public static String getDateFormString(String in){
         return getDateFormString(in, new Date());
     }
-
-
-
 }
