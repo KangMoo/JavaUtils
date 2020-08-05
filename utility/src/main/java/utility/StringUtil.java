@@ -85,8 +85,7 @@ public class StringUtil {
         return (a.equals(b));
     }
 
-    public static String getDateFormString(String in){
-        Date date = new Date();
+    public static String getDateFormString(String in, Date date){
         String[] splitStr = in.split("\\{");
 
         for(int i =0; i<splitStr.length;i++){
@@ -107,18 +106,8 @@ public class StringUtil {
         return sb.toString();
     }
 
-    public static String getDateFormString(String in, Date date){
-        int startIndex = in.indexOf("{");
-        int endIndex = in.indexOf("}");
-        if(startIndex<0 || endIndex<0) {
-            return in;
-        }
-
-        String subStr = in.substring(startIndex,endIndex+1);
-        SimpleDateFormat sdp = new SimpleDateFormat(subStr);
-        String replaceStr = sdp.format(date);
-        replaceStr = replaceStr.substring(1,replaceStr.length()-1);
-        return in.replace(subStr,replaceStr);
+    public static String getDateFormString(String in){
+        return getDateFormString(in, new Date());
     }
 
 

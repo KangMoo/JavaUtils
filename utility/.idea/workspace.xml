@@ -2,15 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4837cc29-0aa4-4994-abef-84493e34c24b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Tester.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Tester.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/UtilityMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/UtilityMain.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/utility/StringUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utility/StringUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Tester.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Tester.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/UtilityMain.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/UtilityMain.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/utility/MsgLogger.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/utility/MsgLogger.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/utility/StringUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/utility/StringUtil.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
