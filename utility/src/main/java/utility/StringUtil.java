@@ -1,5 +1,8 @@
 package utility;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class StringUtil {
     public static final String STR_OK = "OK";
     public static final String STR_FAIL = "FAIL";
@@ -81,5 +84,43 @@ public class StringUtil {
 
         return (a.equals(b));
     }
+
+    public static String getDateFormString(String in){
+        Date date = new Date();
+        String[] splitStr = in.split("\\{");
+
+        for(int i =0; i<splitStr.length;i++){
+            int endpoint = splitStr[i].lastIndexOf("}");
+
+            if(endpoint < 0) continue;
+            if(endpoint == 1) {splitStr[i] = splitStr[i].substring(1); continue;}
+
+            String dateFormat = splitStr[i].substring(0,endpoint);
+            splitStr[i] = new SimpleDateFormat(dateFormat).format(date) + splitStr[i].substring(endpoint+1);
+        }
+        StringBuilder sb = new StringBuilder();
+        for(String k : splitStr){
+
+            sb.append(k);
+        }
+
+        return sb.toString();
+    }
+
+    public static String getDateFormString(String in, Date date){
+        int startIndex = in.indexOf("{");
+        int endIndex = in.indexOf("}");
+        if(startIndex<0 || endIndex<0) {
+            return in;
+        }
+
+        String subStr = in.substring(startIndex,endIndex+1);
+        SimpleDateFormat sdp = new SimpleDateFormat(subStr);
+        String replaceStr = sdp.format(date);
+        replaceStr = replaceStr.substring(1,replaceStr.length()-1);
+        return in.replace(subStr,replaceStr);
+    }
+
+
 
 }
