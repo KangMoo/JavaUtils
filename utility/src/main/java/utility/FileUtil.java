@@ -1,6 +1,9 @@
 package utility;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.util.Map;
 
@@ -8,6 +11,7 @@ import java.util.Map;
  * 파일을 읽고 String으로 변환해주는 유틸
  */
 public class FileUtil {
+    private static Logger logger = LoggerFactory.getLogger(FileUtil.class);
     private FileUtil(){}
 
     /**
@@ -78,12 +82,24 @@ public class FileUtil {
      */
     public static boolean fileAppendWrite(String filePath,String msg, String delimiter)
     {
+        return fileAppendWrite(filePath, msg+delimiter);
+    }
+
+    /**
+     * 파일에 문자열을 덧붙인다.
+     * @param filePath 파일 경로
+     * @param msg 덧붙일 메시지
+     * @return
+     */
+    public static boolean fileAppendWrite(String filePath,String msg)
+    {
         File f = new File(filePath);
         // 파일이 없으면 경로 및 파일 생성
         if(!f.exists()){
             try{
                 FileUtil.createFileWithDirectory(filePath);
             }catch(Exception e){
+                logger.warn("() () () Can't Create Call Log File!", e);
                 return false;
             }
         }
@@ -92,13 +108,17 @@ public class FileUtil {
         try {
             out = new PrintStream(new FileOutputStream(f, true));
             out.print(msg);
-            out.print(delimiter);
         } catch ( FileNotFoundException e ) {
+            logger.warn("() () () Can't Write Call Log File!", e);
             return false;
         }
         finally {
             if ( out != null ) {
-                out.close();
+                try {
+                    out.close( );
+                } catch ( Exception e ) {
+                    logger.warn("() () () Can't Close File",e);
+                }
             }
         }
         return true;
