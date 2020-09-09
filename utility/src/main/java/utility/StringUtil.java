@@ -26,7 +26,7 @@ public class StringUtil {
      * @param args foramt안의 중괄호 "{}"에 차례대로 대치될 값
      * @return
      */
-    public static String stringFomatter(String format, Object ... args){
+    public static String format(String format, Object ... args){
         for(Object o: args){
             format = format.replaceFirst("\\{}",o.toString());
         }
