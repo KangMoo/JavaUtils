@@ -17,3 +17,5 @@ N
 src/main/java/UtilityMain.java,6/e/6e604e5d17b043741838a2483bb4075a20321710
 T
 $src/main/java/utility/MsgLogger.java,6/3/63bc71a0c5aa7772a8081eba38e8c04744732dac
+K
+src/main/java/CryptApi.java,b/9/b9640dc682f1c9a785ef47c0aa2493bb3e950b11

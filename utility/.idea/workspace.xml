@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="4837cc29-0aa4-4994-abef-84493e34c24b" name="Default Changelist" comment="">
+    <list default="true" id="4837cc29-0aa4-4994-abef-84493e34c24b" name="Default Changelist" comment="Update">
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/3/0/30c6ec8ce11b2c73837703022b35e923948a57f0" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/3/0/30c6ec8ce11b2c73837703022b35e923948a57f0" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/6/3/63bc71a0c5aa7772a8081eba38e8c04744732dac" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/6/3/63bc71a0c5aa7772a8081eba38e8c04744732dac" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/6/9/6999eb4e28c2936a723841d97048c0c2327d69f5" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/6/9/6999eb4e28c2936a723841d97048c0c2327d69f5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/6/e/6e604e5d17b043741838a2483bb4075a20321710" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/6/e/6e604e5d17b043741838a2483bb4075a20321710" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/a/c/acce243d1c498e382124316ff54873788fcc0750" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/a/c/acce243d1c498e382124316ff54873788fcc0750" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/b/c/bc672bc08345bca69b6aef60e0ea7b9ca9a80ede" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/b/c/bc672bc08345bca69b6aef60e0ea7b9ca9a80ede" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/e/c/eca028811520604a3cda1ee08695182b8675d0c4" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/e/c/eca028811520604a3cda1ee08695182b8675d0c4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/utility/StringUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utility/StringUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Tester.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Tester.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,22 +32,25 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="MavenImportPreferences">
-    <option name="importingSettings">
-      <MavenImportingSettings>
-        <option name="importAutomatically" value="true" />
-      </MavenImportingSettings>
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="$APPLICATION_HOME_DIR$/plugins/maven/lib/maven3" />
+      </MavenGeneralSettings>
     </option>
   </component>
   <component name="ProjectId" id="1eLgffEeZQAFF3NxMHUp7uoAnDT" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="SONARLINT_PRECOMMIT_ANALYSIS" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/utility" />
     <property name="project.structure.last.edited" value="SDKs" />
     <property name="project.structure.proportion" value="0.15" />
@@ -64,6 +78,7 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -74,43 +89,75 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1594106391177</updated>
+      <workItem from="1601973104676" duration="146000" />
     </task>
+    <task id="LOCAL-00001" summary="File Append Once">
+      <created>1599616398238</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1599616398238</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Update">
+      <created>1599616461415</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1599616461415</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="File Append Once" />
+    <MESSAGE value="Update" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update" />
   </component>
   <component name="WindowStateProjectService">
     <state x="440" y="202" key="#Project_Structure" timestamp="1594107039275">
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state x="440" y="202" key="#Project_Structure/0.23.1680.1027/-1920.23.1920.1057@0.23.1680.1027" timestamp="1594107039275" />
-    <state x="-1174" y="266" key="#com.intellij.ide.util.MemberChooser" timestamp="1594193643190">
-      <screen x="-1920" y="23" width="1920" height="1057" />
+    <state x="653" y="259" key="#com.intellij.ide.util.MemberChooser" timestamp="1597742314700">
+      <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state x="-1174" y="266" key="#com.intellij.ide.util.MemberChooser/0.23.1680.1027/-1920.23.1920.1057@-1920.23.1920.1057" timestamp="1594193643190" />
-    <state x="653" y="259" key="#com.intellij.ide.util.MemberChooser/0.23.1680.1027/-1920.23.1920.1057@0.23.1680.1027" timestamp="1594108353230" />
-    <state width="1878" height="343" key="GridCell.Tab.0.bottom" timestamp="1596604730365">
+    <state x="653" y="259" key="#com.intellij.ide.util.MemberChooser/0.23.1680.1027/-1920.23.1920.1057@0.23.1680.1027" timestamp="1597742314700" />
+    <state x="-1415" y="137" width="1069" height="851" key="CommitChangelistDialog2" timestamp="1599616478278">
       <screen x="-1920" y="23" width="1920" height="1057" />
     </state>
-    <state width="1398" height="275" key="GridCell.Tab.0.bottom/0.23.1440.877@0.23.1440.877" timestamp="1594137929314" />
+    <state x="-1415" y="137" width="1069" height="851" key="CommitChangelistDialog2/0.23.1680.1027/-1920.23.1920.1057@0.23.1680.1027" timestamp="1599616478278" />
+    <state x="-1552" y="141" key="DiffContextDialog" timestamp="1599616368335">
+      <screen x="-1920" y="23" width="1920" height="1057" />
+    </state>
+    <state x="-1552" y="141" key="DiffContextDialog/0.23.1680.1027/-1920.23.1920.1057@0.23.1680.1027" timestamp="1599616368335" />
+    <state width="1398" height="316" key="GridCell.Tab.0.bottom" timestamp="1598284026625">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state width="1398" height="316" key="GridCell.Tab.0.bottom/0.23.1440.877@0.23.1440.877" timestamp="1598284026625" />
     <state width="1878" height="343" key="GridCell.Tab.0.bottom/0.23.1680.1027/-1920.23.1920.1057@-1920.23.1920.1057" timestamp="1596604730365" />
-    <state width="1638" height="279" key="GridCell.Tab.0.bottom/0.23.1680.1027/-1920.23.1920.1057@0.23.1680.1027" timestamp="1594109052989" />
-    <state width="1878" height="343" key="GridCell.Tab.0.center" timestamp="1596604730364">
-      <screen x="-1920" y="23" width="1920" height="1057" />
+    <state width="1638" height="317" key="GridCell.Tab.0.bottom/0.23.1680.1027/-1920.23.1920.1057@0.23.1680.1027" timestamp="1597907480060" />
+    <state width="1398" height="316" key="GridCell.Tab.0.center" timestamp="1598284026624">
+      <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1398" height="275" key="GridCell.Tab.0.center/0.23.1440.877@0.23.1440.877" timestamp="1594137929307" />
+    <state width="1398" height="316" key="GridCell.Tab.0.center/0.23.1440.877@0.23.1440.877" timestamp="1598284026624" />
     <state width="1878" height="343" key="GridCell.Tab.0.center/0.23.1680.1027/-1920.23.1920.1057@-1920.23.1920.1057" timestamp="1596604730364" />
-    <state width="1638" height="279" key="GridCell.Tab.0.center/0.23.1680.1027/-1920.23.1920.1057@0.23.1680.1027" timestamp="1594109052988" />
-    <state width="1878" height="343" key="GridCell.Tab.0.left" timestamp="1596604730363">
-      <screen x="-1920" y="23" width="1920" height="1057" />
+    <state width="1638" height="317" key="GridCell.Tab.0.center/0.23.1680.1027/-1920.23.1920.1057@0.23.1680.1027" timestamp="1597907480059" />
+    <state width="1398" height="316" key="GridCell.Tab.0.left" timestamp="1598284026624">
+      <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1398" height="275" key="GridCell.Tab.0.left/0.23.1440.877@0.23.1440.877" timestamp="1594137929291" />
+    <state width="1398" height="316" key="GridCell.Tab.0.left/0.23.1440.877@0.23.1440.877" timestamp="1598284026624" />
     <state width="1878" height="343" key="GridCell.Tab.0.left/0.23.1680.1027/-1920.23.1920.1057@-1920.23.1920.1057" timestamp="1596604730363" />
-    <state width="1638" height="279" key="GridCell.Tab.0.left/0.23.1680.1027/-1920.23.1920.1057@0.23.1680.1027" timestamp="1594109052987" />
-    <state width="1878" height="343" key="GridCell.Tab.0.right" timestamp="1596604730364">
-      <screen x="-1920" y="23" width="1920" height="1057" />
+    <state width="1638" height="317" key="GridCell.Tab.0.left/0.23.1680.1027/-1920.23.1920.1057@0.23.1680.1027" timestamp="1597907480058" />
+    <state width="1398" height="316" key="GridCell.Tab.0.right" timestamp="1598284026624">
+      <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1398" height="275" key="GridCell.Tab.0.right/0.23.1440.877@0.23.1440.877" timestamp="1594137929307" />
+    <state width="1398" height="316" key="GridCell.Tab.0.right/0.23.1440.877@0.23.1440.877" timestamp="1598284026624" />
     <state width="1878" height="343" key="GridCell.Tab.0.right/0.23.1680.1027/-1920.23.1920.1057@-1920.23.1920.1057" timestamp="1596604730364" />
-    <state width="1638" height="279" key="GridCell.Tab.0.right/0.23.1680.1027/-1920.23.1920.1057@0.23.1680.1027" timestamp="1594109052988" />
+    <state width="1638" height="317" key="GridCell.Tab.0.right/0.23.1680.1027/-1920.23.1920.1057@0.23.1680.1027" timestamp="1597907480059" />
     <state width="918" height="356" key="GridCell.Tab.1.bottom" timestamp="1594346007775">
       <screen x="-1920" y="23" width="1920" height="1057" />
     </state>
@@ -127,14 +174,23 @@
       <screen x="-1920" y="23" width="1920" height="1057" />
     </state>
     <state width="918" height="356" key="GridCell.Tab.1.right/0.23.1680.1027/-1920.23.1920.1057@-1920.23.1920.1057" timestamp="1594346007775" />
-    <state x="-1280" y="308" width="639" height="486" key="find.popup" timestamp="1594196793575">
-      <screen x="-1920" y="23" width="1920" height="1057" />
+    <state x="440" y="276" key="Vcs.Push.Dialog.v2" timestamp="1599616637159">
+      <screen x="0" y="23" width="1680" height="1027" />
+    </state>
+    <state x="440" y="276" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-1920.23.1920.1057@0.23.1680.1027" timestamp="1599616637159" />
+    <state x="560" y="300" width="683" height="486" key="find.popup" timestamp="1597802541232">
+      <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state x="-1280" y="308" width="639" height="486" key="find.popup/0.23.1680.1027/-1920.23.1920.1057@-1920.23.1920.1057" timestamp="1594196793575" />
+    <state x="560" y="300" width="683" height="486" key="find.popup/0.23.1680.1027/-1920.23.1920.1057@0.23.1680.1027" timestamp="1597802541232" />
     <state x="-1252" y="174" key="refactoring.ChangeSignatureDialog" timestamp="1594168677281">
       <screen x="-1920" y="23" width="1920" height="1057" />
     </state>
     <state x="-1252" y="174" key="refactoring.ChangeSignatureDialog/0.23.1680.1027/-1920.23.1920.1057@-1920.23.1920.1057" timestamp="1594168677281" />
+    <state x="505" y="187" width="670" height="676" key="search.everywhere.popup" timestamp="1597904937552">
+      <screen x="0" y="23" width="1680" height="1027" />
+    </state>
+    <state x="505" y="187" width="670" height="676" key="search.everywhere.popup/0.23.1680.1027/-1920.23.1920.1057@0.23.1680.1027" timestamp="1597904937552" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

@@ -51,10 +51,11 @@ public class FileUtil {
         return sb.toString();
     }
 
-    public static void createFileWithDirectory(String filePath) throws IOException {
+    public static File createFileWithDirectory(String filePath) throws IOException {
         File file = new File(filePath);
         file.getParentFile().mkdirs();
         FileWriter writer = new FileWriter(file);
+        return file;
     }
 
     /**
