@@ -5,6 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Map;
 
 /**
@@ -51,10 +56,9 @@ public class FileUtil {
         return sb.toString();
     }
 
-    public static File createFileWithDirectory(String filePath) throws IOException {
+    public static File createFileWithDirectory(String filePath) {
         File file = new File(filePath);
         file.getParentFile().mkdirs();
-        FileWriter writer = new FileWriter(file);
         return file;
     }
 
@@ -81,8 +85,7 @@ public class FileUtil {
      * @param delimiter 구분문자
      * @return
      */
-    public static boolean fileAppendWrite(String filePath,String msg, String delimiter)
-    {
+    public static boolean fileAppendWrite(String filePath,String msg, String delimiter){
         return fileAppendWrite(filePath, msg+delimiter);
     }
 
@@ -94,33 +97,16 @@ public class FileUtil {
      */
     public static boolean fileAppendWrite(String filePath,String msg)
     {
-        File f = new File(filePath);
-        // 파일이 없으면 경로 및 파일 생성
-        if(!f.exists()){
-            try{
-                FileUtil.createFileWithDirectory(filePath);
-            }catch(Exception e){
-                logger.warn("() () () Can't Create Call Log File!", e);
-                return false;
-            }
-        }
-        PrintStream out = null;
-
-        try {
-            out = new PrintStream(new FileOutputStream(f, true));
-            out.print(msg);
-        } catch ( FileNotFoundException e ) {
+        // 파일에 버퍼의 데이터를 write
+        try(FileChannel fileChannel = FileChannel.open(Paths.get(filePath), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND)){
+            ByteBuffer buffer = Charset.defaultCharset().encode(msg);
+            fileChannel.write(buffer);
+        }catch(FileNotFoundException e){
+            logger.warn("() () () File Not Fount [{}]", filePath, e);
+            return false;
+        }catch(Exception e) {
             logger.warn("() () () Can't Write Call Log File!", e);
             return false;
-        }
-        finally {
-            if ( out != null ) {
-                try {
-                    out.close( );
-                } catch ( Exception e ) {
-                    logger.warn("() () () Can't Close File",e);
-                }
-            }
         }
         return true;
     }
