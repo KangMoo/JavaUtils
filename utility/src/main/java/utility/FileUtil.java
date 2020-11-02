@@ -97,6 +97,16 @@ public class FileUtil {
      */
     public static boolean fileAppendWrite(String filePath,String msg)
     {
+        File f = new File(filePath);
+        // 파일이 없으면 경로 및 파일 생성
+        if(!f.exists()){
+            try{
+                FileUtil.createFileWithDirectory(filePath);
+            }catch(Exception e){
+                logger.warn("() () () Can't Create Call Log File!", e);
+                return false;
+            }
+        }
         // 파일에 버퍼의 데이터를 write
         try(FileChannel fileChannel = FileChannel.open(Paths.get(filePath), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND)){
             ByteBuffer buffer = Charset.defaultCharset().encode(msg);
