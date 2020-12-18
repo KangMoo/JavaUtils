@@ -5,11 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.Map;
 
 /**
@@ -110,7 +105,7 @@ public class FileUtil {
             try {
                 FileUtil.createFileWithDirectory(filePath);
             } catch (Exception e) {
-                logger.warn("() () () Can't Create Call Log File!", e);
+                logger.warn("() () () Can't Create File!", e);
                 return false;
             }
         }
@@ -126,17 +121,6 @@ public class FileUtil {
             logger.warn("() () () Fail to Write File", e);
             return false;
         }
-
-//        try (FileChannel fileChannel = FileChannel.open(Paths.get(filePath), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND)) {
-//            ByteBuffer buffer = Charset.defaultCharset().encode(msg);
-//            fileChannel.write(buffer);
-//        } catch (FileNotFoundException e) {
-//            logger.warn("() () () File Not Fount [{}]", filePath, e);
-//            return false;
-//        } catch (Exception e) {
-//            logger.warn("() () () Can't Write Call Log File!", e);
-//            return false;
-//        }
 
         return true;
     }
