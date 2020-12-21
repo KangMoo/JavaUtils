@@ -87,7 +87,7 @@ public class FileUtil {
      * @param delimiter 구분문자
      * @return
      */
-    public static boolean fileAppendWrite(String filePath, String msg, String delimiter) {
+    public static boolean fileAppendWrite(String filePath, String msg, String delimiter) throws Exception{
         return fileAppendWrite(filePath, msg + delimiter);
     }
 
@@ -98,29 +98,15 @@ public class FileUtil {
      * @param msg      덧붙일 메시지
      * @return
      */
-    public static boolean fileAppendWrite(String filePath, String msg) {
+    public static boolean fileAppendWrite(String filePath, String msg) throws Exception{
         File f = new File(filePath);
         // 파일이 없으면 경로 및 파일 생성
         if (!f.exists()) {
-            try {
-                FileUtil.createFileWithDirectory(filePath);
-            } catch (Exception e) {
-                logger.warn("() () () Can't Create File!", e);
-                return false;
-            }
+            FileUtil.createFileWithDirectory(filePath);
         }
 
-        try (BufferedWriter writer = new BufferedWriter(
-                new FileWriter(f, true)  //Set true for append mode
-        )) {
-            writer.write(msg);
-        } catch (FileNotFoundException e) {
-            logger.warn("() () () File Not Fount [{}]", filePath, e);
-            return false;
-        } catch (Exception e) {
-            logger.warn("() () () Fail to Write File", e);
-            return false;
-        }
+        BufferedWriter writer = new BufferedWriter(new FileWriter(f, true));  //Set true for append mode
+        writer.write(msg);
 
         return true;
     }
