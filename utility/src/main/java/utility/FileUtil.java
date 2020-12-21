@@ -112,7 +112,7 @@ public class FileUtil {
      * 파일에 문자열을 덧붙인다.
      *
      * @param filePath 파일 경로
-     * @param data     덧붙일 byte 배
+     * @param data     덧붙일 byte
      * @return
      */
     public static boolean fileAppendWrite(String filePath, byte[] data) throws Exception {
