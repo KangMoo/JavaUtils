@@ -56,9 +56,10 @@ public class FileUtil {
         return sb.toString();
     }
 
-    public static File createFileWithDirectory(String filePath) {
+    public static File createFileWithDirectory(String filePath) throws Exception{
         File file = new File(filePath);
         file.getParentFile().mkdirs();
+        file.createNewFile();
         return file;
     }
 
