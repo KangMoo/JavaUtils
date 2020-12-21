@@ -78,30 +78,18 @@ public class FileUtil {
     /**
      * 파일에 문자열을 덧붙인다.
      *
-     * @param filePath  파일 경로
-     * @param msg       덧붙일 메시지
-     * @param delimiter 구분문자
-     * @return
-     */
-    public static boolean fileAppendWrite(String filePath, String msg, String delimiter) throws Exception {
-        return fileAppendWrite(filePath, msg + delimiter);
-    }
-
-    /**
-     * 파일에 문자열을 덧붙인다.
-     *
      * @param filePath 파일 경로
      * @param msg      덧붙일 메시지
      * @return
      */
-    public static boolean fileAppendWrite(String filePath, String msg) throws Exception {
+    public static boolean fileWrite(String filePath, String msg, boolean append) throws Exception {
         File f = new File(filePath);
         // 파일이 없으면 경로 및 파일 생성
         if (!f.exists()) {
             FileUtil.createFileWithDirectory(filePath);
         }
 
-        BufferedWriter writer = new BufferedWriter(new FileWriter(f, true));  //Set true for append mode
+        BufferedWriter writer = new BufferedWriter(new FileWriter(f, append));  //Set true for append mode
         writer.write(msg);
         writer.close();
 
@@ -115,14 +103,14 @@ public class FileUtil {
      * @param data     덧붙일 byte
      * @return
      */
-    public static boolean fileAppendWrite(String filePath, byte[] data) throws Exception {
+    public static boolean fileWrite(String filePath, byte[] data, boolean append) throws Exception {
         File f = new File(filePath);
         // 파일이 없으면 경로 및 파일 생성
         if (!f.exists()) {
             FileUtil.createFileWithDirectory(filePath);
         }
 
-        FileOutputStream writer = new FileOutputStream(f);
+        FileOutputStream writer = new FileOutputStream(f, append);
         writer.write(data);
         writer.close();
 
