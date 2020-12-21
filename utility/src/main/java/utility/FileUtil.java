@@ -103,6 +103,28 @@ public class FileUtil {
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(f, true));  //Set true for append mode
         writer.write(msg);
+        writer.close();
+
+        return true;
+    }
+
+    /**
+     * 파일에 문자열을 덧붙인다.
+     *
+     * @param filePath 파일 경로
+     * @param data     덧붙일 byte 배
+     * @return
+     */
+    public static boolean fileAppendWrite(String filePath, byte[] data) throws Exception {
+        File f = new File(filePath);
+        // 파일이 없으면 경로 및 파일 생성
+        if (!f.exists()) {
+            FileUtil.createFileWithDirectory(filePath);
+        }
+
+        FileOutputStream writer = new FileOutputStream(f);
+        writer.write(data);
+        writer.close();
 
         return true;
     }
