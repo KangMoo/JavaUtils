@@ -1,9 +1,5 @@
 package utility;
 
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.*;
 import java.util.Map;
 
@@ -11,7 +7,6 @@ import java.util.Map;
  * 파일을 읽고 String으로 변환해주는 유틸
  */
 public class FileUtil {
-    private static Logger logger = LoggerFactory.getLogger(FileUtil.class);
 
     private FileUtil() {
     }
