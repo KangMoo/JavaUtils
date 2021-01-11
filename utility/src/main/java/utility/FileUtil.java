@@ -54,8 +54,10 @@ public class FileUtil {
     public static File createFileWithDirectory(String filePath) throws Exception {
         File file = new File(filePath);
         file.getParentFile().mkdirs();
-        file.createNewFile();
-        return file;
+        if(file.createNewFile()){
+            return file;
+        }
+        return null;
     }
 
     /**
