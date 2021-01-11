@@ -132,21 +132,4 @@ public class StringUtil {
     public static String getDateFormString(String in) {
         return getDateFormString(in, new Date());
     }
-
-    /**
-     * 문자열의 환경변수 이름을 매핑한다.
-     * ex) "$HOME" -> "/home/"
-     *
-     * @param str 매핑할 문자열
-     * @return 환경변수가 매핑된 문자열
-     */
-    public static String getStringWithEnv(String str) {
-        Map<String, String> envMap = System.getenv();
-        String ret = str;
-        for (String envKey : envMap.keySet()) {
-            String env = "$" + envKey;
-            if (str.contains(env)) ret = str.replace(env, envMap.get(envKey));
-        }
-        return ret;
-    }
 }
