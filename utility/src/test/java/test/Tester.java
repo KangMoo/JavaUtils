@@ -11,31 +11,23 @@ import org.junit.Test;
 
 public class Tester {
     @Test
-    public void test1(){
+    public void test1() {
+        String test = "asdfsadf.mp3.enc";
+        if(test.endsWith(".enc")) System.out.println("WOW");
+    }
 
-        String filePath = "/Users/heokangmoo/temp/test/test/test.txt";
-
-        File file = new File(filePath);
+    @Test
+    public void test2() {
         try{
-            file.getParentFile().mkdirs();
-            file.createNewFile();
-            new BufferedWriter(new FileWriter(file, true)).write(filePath);
-
-//            FileInputStream fis = new FileInputStream(filePath);
-//            FileOutputStream fos = new FileOutputStream(filePath+".out.txt");
-//            byte[] bytes = new byte[10];
-//            int i = fis.read();
-//            while(i != -1){
-//                fos.write(i);
-//                i = fis.read();
-//            }
-//            fis.close();
-//            fos.close();
-        } catch(Exception e){
+            div(1, 0);
+        }catch (Exception e){
+            System.out.println("e.toString() = " + e.toString());
             e.printStackTrace();
         }
+    }
 
-
+    public int div(int a, int b){
+        return a/b;
     }
 }
 

@@ -102,7 +102,7 @@ public class StringUtil {
         String[] splitStr = in.split("\\{");
 
         for (int i = 0; i < splitStr.length; i++) {
-            int endpoint = splitStr[i].lastIndexOf("}");
+            int endpoint = splitStr[i].lastIndexOf('}');
 
             if (endpoint < 0) continue;
             if (endpoint == 1) {
