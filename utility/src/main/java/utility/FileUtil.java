@@ -89,9 +89,9 @@ public class FileUtil {
             FileUtil.createFileWithDirectory(filePath);
         }
 
-        BufferedWriter writer = new BufferedWriter(new FileWriter(f, append));  //Set true for append mode
-        writer.write(msg);
-        writer.close();
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(f, append))){  //Set true for append mode
+            writer.write(msg);
+        }
 
         return true;
     }
@@ -110,9 +110,9 @@ public class FileUtil {
             FileUtil.createFileWithDirectory(filePath);
         }
 
-        FileOutputStream writer = new FileOutputStream(f, append);
-        writer.write(data);
-        writer.close();
+        try(FileOutputStream writer = new FileOutputStream(f, append)){
+            writer.write(data);
+        }
 
         return true;
     }
