@@ -2,7 +2,6 @@ package utility;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 
 public class StringUtil {
     public static final String STR_OK = "OK";
@@ -104,9 +103,8 @@ public class StringUtil {
         for (int i = 0; i < splitStr.length; i++) {
             int endpoint = splitStr[i].lastIndexOf('}');
 
-            if (endpoint < 0) continue;
-            if (endpoint == 1) {
-                splitStr[i] = splitStr[i].substring(1);
+            if (endpoint < 0 || endpoint == 1) {
+                if (endpoint == 1) splitStr[i] = splitStr[i].substring(1);
                 continue;
             }
 

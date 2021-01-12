@@ -1,7 +1,6 @@
 package utility;
 
 import java.io.*;
-import java.util.Map;
 
 /**
  * 파일을 읽고 String으로 변환해주는 유틸
@@ -51,10 +50,9 @@ public class FileUtil {
         return sb.toString();
     }
 
-    public static File createFileWithDirectory(String filePath) throws Exception {
+    public static File createFileWithDirectory(String filePath) throws IOException {
         File file = new File(filePath);
-        file.getParentFile().mkdirs();
-        if(file.createNewFile()) return file;
+        if(file.getParentFile().mkdirs() && file.createNewFile()) return file;
         return null;
     }
 
@@ -65,7 +63,7 @@ public class FileUtil {
      * @param msg      덧붙일 메시지
      * @return
      */
-    public static boolean fileWrite(String filePath, String msg, boolean append) throws Exception {
+    public static boolean fileWrite(String filePath, String msg, boolean append) throws IOException {
         File f = new File(filePath);
         // 파일이 없으면 경로 및 파일 생성
         if (!f.exists()) {
@@ -86,7 +84,7 @@ public class FileUtil {
      * @param data     덧붙일 byte
      * @return
      */
-    public static boolean fileWrite(String filePath, byte[] data, boolean append) throws Exception {
+    public static boolean fileWrite(String filePath, byte[] data, boolean append) throws IOException {
         File f = new File(filePath);
         // 파일이 없으면 경로 및 파일 생성
         if (!f.exists()) {
