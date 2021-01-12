@@ -10,16 +10,13 @@ import java.util.Set;
 public class JsonMaker {
     private final Map<String, JsonElement> members = new LinkedHashMap<>();
 
-    public JsonMaker() {
-    }
-
     public JsonObject deepCopy() {
         JsonObject result = new JsonObject();
         Iterator var2 = this.members.entrySet().iterator();
 
         while (var2.hasNext()) {
             Map.Entry<String, JsonElement> entry = (Map.Entry) var2.next();
-            result.add((String) entry.getKey(), ((JsonElement) entry.getValue()).deepCopy());
+            result.add(entry.getKey(), (entry.getValue()).deepCopy());
         }
 
         return result;
@@ -30,26 +27,26 @@ public class JsonMaker {
     }
 
     public JsonElement remove(String property) {
-        return (JsonElement) this.members.remove(property);
+        return this.members.remove(property);
     }
 
     public JsonMaker addProperty(String property, String value) {
-        this.add(property, (JsonElement) (value == null ? JsonNull.INSTANCE : new JsonPrimitive(value)));
+        this.add(property, (value == null ? JsonNull.INSTANCE : new JsonPrimitive(value)));
         return this;
     }
 
     public JsonMaker addProperty(String property, Number value) {
-        this.add(property, (JsonElement) (value == null ? JsonNull.INSTANCE : new JsonPrimitive(value)));
+        this.add(property, (value == null ? JsonNull.INSTANCE : new JsonPrimitive(value)));
         return this;
     }
 
     public JsonMaker addProperty(String property, Boolean value) {
-        this.add(property, (JsonElement) (value == null ? JsonNull.INSTANCE : new JsonPrimitive(value)));
+        this.add(property, (value == null ? JsonNull.INSTANCE : new JsonPrimitive(value)));
         return this;
     }
 
     public JsonMaker addProperty(String property, Character value) {
-        this.add(property, (JsonElement) (value == null ? JsonNull.INSTANCE : new JsonPrimitive(value)));
+        this.add(property, (value == null ? JsonNull.INSTANCE : new JsonPrimitive(value)));
         return this;
     }
 
@@ -70,7 +67,7 @@ public class JsonMaker {
     }
 
     public JsonElement get(String memberName) {
-        return (JsonElement) this.members.get(memberName);
+        return this.members.get(memberName);
     }
 
     public JsonPrimitive getAsJsonPrimitive(String memberName) {
