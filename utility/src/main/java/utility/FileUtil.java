@@ -57,7 +57,7 @@ public class FileUtil {
     }
 
     /**
-     * 파일에 문자열을 덧붙인다.
+     * FileWrite
      *
      * @param filePath 파일 경로
      * @param msg      덧붙일 메시지
@@ -70,7 +70,7 @@ public class FileUtil {
             FileUtil.createFileWithDirectory(filePath);
         }
 
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(f, append))){  //Set true for append mode
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(f, append))){
             writer.write(msg);
         }
 
