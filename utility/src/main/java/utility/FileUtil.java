@@ -63,7 +63,7 @@ public class FileUtil {
      * @param msg      덧붙일 메시지
      * @return
      */
-    public static boolean fileWrite(String filePath, String msg, boolean append) throws IOException {
+    public static void fileWrite(String filePath, String msg, boolean append) throws IOException {
         File f = new File(filePath);
         // 파일이 없으면 경로 및 파일 생성
         if (!f.exists()) {
@@ -73,8 +73,6 @@ public class FileUtil {
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(f, append))){
             writer.write(msg);
         }
-
-        return true;
     }
 
     /**
@@ -84,7 +82,7 @@ public class FileUtil {
      * @param data     덧붙일 byte
      * @return
      */
-    public static boolean fileWrite(String filePath, byte[] data, boolean append) throws IOException {
+    public static void fileWrite(String filePath, byte[] data, boolean append) throws IOException {
         File f = new File(filePath);
         // 파일이 없으면 경로 및 파일 생성
         if (!f.exists()) {
@@ -94,7 +92,5 @@ public class FileUtil {
         try(FileOutputStream writer = new FileOutputStream(f, append)){
             writer.write(data);
         }
-
-        return true;
     }
 }
