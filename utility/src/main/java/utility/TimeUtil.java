@@ -1,5 +1,8 @@
 package utility;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 /**
  * @author kangmoo Heo
  */
@@ -13,6 +16,9 @@ public class TimeUtil {
         } catch (InterruptedException var2) {
             Thread.currentThread().interrupt();
         }
+    }
 
+    public static long changeDateFormat(String time, String format) throws ParseException {
+        return new SimpleDateFormat(format).parse(time).getTime();
     }
 }

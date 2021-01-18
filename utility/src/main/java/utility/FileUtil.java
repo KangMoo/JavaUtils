@@ -56,24 +56,6 @@ public class FileUtil {
         return null;
     }
 
-    /**
-     * FileWrite
-     *
-     * @param filePath 파일 경로
-     * @param msg      덧붙일 메시지
-     * @return
-     */
-    public static void fileWrite(String filePath, String msg, boolean append) throws IOException {
-        File f = new File(filePath);
-        // 파일이 없으면 경로 및 파일 생성
-        if (!f.exists()) {
-            FileUtil.createFileWithDirectory(filePath);
-        }
-
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(f, append))){
-            writer.write(msg);
-        }
-    }
 
     /**
      * 파일에 문자열을 덧붙인다.
