@@ -9,6 +9,7 @@ public class ctest {
     public void test() {
         // Git Rebase Test1
         // Git Rebase Test2
+        // Git Rebase Test3
     }
 
 }
