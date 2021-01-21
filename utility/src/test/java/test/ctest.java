@@ -7,10 +7,7 @@ import org.junit.Test;
 public class ctest {
     @Test
     public void test() {
-        // Git Rebase Test1
-        // Git Rebase Test2
-        // Git Rebase Test3
-        // Git Rebase Test4
+        // Git Config Test
     }
 
 }
