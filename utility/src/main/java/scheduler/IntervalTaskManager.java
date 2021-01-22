@@ -41,9 +41,7 @@ public class IntervalTaskManager {
                 }
             }));
         }
-        for(Thread thread : runners){
-            thread.start();
-        }
+        runners.forEach(Thread::start);
         log.debug("() () () Timeout Msg Handler Start");
     }
 
