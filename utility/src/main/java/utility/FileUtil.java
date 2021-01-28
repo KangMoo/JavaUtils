@@ -79,20 +79,16 @@ public class FileUtil {
 
     public static void copy(File srcFile, File destFile) throws IOException {
         BufferedInputStream input = new BufferedInputStream(new FileInputStream(srcFile));
-
         try {
             if (!destFile.getParentFile().exists()) {
                 destFile.getParentFile().mkdirs();
             }
-
             BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(destFile));
-
             try {
                 int c;
                 while((c = input.read()) != -1) {
                     output.write(c);
                 }
-
                 output.flush();
             } finally {
                 output.close();
@@ -100,6 +96,9 @@ public class FileUtil {
         } finally {
             input.close();
         }
+    }
 
+    public static void copy(String srcFile, String destFile) throws IOException {
+        copy(new File(srcFile), new File(destFile));
     }
 }
