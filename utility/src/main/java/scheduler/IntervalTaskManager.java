@@ -11,22 +11,20 @@ import java.util.concurrent.TimeUnit;
 /**
  * Session Manager
  * 주기적으로 세션을 필터링하고 처리 (Default 1초)
+ *
  * @author Kangmoo Heo
  */
 public class IntervalTaskManager {
-
     private static final Logger log = LoggerFactory.getLogger(IntervalTaskManager.class);
-
-    // IntervalTaskManager 싱글턴 변수
-    private static IntervalTaskManager instance;
-    // Interval Task 목록
+    private static IntervalTaskManager instance = new IntervalTaskManager();
     private final Map<String, IntervalTaskUnit> jobs = new HashMap<>();
-    // Interval Tasker (쓰레드) 목록
-    private final Set<ScheduledExecutorService> runners = new HashSet<>();
-    // Interval Time (milli sec)
+    private ScheduledExecutorService executorService;
     private int defaultInterval = 1000;
 
     private IntervalTaskManager() {
+    }
+
+    public void init() {
     }
 
     public static IntervalTaskManager getInstance() {
@@ -37,9 +35,8 @@ public class IntervalTaskManager {
     }
 
     public void start() {
+        executorService = Executors.newScheduledThreadPool(jobs.size());
         for (IntervalTaskUnit runner : jobs.values()) {
-            ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
-            runners.add(executorService);
             executorService.scheduleAtFixedRate(runner,
                     runner.getInterval() - System.currentTimeMillis() % runner.getInterval(),
                     runner.getInterval(),
@@ -49,14 +46,7 @@ public class IntervalTaskManager {
     }
 
     public void stop() {
-        for (ScheduledExecutorService executorService : runners) {
-            try {
-                executorService.shutdown();
-            } catch (Exception e) {
-                log.warn("Fail to Shutdown Interval Time Job");
-            }
-        }
-        runners.clear();
+        executorService.shutdown();
         log.debug("() () () Session Manager Stop");
     }
 
@@ -65,13 +55,12 @@ public class IntervalTaskManager {
             log.warn("() () () Hashmap Key duplication");
             return;
         }
-
         log.debug("() () () Add Runner [{}]", name);
         jobs.put(name, runner);
     }
 
     public void sessionCheck() {
-        for (Runnable runner : jobs.values()) {
+        for (IntervalTaskUnit runner : jobs.values()) {
             runner.run();
         }
     }
@@ -80,7 +69,7 @@ public class IntervalTaskManager {
         return defaultInterval;
     }
 
-    public void setDefaultInterval(int mSec) {
-        this.defaultInterval = mSec;
+    public void setDefaultInterval(int msec) {
+        this.defaultInterval = msec;
     }
 }
