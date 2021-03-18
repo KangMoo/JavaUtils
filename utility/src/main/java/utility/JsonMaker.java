@@ -10,7 +10,7 @@ import java.util.Set;
 public class JsonMaker {
     private final Map<String, JsonElement> members = new LinkedHashMap<>();
 
-    public JsonObject deepCopy() {
+    public JsonObject deepCopyJsonObj() {
         JsonObject result = new JsonObject();
         Iterator var2 = this.members.entrySet().iterator();
 
@@ -22,8 +22,19 @@ public class JsonMaker {
         return result;
     }
 
-    public void add(String property, JsonElement value) {
+    public JsonMaker deepCopy(){
+        JsonMaker result = new JsonMaker();
+        Iterator var2 = this.members.entrySet().iterator();
+        while (var2.hasNext()) {
+            Map.Entry<String, JsonElement> entry = (Map.Entry) var2.next();
+            result.add(entry.getKey(), (entry.getValue()).deepCopy());
+        }
+        return result;
+    }
+
+    public JsonMaker add(String property, JsonElement value) {
         this.members.put(property, value == null ? JsonNull.INSTANCE : value);
+        return this;
     }
 
     public JsonElement remove(String property) {
