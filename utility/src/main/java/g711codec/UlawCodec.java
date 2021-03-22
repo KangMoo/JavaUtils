@@ -16,8 +16,7 @@ public class UlawCodec {
         return encoded;
     }
 
-    public static short[] decode(byte[] data)
-    {
+    public static short[] decode(byte[] data) {
         short[] decoded = new short[data.length];
         for(int i =0; i<data.length;i++){
             decoded[i] = decode(data[i]);
@@ -25,8 +24,7 @@ public class UlawCodec {
         return decoded;
     }
 
-    private static byte encode(int pcm) //16-bit
-    {
+    private static byte encode(int pcm) { //16-bit
         //Get the sign bit. Shift it for later
         //use without further modification
         int sign = (pcm & 0x8000) >> 8;
@@ -73,8 +71,7 @@ public class UlawCodec {
         return (byte)~mulaw;
     }
 
-    private static short decode(byte mulaw)
-    {
+    private static short decode(byte mulaw) {
         //Flip all the bits
         mulaw = (byte)~mulaw;
 

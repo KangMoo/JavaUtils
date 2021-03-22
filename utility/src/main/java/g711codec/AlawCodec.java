@@ -15,8 +15,7 @@ public class AlawCodec {
         return encoded;
     }
 
-    public static short[] decode(byte[] data)
-    {
+    public static short[] decode(byte[] data) {
         short[] decoded = new short[data.length];
         for(int i =0; i<data.length;i++){
             decoded[i] = decode(data[i]);
@@ -24,8 +23,7 @@ public class AlawCodec {
         return decoded;
     }
 
-    private static byte encode(int pcm)
-    {
+    private static byte encode(int pcm) {
         //Get the sign bit. Shift it for later use
         //without further modification
         int sign = (pcm & 0x8000) >> 8;
@@ -80,8 +78,7 @@ public class AlawCodec {
         return (byte)(alaw^0xD5);
     }
 
-    private static short decode(byte alaw)
-    {
+    private static short decode(byte alaw) {
         //Invert every other bit,
         //and the sign bit (0xD5 = 1101 0101)
         alaw ^= 0xD5;
