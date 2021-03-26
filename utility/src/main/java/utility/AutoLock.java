@@ -13,10 +13,10 @@ import java.util.function.Supplier;
 public class AutoLock {
     private final ReentrantLock lock = new ReentrantLock();
 
-    public void blockLock(Runnable job){
+    public void blockLock(Runnable action){
         try{
             lock();
-            job.run();
+            action.run();
         } finally {
             unlock();
         }
