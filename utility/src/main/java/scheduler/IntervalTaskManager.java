@@ -15,11 +15,12 @@ import java.util.concurrent.TimeUnit;
  * @author Kangmoo Heo
  */
 public class IntervalTaskManager {
-    private static final Logger log = LoggerFactory.getLogger(IntervalTaskManager.class);
-    private static IntervalTaskManager instance = new IntervalTaskManager();
+    private static final Logger logger = LoggerFactory.getLogger(IntervalTaskManager.class);
+    private static final IntervalTaskManager instance = new IntervalTaskManager();
     private final Map<String, IntervalTaskUnit> jobs = new HashMap<>();
     private ScheduledExecutorService executorService;
     private int defaultInterval = 1000;
+    private boolean isStarted = false;
 
     private IntervalTaskManager() {
     }
@@ -32,6 +33,11 @@ public class IntervalTaskManager {
     }
 
     public void start() {
+        if(isStarted) {
+            logger.info("Already Started Interval Task Manager");
+            return;
+        }
+        isStarted = true;
         executorService = Executors.newScheduledThreadPool(jobs.size());
         for (IntervalTaskUnit runner : jobs.values()) {
             executorService.scheduleAtFixedRate(runner,
@@ -39,20 +45,25 @@ public class IntervalTaskManager {
                     runner.getInterval(),
                     TimeUnit.MILLISECONDS);
         }
-        log.debug("() () () Timeout Msg Handler Start");
+        logger.info("Interval Task Manager Start");
     }
 
     public void stop() {
+        if(!isStarted) {
+            logger.info("Already Stopped Interval Task Manager");
+            return;
+        }
+        isStarted = false;
         executorService.shutdown();
-        log.debug("() () () Session Manager Stop");
+        logger.info("Interval Task Manager Stop");
     }
 
     public void addJob(String name, IntervalTaskUnit runner) {
         if (jobs.get(name) != null) {
-            log.warn("() () () Hashmap Key duplication");
+            logger.warn("() () () Hashmap Key duplication");
             return;
         }
-        log.debug("() () () Add Runner [{}]", name);
+        logger.debug("() () () Add Runner [{}]", name);
         jobs.put(name, runner);
     }
 
