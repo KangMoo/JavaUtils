@@ -28,9 +28,6 @@ public class IntervalTaskManager {
     }
 
     public static IntervalTaskManager getInstance() {
-        if (instance == null) {
-            instance = new IntervalTaskManager();
-        }
         return instance;
     }
 
