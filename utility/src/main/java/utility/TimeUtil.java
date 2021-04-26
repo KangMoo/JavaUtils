@@ -13,7 +13,7 @@ public class TimeUtil {
 
     public static void trySleep(int msec) {
         try {
-            Thread.sleep((long)msec);
+            Thread.sleep(msec);
         } catch (InterruptedException var2) {
             Thread.currentThread().interrupt();
         }
