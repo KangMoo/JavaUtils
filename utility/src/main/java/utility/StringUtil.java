@@ -130,4 +130,19 @@ public class StringUtil {
     public static String getDateFormString(String in) {
         return getDateFormString(in, new Date());
     }
+
+    public static String byteArrayToHex(byte[] data) {
+        StringBuilder sb = new StringBuilder(data.length * 2);
+        for(byte b: data)
+            sb.append(String.format("%02x", b));
+        return sb.toString();
+    }
+
+    public static String byteArrayToHex(byte[] data, String separator) {
+        StringBuilder sb = new StringBuilder(data.length * 2);
+        for(byte b: data)
+            sb.append(String.format("%02x", b)).append(separator);
+        sb.delete(sb.length() - separator.length(), sb.length());
+        return sb.toString();
+    }
 }
