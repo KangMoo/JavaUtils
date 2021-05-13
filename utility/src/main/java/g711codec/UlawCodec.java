@@ -18,7 +18,7 @@ public class UlawCodec {
 
     public static short[] decode(byte[] data) {
         short[] decoded = new short[data.length];
-        for(int i =0; i<data.length;i++){
+        for (int i = 0; i < data.length; i++) {
             decoded[i] = decode(data[i]);
         }
         return decoded;
@@ -49,7 +49,8 @@ public class UlawCodec {
         int exponent = 7;
         //Move to the right and decrement exponent until we hit the 1
         for (int expMask = 0x4000; (pcm & expMask) == 0;
-             exponent--, expMask >>= 1) { }
+             exponent--, expMask >>= 1) {
+        }
 
         /* The last part - the "mantissa"
          * We need to take the four bits after the 1 we just found.
@@ -65,15 +66,15 @@ public class UlawCodec {
 
         //The mu-law byte bit arrangement
         //is SEEEMMMM (Sign, Exponent, and Mantissa.)
-        byte mulaw = (byte)(sign | exponent << 4 | mantissa);
+        byte mulaw = (byte) (sign | exponent << 4 | mantissa);
 
         //Last is to flip the bits
-        return (byte)~mulaw;
+        return (byte) ~mulaw;
     }
 
     private static short decode(byte mulaw) {
         //Flip all the bits
-        mulaw = (byte)~mulaw;
+        mulaw = (byte) ~mulaw;
 
         //Pull out the value of the sign bit
         int sign = mulaw & 0x80;
@@ -113,6 +114,6 @@ public class UlawCodec {
         data -= BIAS;
         //If the sign bit is 0, the number
         //is positive. Otherwise, negative.
-        return (short)(sign == 0 ? data : -data);
+        return (short) (sign == 0 ? data : -data);
     }
 }

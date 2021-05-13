@@ -17,7 +17,7 @@ public class AlawCodec {
 
     public static short[] decode(byte[] data) {
         short[] decoded = new short[data.length];
-        for(int i =0; i<data.length;i++){
+        for (int i = 0; i < data.length; i++) {
             decoded[i] = decode(data[i]);
         }
         return decoded;
@@ -49,7 +49,8 @@ public class AlawCodec {
         //Move to the right and decrement exponent
         //until we hit the 1 or the exponent hits 0
         for (int expMask = 0x4000; (pcm & expMask) == 0
-                && exponent>0; exponent--, expMask >>= 1) { }
+                && exponent > 0; exponent--, expMask >>= 1) {
+        }
 
         /* The last part - the "mantissa"
          * We need to take the four bits after the 1 we just found.
@@ -72,10 +73,10 @@ public class AlawCodec {
 
         //The a-law byte bit arrangement is SEEEMMMM
         //(Sign, Exponent, and Mantissa.)
-        byte alaw = (byte)(sign | exponent << 4 | mantissa);
+        byte alaw = (byte) (sign | exponent << 4 | mantissa);
 
         //Last is to flip every other bit, and the sign bit (0xD5 = 1101 0101)
-        return (byte)(alaw^0xD5);
+        return (byte) (alaw ^ 0xD5);
     }
 
     private static short decode(byte alaw) {
@@ -112,7 +113,7 @@ public class AlawCodec {
         if (exponent > 1)
             data <<= (exponent - 1);
 
-        return (short)(sign == 0 ? data : -data);
+        return (short) (sign == 0 ? data : -data);
     }
 
 }
