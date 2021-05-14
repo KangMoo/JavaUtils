@@ -22,7 +22,7 @@ public class JsonMaker {
         return result;
     }
 
-    public JsonMaker deepCopy(){
+    public JsonMaker deepCopy() {
         JsonMaker result = new JsonMaker();
         Iterator var2 = this.members.entrySet().iterator();
         while (var2.hasNext()) {

@@ -23,7 +23,7 @@ public class TimeUtil {
         return new SimpleDateFormat(format).parse(time).getTime();
     }
 
-    public static String dateFormat(long time, String format){
+    public static String dateFormat(long time, String format) {
         return new SimpleDateFormat(format).format(new Date(time));
     }
 }

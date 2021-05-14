@@ -52,7 +52,7 @@ public class FileUtil {
 
     public static File createFileWithDirectory(String filePath) throws IOException {
         File file = new File(filePath);
-        if(file.getParentFile().mkdirs() && file.createNewFile()) return file;
+        if (file.getParentFile().mkdirs() && file.createNewFile()) return file;
         return null;
     }
 
@@ -71,7 +71,7 @@ public class FileUtil {
             FileUtil.createFileWithDirectory(filePath);
         }
 
-        try(FileOutputStream writer = new FileOutputStream(f, append)){
+        try (FileOutputStream writer = new FileOutputStream(f, append)) {
             writer.write(data);
         }
     }
@@ -86,7 +86,7 @@ public class FileUtil {
             BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(destFile));
             try {
                 int c;
-                while((c = input.read()) != -1) {
+                while ((c = input.read()) != -1) {
                     output.write(c);
                 }
                 output.flush();

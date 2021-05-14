@@ -11,7 +11,7 @@ import com.google.gson.JsonObject;
 public class JsonUtil {
 
     public static boolean isJson(String msg) {
-        if(!msg.contains("{")) return false;
+        if (!msg.contains("{")) return false;
         Gson gson = new Gson();
         try {
             gson.fromJson(msg, Object.class);
@@ -21,7 +21,8 @@ public class JsonUtil {
         }
     }
 
-    private JsonUtil(){}
+    private JsonUtil() {
+    }
 
     /**
      * Json 문자열을 받아 파싱하고 JsonElement 형태로 반환한다
@@ -34,14 +35,14 @@ public class JsonUtil {
      * @return 파싱한 JsonElement
      * @throws IllegalArgumentException
      */
-    public static JsonElement json2Element(String jsonStr, String ... element){
-        if(element.length == 0) throw new IllegalStateException("Element length must more than 0");
+    public static JsonElement json2Element(String jsonStr, String... element) {
+        if (element.length == 0) throw new IllegalStateException("Element length must more than 0");
         Gson gson = new Gson();
         JsonObject jo = gson.fromJson(jsonStr, JsonObject.class);
-        for(int i = 0; i<element.length-1;i++){
+        for (int i = 0; i < element.length - 1; i++) {
             jo = jo.getAsJsonObject(element[i]);
         }
-        return jo.get(element[element.length-1]);
+        return jo.get(element[element.length - 1]);
     }
 
     /**
@@ -55,7 +56,7 @@ public class JsonUtil {
      * @return 파싱한 int
      * @throws IllegalArgumentException
      */
-    public static int json2Int(String jsonStr, String ... element){
+    public static int json2Int(String jsonStr, String... element) {
         return json2Element(jsonStr, element).getAsInt();
     }
 
@@ -70,7 +71,7 @@ public class JsonUtil {
      * @return 파싱한 String
      * @throws IllegalArgumentException
      */
-    public static String json2String(String jsonStr, String ... element){
+    public static String json2String(String jsonStr, String... element) {
         return json2Element(jsonStr, element).getAsString();
     }
 
@@ -85,7 +86,7 @@ public class JsonUtil {
      * @return 파싱한 boolean
      * @throws IllegalArgumentException
      */
-    public static boolean json2Boolean(String jsonStr, String ... element){
+    public static boolean json2Boolean(String jsonStr, String... element) {
         return json2Element(jsonStr, element).getAsBoolean();
     }
 
@@ -100,7 +101,7 @@ public class JsonUtil {
      * @return 파싱한 float
      * @throws IllegalArgumentException
      */
-    public static float json2Float(String jsonStr, String ... element){
+    public static float json2Float(String jsonStr, String... element) {
         return json2Element(jsonStr, element).getAsFloat();
     }
 
@@ -115,7 +116,7 @@ public class JsonUtil {
      * @return 파싱한 int[]
      * @throws IllegalArgumentException
      */
-    public static int[] json2IntArr(String jsonStr, String ... element){
+    public static int[] json2IntArr(String jsonStr, String... element) {
         JsonElement jsonelement = json2Element(jsonStr, element);
         return jsonArr2IntArr(jsonelement.getAsJsonArray());
     }
@@ -131,7 +132,7 @@ public class JsonUtil {
      * @return 파싱한 String[]
      * @throws IllegalArgumentException
      */
-    public static String[] json2StringArr(String jsonStr, String ... element) {
+    public static String[] json2StringArr(String jsonStr, String... element) {
         JsonElement jsonelement = json2Element(jsonStr, element);
         return jsonArr2StringArr(jsonelement.getAsJsonArray());
     }
@@ -147,7 +148,7 @@ public class JsonUtil {
      * @return 파싱한 float[]
      * @throws IllegalArgumentException
      */
-    public static float[] json2FloatArr(String jsonStr, String ... element) {
+    public static float[] json2FloatArr(String jsonStr, String... element) {
         JsonElement jsonelement = json2Element(jsonStr, element);
         return jsonArr2FloatArr(jsonelement.getAsJsonArray());
     }
@@ -163,7 +164,7 @@ public class JsonUtil {
      * @return 파싱한 boolean[]
      * @throws IllegalArgumentException
      */
-    public static boolean[] json2BooleanArr(String jsonStr, String ... element) {
+    public static boolean[] json2BooleanArr(String jsonStr, String... element) {
         JsonElement jsonelement = json2Element(jsonStr, element);
         return jsonArr2BooleanArr(jsonelement.getAsJsonArray());
     }
@@ -173,9 +174,9 @@ public class JsonUtil {
      * @param jsonArray
      * @return
      */
-    public static int[] jsonArr2IntArr(JsonArray jsonArray){
+    public static int[] jsonArr2IntArr(JsonArray jsonArray) {
         int[] ret = new int[jsonArray.size()];
-        for(int i =0; i<jsonArray.size();i++){
+        for (int i = 0; i < jsonArray.size(); i++) {
             ret[i] = jsonArray.get(i).getAsInt();
         }
         return ret;
@@ -186,9 +187,9 @@ public class JsonUtil {
      * @param jsonArray
      * @return
      */
-    public static String[] jsonArr2StringArr(JsonArray jsonArray){
+    public static String[] jsonArr2StringArr(JsonArray jsonArray) {
         String[] ret = new String[jsonArray.size()];
-        for(int i =0; i<jsonArray.size();i++){
+        for (int i = 0; i < jsonArray.size(); i++) {
             ret[i] = jsonArray.get(i).getAsString();
         }
         return ret;
@@ -199,9 +200,9 @@ public class JsonUtil {
      * @param jsonArray
      * @return
      */
-    public static boolean[] jsonArr2BooleanArr(JsonArray jsonArray){
+    public static boolean[] jsonArr2BooleanArr(JsonArray jsonArray) {
         boolean[] ret = new boolean[jsonArray.size()];
-        for(int i =0; i<jsonArray.size();i++){
+        for (int i = 0; i < jsonArray.size(); i++) {
             ret[i] = jsonArray.get(i).getAsBoolean();
         }
         return ret;
@@ -212,9 +213,9 @@ public class JsonUtil {
      * @param jsonArray
      * @return
      */
-    public static float[] jsonArr2FloatArr(JsonArray jsonArray){
+    public static float[] jsonArr2FloatArr(JsonArray jsonArray) {
         float[] ret = new float[jsonArray.size()];
-        for(int i =0; i<jsonArray.size();i++){
+        for (int i = 0; i < jsonArray.size(); i++) {
             ret[i] = jsonArray.get(i).getAsFloat();
         }
         return ret;
