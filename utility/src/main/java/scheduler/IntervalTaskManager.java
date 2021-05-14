@@ -33,7 +33,7 @@ public class IntervalTaskManager {
     }
 
     public void start() {
-        if(isStarted) {
+        if (isStarted) {
             logger.info("Already Started Interval Task Manager");
             return;
         }
@@ -49,7 +49,7 @@ public class IntervalTaskManager {
     }
 
     public void stop() {
-        if(!isStarted) {
+        if (!isStarted) {
             logger.info("Already Stopped Interval Task Manager");
             return;
         }
