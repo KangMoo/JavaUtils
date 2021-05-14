@@ -11,12 +11,12 @@ import java.util.function.UnaryOperator;
 public class Pipeline<T> {
     private final Map<Integer, UnaryOperator<T>> pipelineSteps = new TreeMap<>();
 
-    public void addStep(int priority, UnaryOperator<T>step){
+    public void addStep(int priority, UnaryOperator<T> step) {
         pipelineSteps.put(priority, step);
     }
 
-    public T execute(T o){
-        for(UnaryOperator<T> step : pipelineSteps.values()){
+    public T execute(T o) {
+        for (UnaryOperator<T> step : pipelineSteps.values()) {
             o = step.apply(o);
         }
         return o;
