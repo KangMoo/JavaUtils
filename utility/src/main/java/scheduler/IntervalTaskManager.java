@@ -25,7 +25,8 @@ public class IntervalTaskManager {
     private IntervalTaskManager() {
     }
 
-    public void init() {
+    public IntervalTaskManager init() {
+        return this;
     }
 
     public static IntervalTaskManager getInstance() {
