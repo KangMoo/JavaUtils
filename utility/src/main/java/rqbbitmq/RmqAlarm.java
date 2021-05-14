@@ -12,7 +12,7 @@ public enum RmqAlarm {
 
     private final Integer value;
 
-    private RmqAlarm (Integer i) {
+    private RmqAlarm(Integer i) {
         this.value = i;
     }
 }

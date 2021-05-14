@@ -24,7 +24,7 @@ public class RmqReceiver extends RmqTransport {
     RmqCallback callback;
     private Consumer consumer = new DefaultConsumer(getChannel()) {
         @Override
-        public void handleDelivery (String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) {
+        public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) {
             String msg = new String(body, StandardCharsets.UTF_8);
 
             if (callback != null) {
@@ -50,7 +50,7 @@ public class RmqReceiver extends RmqTransport {
      * @param queueName RMQ queue name
      * @param callback  RMQ message receive callback
      */
-    public RmqReceiver (String host, String userName, String password, String queueName, RmqCallback callback) {
+    public RmqReceiver(String host, String userName, String password, String queueName, RmqCallback callback) {
         super(host, userName, password, queueName, callback);
         this.callback = callback;
     }
@@ -60,7 +60,7 @@ public class RmqReceiver extends RmqTransport {
      *
      * @return success/fail
      */
-    public boolean start ( ) {
+    public boolean start() {
 
         if (!isConnected()) {
             logger.error("() () () channel is not opened. [RMQ name: {}]", getQueueName());

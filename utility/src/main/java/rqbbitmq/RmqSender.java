@@ -23,7 +23,7 @@ public class RmqSender extends RmqTransport {
      * @param password  RMQ password
      * @param queueName RMQ message send queue name
      */
-    public RmqSender (String host, String userName, String password, String queueName, RmqCallback callback) {
+    public RmqSender(String host, String userName, String password, String queueName, RmqCallback callback) {
         super(host, userName, password, queueName, callback);
         properties = new AMQP.BasicProperties.Builder().expiration("5000").build();
     }
@@ -35,7 +35,7 @@ public class RmqSender extends RmqTransport {
      * @param size RMQ message size
      * @return success/fail
      */
-    public boolean send (byte[] msg, int size) {
+    public boolean send(byte[] msg, int size) {
 
         if (!isConnected() || !isSendAvailable()) {
             logger.error("() () () channel is not opened or not available. [RMQ name: {}]", getQueueName());

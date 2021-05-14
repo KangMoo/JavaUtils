@@ -33,7 +33,7 @@ public class RmqTransport {
      * @param password  RMQ password
      * @param queueName RMQ queue name
      */
-    public RmqTransport (String host, String userName, String password, String queueName, RmqCallback callback) {
+    public RmqTransport(String host, String userName, String password, String queueName, RmqCallback callback) {
         this.isBlocked = false;
         this.level = RmqAlarm.UNKNOWN;
 
@@ -49,7 +49,7 @@ public class RmqTransport {
      *
      * @return connection 성공 유무
      */
-    public boolean connectServer ( ) {
+    public boolean connectServer() {
 
         String connectionName = String.format("Consumer_%s", queueName);
 
@@ -71,7 +71,7 @@ public class RmqTransport {
      *
      * @return success/fail
      */
-    public boolean connectClient ( ) {
+    public boolean connectClient() {
 
         String connectionName = String.format("Producer_%s", queueName);
         if (!makeConnection(connectionName)) {
@@ -92,7 +92,7 @@ public class RmqTransport {
      *
      * @return channel
      */
-    public Channel getChannel ( ) {
+    public Channel getChannel() {
         return channel;
     }
 
@@ -101,7 +101,7 @@ public class RmqTransport {
      *
      * @return queue name
      */
-    public String getQueueName ( ) {
+    public String getQueueName() {
         return queueName;
     }
 
@@ -110,7 +110,7 @@ public class RmqTransport {
      *
      * @return true/false
      */
-    public boolean isConnected ( ) {
+    public boolean isConnected() {
         return channel != null && channel.isOpen();
     }
 
@@ -119,7 +119,7 @@ public class RmqTransport {
      *
      * @return true/false
      */
-    public boolean isConnectionOpened ( ) {
+    public boolean isConnectionOpened() {
         return connection != null && connection.isOpen();
     }
 
@@ -128,19 +128,19 @@ public class RmqTransport {
      *
      * @return true/false
      */
-    public boolean isSendAvailable ( ) {
+    public boolean isSendAvailable() {
         return !isBlocked;
     }
 
     /**
      * close RabbitMQ channel and connection
      */
-    public void close ( ) {
+    public void close() {
         closeChannel();
         closeConnection();
     }
 
-    private boolean makeConnection (String connectionName) {
+    private boolean makeConnection(String connectionName) {
 
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(host);
@@ -151,17 +151,17 @@ public class RmqTransport {
         factory.setRequestedHeartbeat(5);
         factory.setExceptionHandler(new DefaultExceptionHandler() {
             @Override
-            public void handleUnexpectedConnectionDriverException (Connection con, Throwable exception) {
+            public void handleUnexpectedConnectionDriverException(Connection con, Throwable exception) {
                 onAlarmNotify(RmqAlarm.CRI, exception);
             }
 
             @Override
-            public void handleConnectionRecoveryException (Connection conn, Throwable exception) {
+            public void handleConnectionRecoveryException(Connection conn, Throwable exception) {
                 logger.error("() () () connection recovery exception is occured. [RMQ name: {}]", queueName);
             }
 
             @Override
-            public void handleChannelRecoveryException (Channel ch, Throwable exception) {
+            public void handleChannelRecoveryException(Channel ch, Throwable exception) {
                 logger.error("() () () channel recovery exception is occured. [RMQ name: {}]", queueName);
             }
         });
@@ -176,12 +176,12 @@ public class RmqTransport {
 
         connection.addBlockedListener(new BlockedListener() {
             @Override
-            public void handleBlocked (String s) {
+            public void handleBlocked(String s) {
                 onAlarmNotify(RmqAlarm.CRI, new Throwable(s));
             }
 
             @Override
-            public void handleUnblocked ( ) {
+            public void handleUnblocked() {
                 onAlarmNotify(RmqAlarm.NOR, new Throwable("Unblocked."));
             }
         });
@@ -189,7 +189,7 @@ public class RmqTransport {
         return true;
     }
 
-    private void closeConnection ( ) {
+    private void closeConnection() {
         try {
             connection.close();
         } catch (Exception exception) {
@@ -197,13 +197,13 @@ public class RmqTransport {
         }
     }
 
-    private boolean makeChannel (boolean declareQueue) {
+    private boolean makeChannel(boolean declareQueue) {
 
         try {
             channel = connection.createChannel();
             ((Recoverable) channel).addRecoveryListener(new RecoveryListener() {
                 @Override
-                public void handleRecovery (Recoverable recoverable) {
+                public void handleRecovery(Recoverable recoverable) {
                     if (recoverable instanceof Channel) {
                         // 자동 연결 복구 알림
                         onAlarmNotify(RmqAlarm.NOR, new Throwable("Recovery success."));
@@ -211,7 +211,7 @@ public class RmqTransport {
                 }
 
                 @Override
-                public void handleRecoveryStarted (Recoverable recoverable) {
+                public void handleRecoveryStarted(Recoverable recoverable) {
                     logger.error("() () () recovery started. [RMQ name: {}]", queueName);
                 }
             });
@@ -226,7 +226,7 @@ public class RmqTransport {
         return true;
     }
 
-    private void closeChannel ( ) {
+    private void closeChannel() {
         try {
             channel.close();
         } catch (Exception exception) {
@@ -234,7 +234,7 @@ public class RmqTransport {
         }
     }
 
-    private void onAlarmNotify (RmqAlarm level, Throwable exception) {
+    private void onAlarmNotify(RmqAlarm level, Throwable exception) {
         if (callback != null && this.level != level) {
             callback.onAlarmNotify(level, exception);
             this.level = level;

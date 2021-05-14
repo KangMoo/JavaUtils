@@ -20,7 +20,7 @@ public interface RmqCallback {
      * @param msg RMQ message
      * @param ts  received time
      */
-    void onReceived (String msg, Date ts);
+    void onReceived(String msg, Date ts);
 
     /**
      * RMQ 장애 또는 복구 시 장애 알람을 수신한다.
@@ -28,5 +28,5 @@ public interface RmqCallback {
      * @param level     alarm level
      * @param exception alarm exception
      */
-    void onAlarmNotify (RmqAlarm level, Throwable exception);
+    void onAlarmNotify(RmqAlarm level, Throwable exception);
 }
