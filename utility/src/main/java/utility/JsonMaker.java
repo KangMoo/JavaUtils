@@ -92,7 +92,7 @@ public class JsonMaker {
     }
 
     public boolean equals(Object o) {
-        return o == this || o instanceof JsonObject && ((JsonMaker) o).members.equals(this.members);
+        return o == this || o instanceof JsonMaker && ((JsonMaker) o).members.equals(this.members);
     }
 
     public int hashCode() {
