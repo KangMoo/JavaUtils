@@ -13,8 +13,8 @@ public class JsonMaker {
     public JsonObject deepCopyJsonObj() {
         JsonObject result = new JsonObject();
 
-        for (Map.Entry<String, JsonElement> stringJsonElementEntry : this.members.entrySet()) {
-            result.add(stringJsonElementEntry.getKey(), (stringJsonElementEntry.getValue()).deepCopy());
+        for (Map.Entry<String, JsonElement> v : this.members.entrySet()) {
+            result.add(v.getKey(), (v.getValue()).deepCopy());
         }
 
         return result;
@@ -23,8 +23,8 @@ public class JsonMaker {
     public JsonObject deepCopy() {
         JsonObject result = new JsonObject();
 
-        for (Map.Entry<String, JsonElement> stringJsonElementEntry : this.members.entrySet()) {
-            result.add(stringJsonElementEntry.getKey(), (stringJsonElementEntry.getValue()).deepCopy());
+        for (Map.Entry<String, JsonElement> v : this.members.entrySet()) {
+            result.add(v.getKey(), (v.getValue()).deepCopy());
         }
 
         return result;
