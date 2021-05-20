@@ -26,7 +26,7 @@ public class UdpClient {
     }
 
     public void simpleSend(byte[] data) throws IOException {
-        if (this.ds == null || !this.ds.isConnected()) return;
+        if (this.ds == null) return;
         DatagramPacket dp = new DatagramPacket(data, data.length, this.ia, this.toPort);
         this.ds.send(dp);
     }
@@ -35,7 +35,7 @@ public class UdpClient {
         this.simpleSend(msg.getBytes());
     }
 
-    public void disConnect() {
+    public void disconnect() {
         this.ds.close();
     }
 }
