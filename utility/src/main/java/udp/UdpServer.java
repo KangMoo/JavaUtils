@@ -30,7 +30,7 @@ public class UdpServer extends Thread{
             }
             byte[] data = new byte[dp.getLength()];
             System.arraycopy(dp.getData(), 0, data, 0, dp.getLength());
-            packetConsumer.accept(dp.getData());
+            packetConsumer.accept(data);
         }
     }
 
