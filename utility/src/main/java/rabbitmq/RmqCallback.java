@@ -2,7 +2,7 @@
  * Copyright (C) 2020. Uangel Corp. All rights reserved.
  *
  */
-package rqbbitmq;
+package rabbitmq;
 
 import java.util.Date;
 

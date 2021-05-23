@@ -1,4 +1,4 @@
-package rqbbitmq;
+package rabbitmq;
 
 import com.rabbitmq.client.*;
 import com.rabbitmq.client.impl.DefaultExceptionHandler;

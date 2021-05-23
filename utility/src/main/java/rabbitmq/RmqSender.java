@@ -1,4 +1,4 @@
-package rqbbitmq;
+package rabbitmq;
 
 import com.rabbitmq.client.AMQP;
 import org.slf4j.Logger;

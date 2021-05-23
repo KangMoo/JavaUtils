@@ -1,4 +1,4 @@
-package rqbbitmq;
+package rabbitmq;
 
 /**
  * RabbitMQ Alarm 관련 define
