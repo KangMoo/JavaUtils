@@ -20,7 +20,6 @@ public class UdpServer extends Thread{
     public void run() {
         running = true;
         DatagramPacket dp = new DatagramPacket(new byte[66536], 66536);
-
         while(running){
             if(packetConsumer == null) continue;
             try {
@@ -31,8 +30,6 @@ public class UdpServer extends Thread{
             }
             packetConsumer.accept(dp.getData());
         }
-        // ds.disconnect();
-        // running = false;
     }
 
     public boolean isRunning() {
