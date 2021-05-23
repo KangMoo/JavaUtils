@@ -28,6 +28,8 @@ public class UdpServer extends Thread{
                 e.printStackTrace();
                 // do nothing
             }
+            byte[] data = new byte[dp.getLength()];
+            System.arraycopy(dp.getData(), 0, data, 0, dp.getLength());
             packetConsumer.accept(dp.getData());
         }
     }
