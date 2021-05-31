@@ -6,7 +6,7 @@ package scheduler;
 public abstract class IntervalTaskUnit implements Runnable {
     protected int interval;
 
-    protected IntervalTaskUnit(int interval) {
+    public IntervalTaskUnit(int interval) {
         this.interval = interval;
     }
 
