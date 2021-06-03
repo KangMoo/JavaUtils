@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -18,7 +19,7 @@ public class IntervalTaskManager {
     private static final Logger logger = LoggerFactory.getLogger(IntervalTaskManager.class);
     private static final IntervalTaskManager instance = new IntervalTaskManager();
     private final Map<String, IntervalTaskUnit> jobs = new HashMap<>();
-    private ScheduledExecutorService executorService;
+    private Set<ScheduledExecutorService> executorService;
     private int defaultInterval = 1000;
     private boolean isStarted = false;
 
@@ -39,12 +40,12 @@ public class IntervalTaskManager {
             return;
         }
         isStarted = true;
-        executorService = Executors.newScheduledThreadPool(jobs.size());
+        executorService = new HashSet<>(jobs.size());
         for (IntervalTaskUnit runner : jobs.values()) {
-            executorService.scheduleAtFixedRate(runner,
-                    runner.getInterval() - System.currentTimeMillis() % runner.getInterval(),
-                    runner.getInterval(),
-                    TimeUnit.MILLISECONDS);
+            ScheduledExecutorService job = Executors.newSingleThreadScheduledExecutor(r -> new Thread(r, "ITV_" + runner.getClass().getSimpleName()));
+            executorService.add(job);
+            job.scheduleAtFixedRate(runner, runner.getInterval() - System.currentTimeMillis() % runner.getInterval(),
+                    runner.getInterval(), TimeUnit.MILLISECONDS);
         }
         logger.info("Interval Task Manager Start");
     }
@@ -55,7 +56,7 @@ public class IntervalTaskManager {
             return;
         }
         isStarted = false;
-        executorService.shutdown();
+        executorService.forEach(ExecutorService::shutdown);
         logger.info("Interval Task Manager Stop");
     }
 
