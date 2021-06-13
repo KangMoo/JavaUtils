@@ -20,23 +20,20 @@ import java.util.logging.Logger;
  */
 public class SessionDescription {
 
-    static public SessionDescription Parse(byte[] body) throws IllegalArgumentException, ParserException
-    {
+    static public SessionDescription Parse(byte[] body) throws IllegalArgumentException, ParserException {
         return Parse(new String(body));
     }
-    
+
     static public SessionDescription Clone(SessionDescription sdp) {
-	return sdp.clone();
+        return sdp.clone();
     }
-    
-    static public SessionDescription Parse(String string) throws IllegalArgumentException, ParserException
-    {
-       ParserContext context = new ParserContext(string, false);
+
+    static public SessionDescription Parse(String string) throws IllegalArgumentException, ParserException {
+        ParserContext context = new ParserContext(string, false);
 
         Rule$session_description rule = Rule$session_description.parse(context);
 
-        if (rule == null)
-        {
+        if (rule == null) {
             throw new ParserException(
                     "rule \"" + (String) context.getErrorStack().peek() + "\" failed",
                     context.text,
@@ -44,23 +41,21 @@ public class SessionDescription {
                     context.getErrorStack());
         }
 
-        if (context.text.length() > context.index)
-        {
+        if (context.text.length() > context.index) {
             ParserException primaryError =
                     new ParserException(
-                    "extra data found",
-                    context.text,
-                    context.index,
-                    new Stack<String>());
+                            "extra data found",
+                            context.text,
+                            context.index,
+                            new Stack<String>());
 
-            if (context.getErrorIndex() > context.index)
-            {
+            if (context.getErrorIndex() > context.index) {
                 ParserException secondaryError =
                         new ParserException(
-                        "rule \"" + (String) context.getErrorStack().peek() + "\" failed",
-                        context.text,
-                        context.getErrorIndex(),
-                        context.getErrorStack());
+                                "rule \"" + (String) context.getErrorStack().peek() + "\" failed",
+                                context.text,
+                                context.getErrorIndex(),
+                                context.getErrorStack());
 
                 primaryError.initCause(secondaryError);
             }
@@ -98,81 +93,83 @@ public class SessionDescription {
         times = new ArrayList<Time>();
         medias = new ArrayList<MediaDescription>();
     }
-    
-    public String getA() {return "a";}
+
+    public String getA() {
+        return "a";
+    }
 
     @Override
     public SessionDescription clone() {
-	//Create clone
-	SessionDescription cloned = new SessionDescription();
-	//Clone data
-	cloned.setVersion(version);
-	if (origin!=null)	cloned.setOrigin(origin.clone());
-	if (sessionName!=null)	cloned.setSessionName(sessionName.clone());
-	if (information!=null)	cloned.setInformation(information.clone());
-	if (connection!=null)	cloned.setConnection(connection.clone());
-	if (key!=null)		cloned.setKey(key.clone());
-	//For each email
-	for (String email: emails)
-	    //Add it
-	    cloned.addEmail(email);
-	//For each phone
-	for (String phone: phones)
-	    //Add it
-	    cloned.addPhone(phone);
-	//For each bandwidth
-	for (Bandwidth bandwidth: bandwidths)
-		//Add it
-		cloned.addBandwidth(bandwidth.clone());
-	//For each connection
-	for (Attribute attribute: attributes)
-		//Add it
-		cloned.addAttribute(attribute.clone());
-	//For each connection
-	for (Attribute attribute: attributes)
-		//Add it
-		cloned.addAttribute(attribute.clone());
-	//For each time
-	for (Time time: times)
-		//Add it
-		cloned.addTime(time.clone());
-	//For each media
-	for (MediaDescription media: medias)
-		//Add it
-		cloned.addMedia(media.clone());
-	//return it
-	return cloned;
+        //Create clone
+        SessionDescription cloned = new SessionDescription();
+        //Clone data
+        cloned.setVersion(version);
+        if (origin != null) cloned.setOrigin(origin.clone());
+        if (sessionName != null) cloned.setSessionName(sessionName.clone());
+        if (information != null) cloned.setInformation(information.clone());
+        if (connection != null) cloned.setConnection(connection.clone());
+        if (key != null) cloned.setKey(key.clone());
+        //For each email
+        for (String email : emails)
+            //Add it
+            cloned.addEmail(email);
+        //For each phone
+        for (String phone : phones)
+            //Add it
+            cloned.addPhone(phone);
+        //For each bandwidth
+        for (Bandwidth bandwidth : bandwidths)
+            //Add it
+            cloned.addBandwidth(bandwidth.clone());
+        //For each connection
+        for (Attribute attribute : attributes)
+            //Add it
+            cloned.addAttribute(attribute.clone());
+        //For each connection
+        for (Attribute attribute : attributes)
+            //Add it
+            cloned.addAttribute(attribute.clone());
+        //For each time
+        for (Time time : times)
+            //Add it
+            cloned.addTime(time.clone());
+        //For each media
+        for (MediaDescription media : medias)
+            //Add it
+            cloned.addMedia(media.clone());
+        //return it
+        return cloned;
     }
-    
+
     @Override
     public String toString() {
-        String sdp = "v="+version+"\r\n";
-        sdp+=origin.toString();
-        sdp+=sessionName.toString();
-        if (uri!=null)
-            sdp+="u="+uri.toString();
-        for (String email:emails)
-            sdp+="e="+email+"\r\n";
-        for (String phone:phones)
-            sdp+="p="+phone+"\r\n";
-        if (connection!=null)
-            sdp+=connection.toString();
-        for (Time time:times)
-            sdp+=time.toString();
-        for (Attribute attr:attributes)
-            sdp+=attr.toString();
-        for (MediaDescription media:medias)
-            sdp+=media.toString();
+        String sdp = "v=" + version + "\r\n";
+        sdp += origin.toString();
+        sdp += sessionName.toString();
+        if (uri != null)
+            sdp += "u=" + uri.toString();
+        for (String email : emails)
+            sdp += "e=" + email + "\r\n";
+        for (String phone : phones)
+            sdp += "p=" + phone + "\r\n";
+        if (connection != null)
+            sdp += connection.toString();
+        for (Time time : times)
+            sdp += time.toString();
+        for (Attribute attr : attributes)
+            sdp += attr.toString();
+        for (MediaDescription media : medias)
+            sdp += media.toString();
         return sdp;
     }
 
     public ArrayList<Attribute> getAttributes() {
         return attributes;
     }
-    
+
     public Attribute getAttribute(String key) {
         //For each attribute
-        for (Attribute attr : attributes )
+        for (Attribute attr : attributes)
             //Check if the one searhced
             if (attr.getField().equalsIgnoreCase(key))
                 //Found
@@ -244,7 +241,7 @@ public class SessionDescription {
     public SessionName getSessionName() {
         return sessionName;
     }
-    
+
     public void setSessionName(String sessionName) {
         this.sessionName = new SessionName(sessionName);
     }
@@ -284,13 +281,13 @@ public class SessionDescription {
     public void addPhone(String email) {
         emails.add(email);
     }
-    
+
     public void addBandwidth(String type, Integer bandwidth) {
-        addBandwidth(new Bandwidth(type,bandwidth));
+        addBandwidth(new Bandwidth(type, bandwidth));
     }
 
     public void addBandwidth(String type, String bandwidth) {
-        addBandwidth(new Bandwidth(type,bandwidth));
+        addBandwidth(new Bandwidth(type, bandwidth));
     }
 
     public void addBandwidth(Bandwidth bandwith) {
@@ -316,11 +313,11 @@ public class SessionDescription {
     public void setOrigin(String username, Long sessId, Long sessVersion, String nettype, String addrtype, String address) {
         setOrigin(new Origin(username, sessId, sessVersion, nettype, addrtype, address));
     }
-    
+
     public void setOrigin(String username, Integer sessId, Long sessVersion, String nettype, String addrtype, String address) {
         setOrigin(new Origin(username, sessId.longValue(), sessVersion, nettype, addrtype, address));
     }
-    
+
     public void setOrigin(String username, Integer sessId, Integer sessVersion, String nettype, String addrtype, String address) {
         setOrigin(new Origin(username, sessId.longValue(), sessVersion.longValue(), nettype, addrtype, address));
     }
@@ -330,49 +327,48 @@ public class SessionDescription {
     }
 
     public void addTime(int start, int stop) {
-        addTime( new Time(start, stop));
+        addTime(new Time(start, stop));
     }
 
     public void addAttribute(String attr) {
-        addAttribute( new BaseAttribute(attr));
+        addAttribute(new BaseAttribute(attr));
     }
 
     public void addAttribute(String attr, String value) {
-        addAttribute( new BaseAttribute(attr,value));
+        addAttribute(new BaseAttribute(attr, value));
     }
 
-  static public void main(String[] args)
-  {
-	  SessionDescription sdp = new SessionDescription();
-	  Origin origin = new Origin("-", 0L, 0L, "IN", "IP4", "127.0.0.1");
-	  sdp.setOrigin(origin);
-	  sdp.setSessionName("test");
-	  sdp.addMedia(new MediaDescription("aduio", 0, "UDP/AVP"));
-	  SessionDescription cloned = sdp.clone();
-	  System.out.println(sdp.toString());
-	  System.out.println(cloned.toString());
-	  
-	  origin.setSessId(1);
-	  System.out.println(sdp.toString());
-	  System.out.println(cloned.toString());
-	  
-	    try {
-		    sdp = SessionDescription.Parse("v=0\r\n" +
-			"o=- 3803220250780278427 2 IN IP4 127.0.0.1\r\n" +
-			"s=-\r\n" +
-			"t=0 0\r\n" +
-			"a=msid-semantic: WMS\r\n" +
-			"m=application 50895 DTLS/SCTP 5000\r\n" +
-			"a=sctpmap:5000 webrtc-datachannel 1024\r\n");
-		    
-		    MediaDescription datachannel = sdp.getMedias().get(0);
-		    SCTPMapAttribute sctpmap = (SCTPMapAttribute)datachannel.getAttributes("sctpmap").get(0);
-		    System.out.println(sctpmap.toString());
-	    } catch (IllegalArgumentException ex) {
-		    Logger.getLogger(SessionDescription.class.getName()).log(Level.SEVERE, null, ex);
-	    } catch (ParserException ex) {
-		    Logger.getLogger(SessionDescription.class.getName()).log(Level.SEVERE, null, ex);
-	    }
-  }
+    static public void main(String[] args) {
+        SessionDescription sdp = new SessionDescription();
+        Origin origin = new Origin("-", 0L, 0L, "IN", "IP4", "127.0.0.1");
+        sdp.setOrigin(origin);
+        sdp.setSessionName("test");
+        sdp.addMedia(new MediaDescription("aduio", 0, "UDP/AVP"));
+        SessionDescription cloned = sdp.clone();
+        System.out.println(sdp.toString());
+        System.out.println(cloned.toString());
+
+        origin.setSessId(1);
+        System.out.println(sdp.toString());
+        System.out.println(cloned.toString());
+
+        try {
+            sdp = SessionDescription.Parse("v=0\r\n" +
+                    "o=- 3803220250780278427 2 IN IP4 127.0.0.1\r\n" +
+                    "s=-\r\n" +
+                    "t=0 0\r\n" +
+                    "a=msid-semantic: WMS\r\n" +
+                    "m=application 50895 DTLS/SCTP 5000\r\n" +
+                    "a=sctpmap:5000 webrtc-datachannel 1024\r\n");
+
+            MediaDescription datachannel = sdp.getMedias().get(0);
+            SCTPMapAttribute sctpmap = (SCTPMapAttribute) datachannel.getAttributes("sctpmap").get(0);
+            System.out.println(sctpmap.toString());
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(SessionDescription.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParserException ex) {
+            Logger.getLogger(SessionDescription.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
 
