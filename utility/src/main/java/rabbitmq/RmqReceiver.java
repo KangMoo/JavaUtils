@@ -25,7 +25,7 @@ public class RmqReceiver extends RmqTransport {
     private Consumer consumer = new DefaultConsumer(getChannel()) {
         @Override
         public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) {
-            String msg = new String(body, StandardCharsets.UTF_8);
+            String msg = new String(body, StandardCharsets.US_ASCII);
 
             if (callback != null) {
                 Date ts = null;
