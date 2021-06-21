@@ -154,7 +154,7 @@ public class RtpPacket {
     public byte[] getpacket() {
         byte[] res = new byte[HEADER_SIZE + payload_size];
         System.arraycopy(header, 0, res, 0, HEADER_SIZE);
-        System.arraycopy(payload, HEADER_SIZE, res, 0, payload_size);
+        System.arraycopy(payload, 0, res, HEADER_SIZE, payload_size);
         return res;
     }
 
