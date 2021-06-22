@@ -13,148 +13,152 @@ public class RtpPacket {
     static int HEADER_SIZE = 12;
 
     //Fields that compose the RTP header
-    public int Version;
-    public int Padding;
-    public int Extension;
-    public int CC;
-    public int Marker;
-    public int PayloadType;
-    public int SequenceNumber;
-    public int TimeStamp;
-    public int Ssrc;
+    public int version;
+    public int padding;
+    public int extension;
+    public int cc;
+    public int marker;
+    public int payloadType;
+    public int sequenceNumber;
+    public int timeStamp;
+    public long ssrc;
 
     //Bitstream of the RTP header
     public byte[] header;
 
     //size of the RTP payload
-    public int payload_size;
+    public int payloadSize;
     //Bitstream of the RTP payload
     public byte[] payload;
 
     //--------------------------
     //Constructor of an RTPpacket object from header fields and payload bitstream
     //--------------------------
-    public RtpPacket(int PType, int Framenb, int Time, byte[] data, int data_length) {
+    public RtpPacket(int pType, int seqNo, int timeStamp, byte[] data, int dataLength, long ssrc) {
         //fill by default header fields:
-        Version = 2;
-        Padding = 0;
-        Extension = 0;
-        CC = 0;
-        Marker = 0;
-        Ssrc = 1337;    // Identifies the server
+        this.version = 2;
+        this.padding = 0;
+        this.extension = 0;
+        this.cc = 0;
+        this.marker = 0;
+        this.ssrc = ssrc;    // Identifies the server
 
         //fill changing header fields:
-        SequenceNumber = Framenb;
-        TimeStamp = Time;
-        PayloadType = PType;
+        this.sequenceNumber = seqNo;
+        this.timeStamp = timeStamp;
+        this.payloadType = pType;
 
         //build the header bistream:
-        header = new byte[HEADER_SIZE];
+        this.header = new byte[HEADER_SIZE];
 
         //fill the header array of byte with RTP header fields
-        header[0] = (byte) (Version << 6 | Padding << 5 | Extension << 4 | CC);
-        header[1] = (byte) (Marker << 7 | PayloadType & 0x000000FF);
-        header[2] = (byte) (SequenceNumber >> 8);
-        header[3] = (byte) (SequenceNumber & 0xFF);
-        header[4] = (byte) (TimeStamp >> 24);
-        header[5] = (byte) (TimeStamp >> 16);
-        header[6] = (byte) (TimeStamp >> 8);
-        header[7] = (byte) (TimeStamp & 0xFF);
-        header[8] = (byte) (Ssrc >> 24);
-        header[9] = (byte) (Ssrc >> 16);
-        header[10] = (byte) (Ssrc >> 8);
-        header[11] = (byte) (Ssrc & 0xFF);
+        this.header[0] = (byte) (this.version << 6 | this.padding << 5 | this.extension << 4 | cc);
+        this.header[1] = (byte) (this.marker << 7 | this.payloadType & 0x000000FF);
+        this.header[2] = (byte) (this.sequenceNumber >> 8);
+        this.header[3] = (byte) (this.sequenceNumber & 0xFF);
+        this.header[4] = (byte) (this.timeStamp >> 24);
+        this.header[5] = (byte) (this.timeStamp >> 16);
+        this.header[6] = (byte) (this.timeStamp >> 8);
+        this.header[7] = (byte) (this.timeStamp & 0xFF);
+        this.header[8] = (byte) (this.ssrc >> 24);
+        this.header[9] = (byte) (this.ssrc >> 16);
+        this.header[10] = (byte) (this.ssrc >> 8);
+        this.header[11] = (byte) (this.ssrc & 0xFF);
 
         //fill the payload bitstream:
-        payload_size = data_length;
-        payload = new byte[data_length];
+        this.payloadSize = dataLength;
+        this.payload = new byte[dataLength];
 
         //fill payload array of byte from data (given in parameter of the constructor)
-        payload = Arrays.copyOf(data, payload_size);
+        this.payload = Arrays.copyOf(data, this.payloadSize);
     }
 
     //--------------------------
     //Constructor of an RTPpacket object from the packet bistream
     //--------------------------
-    public RtpPacket(byte[] packet, int packet_size) {
+    public RtpPacket(byte[] packet, int packetSize) {
         //fill default fields:
-        Version = 2;
-        Padding = 0;
-        Extension = 0;
-        CC = 0;
-        Marker = 0;
-        Ssrc = 0;
+        this.version = 2;
+        this.padding = 0;
+        this.extension = 0;
+        this.cc = 0;
+        this.marker = 0;
+        this.ssrc = 0;
 
         //check if total packet size is lower than the header size
-        if (packet_size >= HEADER_SIZE) {
+        if (packetSize >= HEADER_SIZE) {
             //get the header bitsream:
-            header = new byte[HEADER_SIZE];
-            for (int i = 0; i < HEADER_SIZE; i++)
-                header[i] = packet[i];
+            this.header = new byte[HEADER_SIZE];
+            this.header = Arrays.copyOf(packet,packet.length);
 
             //get the payload bitstream:
-            payload_size = packet_size - HEADER_SIZE;
-            payload = new byte[payload_size];
-            for (int i = HEADER_SIZE; i < packet_size; i++)
+            payloadSize = packetSize - HEADER_SIZE;
+            payload = new byte[payloadSize];
+            for (int i = HEADER_SIZE; i < packetSize; i++)
                 payload[i - HEADER_SIZE] = packet[i];
 
             //interpret the changing fields of the header:
-            Version = (header[0] & 0xFF) >>> 6;
-            PayloadType = header[1] & 0x7F;
-            SequenceNumber = (header[3] & 0xFF) + ((header[2] & 0xFF) << 8);
-            TimeStamp = (header[7] & 0xFF) + ((header[6] & 0xFF) << 8) + ((header[5] & 0xFF) << 16) + ((header[4] & 0xFF) << 24);
+            version = (header[0] & 0xFF) >>> 6;
+            payloadType = header[1] & 0x7F;
+            sequenceNumber = (header[3] & 0xFF) + ((header[2] & 0xFF) << 8);
+            timeStamp = (header[7] & 0xFF) + ((header[6] & 0xFF) << 8) + ((header[5] & 0xFF) << 16) + ((header[4] & 0xFF) << 24);
+            ssrc = ((long) (header[8] & 0xFF) << 24) |
+                    ((long) (header[8+ 1] & 0xFF) << 16) |
+                    ((long) (header[8+ 2] & 0xFF) << 8) |
+                    ((long) (header[8+ 3] & 0xFF));
         }
     }
 
     //--------------------------
     //getpayload: return the payload bistream of the RTPpacket and its size
     //--------------------------
-    public int getpayload(byte[] data) {
+    public int getPayload(byte[] data) {
 
-        for (int i = 0; i < payload_size; i++)
+        for (int i = 0; i < payloadSize; i++)
             data[i] = payload[i];
 
-        return (payload_size);
+        return (payloadSize);
     }
 
-    public byte[] getpayload() {
-        byte[] res = new byte[payload_size];
-        System.arraycopy(payload, 0, res, 0, payload_size);
+    public byte[] getPayload() {
+        byte[] res = new byte[payloadSize];
+        Arrays.copyOf(payload, payloadSize);
+        System.arraycopy(payload, 0, res, 0, payloadSize);
         return res;
     }
 
     //--------------------------
     //getpayload_length: return the length of the payload
     //--------------------------
-    public int getpayload_length() {
-        return (payload_size);
+    public int getPayloadLength() {
+        return (payloadSize);
     }
 
     //--------------------------
     //getlength: return the total length of the RTP packet
     //--------------------------
-    public int getlength() {
-        return (payload_size + HEADER_SIZE);
+    public int getLength() {
+        return (payloadSize + HEADER_SIZE);
     }
 
     //--------------------------
     //getpacket: returns the packet bitstream and its length
     //--------------------------
-    public int getpacket(byte[] packet) {
+    public int getPacket(byte[] packet) {
         //construct the packet = header + payload
         for (int i = 0; i < HEADER_SIZE; i++)
             packet[i] = header[i];
-        for (int i = 0; i < payload_size; i++)
+        for (int i = 0; i < payloadSize; i++)
             packet[i + HEADER_SIZE] = payload[i];
 
         //return total size of the packet
-        return (payload_size + HEADER_SIZE);
+        return (payloadSize + HEADER_SIZE);
     }
 
-    public byte[] getpacket() {
-        byte[] res = new byte[HEADER_SIZE + payload_size];
+    public byte[] getPacket() {
+        byte[] res = new byte[HEADER_SIZE + payloadSize];
         System.arraycopy(header, 0, res, 0, HEADER_SIZE);
-        System.arraycopy(payload, 0, res, HEADER_SIZE, payload_size);
+        System.arraycopy(payload, 0, res, HEADER_SIZE, payloadSize);
         return res;
     }
 
@@ -162,49 +166,37 @@ public class RtpPacket {
     //gettimestamp
     //--------------------------
 
-    public int gettimestamp() {
-        return (TimeStamp);
+    public int getTimeStamp() {
+        return (timeStamp);
     }
 
     //--------------------------
     //getsequencenumber
     //--------------------------
-    public int getsequencenumber() {
-        return (SequenceNumber);
+    public int getSequenceNumber() {
+        return (sequenceNumber);
     }
 
     //--------------------------
     //getpayloadtype
     //--------------------------
-    public int getpayloadtype() {
-        return (PayloadType);
+    public int getPayloadType() {
+        return (payloadType);
     }
 
-    //--------------------------
-    //print headers without the SSRC
-    //--------------------------
-    public void printheader() {
-        System.out.print("[RTP-Header] ");
-        System.out.println("Version: " + Version
-                + ", Padding: " + Padding
-                + ", Extension: " + Extension
-                + ", CC: " + CC
-                + ", Marker: " + Marker
-                + ", PayloadType: " + PayloadType
-                + ", SequenceNumber: " + SequenceNumber
-                + ", TimeStamp: " + TimeStamp);
-
+    public long getSsrc() {
+        return ssrc;
     }
 
     public String toString() {
-        return "Version: " + Version
-                + ", Padding: " + Padding
-                + ", Extension: " + Extension
-                + ", CC: " + CC
-                + ", Marker: " + Marker
-                + ", PayloadType: " + PayloadType
-                + ", SequenceNumber: " + SequenceNumber
-                + ", TimeStamp: " + TimeStamp
-                + ", SSRC: " + Ssrc;
+        return "Version: " + version
+                + ", Padding: " + padding
+                + ", Extension: " + extension
+                + ", CC: " + cc
+                + ", Marker: " + marker
+                + ", PayloadType: " + payloadType
+                + ", SequenceNumber: " + sequenceNumber
+                + ", TimeStamp: " + timeStamp
+                + ", SSRC: " + ssrc;
     }
 }
