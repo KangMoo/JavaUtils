@@ -31,9 +31,6 @@ public class RtpPacket {
     //Bitstream of the RTP payload
     public byte[] payload;
 
-    //--------------------------
-    //Constructor of an RTPpacket object from header fields and payload bitstream
-    //--------------------------
     public RtpPacket(int pType, int seqNo, int timeStamp, byte[] data, int dataLength, long ssrc) {
         //fill by default header fields:
         this.version = 2;
@@ -73,9 +70,6 @@ public class RtpPacket {
         this.payload = Arrays.copyOf(data, this.payloadSize);
     }
 
-    //--------------------------
-    //Constructor of an RTPpacket object from the packet bistream
-    //--------------------------
     public RtpPacket(byte[] packet, int packetSize) {
         //fill default fields:
         this.version = 2;
@@ -109,14 +103,9 @@ public class RtpPacket {
         }
     }
 
-    //--------------------------
-    //getpayload: return the payload bistream of the RTPpacket and its size
-    //--------------------------
     public int getPayload(byte[] data) {
-
         for (int i = 0; i < payloadSize; i++)
             data[i] = payload[i];
-
         return (payloadSize);
     }
 
@@ -127,23 +116,14 @@ public class RtpPacket {
         return res;
     }
 
-    //--------------------------
-    //getpayload_length: return the length of the payload
-    //--------------------------
     public int getPayloadLength() {
         return (payloadSize);
     }
 
-    //--------------------------
-    //getlength: return the total length of the RTP packet
-    //--------------------------
     public int getLength() {
         return (payloadSize + HEADER_SIZE);
     }
 
-    //--------------------------
-    //getpacket: returns the packet bitstream and its length
-    //--------------------------
     public int getPacket(byte[] packet) {
         //construct the packet = header + payload
         for (int i = 0; i < HEADER_SIZE; i++)
@@ -162,24 +142,14 @@ public class RtpPacket {
         return res;
     }
 
-    //--------------------------
-    //gettimestamp
-    //--------------------------
-
     public int getTimeStamp() {
         return (timeStamp);
     }
 
-    //--------------------------
-    //getsequencenumber
-    //--------------------------
     public int getSequenceNumber() {
         return (sequenceNumber);
     }
 
-    //--------------------------
-    //getpayloadtype
-    //--------------------------
     public int getPayloadType() {
         return (payloadType);
     }
