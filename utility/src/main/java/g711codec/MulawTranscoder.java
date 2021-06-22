@@ -4,7 +4,9 @@ package g711codec;
  *
  * @author kangmoo Heo
  */
-public class SimplePcmuDecoder {
+public class MulawTranscoder {
+    private static final int cBias = 132;
+    private static final int cClip = 32635;
     private static short muLawDecompressTable[] = new short[]{
             -32124, -31100, -30076, -29052, -28028, -27004, -25980, -24956,
             -23932, -22908, -21884, -20860, -19836, -18812, -17788, -16764,
@@ -39,6 +41,23 @@ public class SimplePcmuDecoder {
             120, 112, 104, 96, 88, 80, 72, 64,
             56, 48, 40, 32, 24, 16, 8, 0
     };
+    private static byte[] muLawCompressTable = {
+            0, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3,
+            4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+            5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+            5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+            7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+            7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+            7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+            7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+            7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+            7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+            7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7};
 
     public static byte[] decode(byte[] media) {
         byte[] res = new byte[media.length * 2];
@@ -49,5 +68,30 @@ public class SimplePcmuDecoder {
             res[j++] = (byte) (s >> 8);
         }
         return res;
+    }
+
+    public static int encode(byte[] src, int offset, int len, byte[] res) {
+        int j = offset;
+        int count = len / 2;
+        short sample = 0;
+
+        for (int i = 0; i < count; i++) {
+            sample = (short) (((src[j++] & 0xff) | (src[j++]) << 8));
+            res[i] = linearToMuLawSample(sample);
+        }
+        return count;
+    }
+
+    private static byte linearToMuLawSample(short s) {
+        int i = (s >> 8) & 128;
+        if (i != 0) {
+            s = (short) (-s);
+        }
+        if (s > cClip) {
+            s = 32635;
+        }
+        short s2 = (short) (s + 132);
+        byte b = muLawCompressTable[(s2 >> 7) & 255];
+        return (byte) (~(((s2 >> (b + 3)) & 15) | i | (b << 4)));
     }
 }
