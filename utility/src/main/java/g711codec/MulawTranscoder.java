@@ -82,6 +82,12 @@ public class MulawTranscoder {
         return count;
     }
 
+    public static byte[] encode(byte[] data) {
+        byte[] res = new byte[data.length/2];
+        encode(data, 0, data.length, res);
+        return res;
+    }
+
     private static byte linearToMuLawSample(short s) {
         int i = (s >> 8) & 128;
         if (i != 0) {
