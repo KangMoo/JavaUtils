@@ -4,8 +4,7 @@ package g711codec;
  *
  * @author kangmoo Heo
  */
-public class SimplePcmaDecoder {
-
+public class AlawTranscoder {
     private static short aLawDecompressTable[] = new short[]{
             -5504, -5248, -6016, -5760, -4480, -4224, -4992, -4736,
             -7552, -7296, -8064, -7808, -6528, -6272, -7040, -6784,
@@ -41,6 +40,15 @@ public class SimplePcmaDecoder {
             944, 912, 1008, 976, 816, 784, 880, 848
     };
 
+    private final static int cClip = 32635;
+    private static byte aLawCompressTable[] = new byte[] { 1, 1, 2, 2, 3, 3, 3,
+            3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+            5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+            6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+            7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+            7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+            7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7 };
+
     public static byte[] decode(byte[] media) {
         byte[] res = new byte[media.length * 2];
         int j = 0;
@@ -50,5 +58,57 @@ public class SimplePcmaDecoder {
             res[j++] = (byte) (s >> 8);
         }
         return res;
+    }
+
+    public static int decode(byte[] src, int offset, int len, byte[] res) {
+        int j = 0;
+        for (int i = 0; i < len; i++) {
+            short s = aLawDecompressTable[src[i + offset] & 0xff];
+            res[j++] = (byte) s;
+            res[j++] = (byte) (s >> 8);
+        }
+        return j;
+    }
+
+    public static byte[] encode(byte[] data) {
+        byte[] res = new byte[data.length/2];
+        encode(data, 0, data.length, res);
+        return res;
+    }
+
+    public static int encode(byte[] src, int offset, int len, byte[] res) {
+        int j = offset;
+        int count = len / 2;
+        short sample = 0;
+
+        for (int i = 0; i < count; i++) {
+            sample = (short) (((src[j++] & 0xff) | (src[j++]) << 8));
+            res[i] = linearToALawSample(sample);
+        }
+        return count;
+    }
+
+    private static byte linearToALawSample(short sample) {
+        int sign;
+        int exponent;
+        int mantissa;
+        int s;
+
+        sign = ((~sample) >> 8) & 0x80;
+        if (!(sign == 0x80)) {
+            sample = (short) -sample;
+        }
+        if (sample > cClip) {
+            sample = cClip;
+        }
+        if (sample >= 256) {
+            exponent = (int) aLawCompressTable[(sample >> 8) & 0x7F];
+            mantissa = (sample >> (exponent + 3)) & 0x0F;
+            s = (exponent << 4) | mantissa;
+        } else {
+            s = sample >> 4;
+        }
+        s ^= (sign ^ 0x55);
+        return (byte) s;
     }
 }
