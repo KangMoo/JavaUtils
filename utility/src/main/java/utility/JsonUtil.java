@@ -1,9 +1,6 @@
 package utility;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 
 /**
  * Json 처리를 원할하게 하기 위한 유틸
@@ -234,5 +231,11 @@ public class JsonUtil {
             ret[i] = jsonArray.get(i).getAsFloat();
         }
         return ret;
+    }
+
+    public static String toPrettyJson(String json){
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonElement je = JsonParser.parseString(json);
+        return gson.toJson(je);
     }
 }
