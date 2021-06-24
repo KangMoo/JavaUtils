@@ -79,10 +79,10 @@ public class JsonUtil {
      * @param element 파싱할 하위구조. element의 마지막 값을 String으로 반환한다
      * @return 파싱한 String. 파싱이 실패할 경우 defaultValue return
      */
-    public static String json2StringWithDefault (String jsonStr, String defaultValue, String... element) {
-        try{
+    public static String json2StringWithDefault(String jsonStr, String defaultValue, String... element) {
+        try {
             return json2Element(jsonStr, element).getAsString();
-        } catch (Exception e){
+        } catch (Exception e) {
             return defaultValue;
         }
     }
@@ -233,9 +233,14 @@ public class JsonUtil {
         return ret;
     }
 
-    public static String toPrettyJson(String json){
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        JsonElement je = JsonParser.parseString(json);
-        return gson.toJson(je);
+    public static String toPrettyJson(String json) {
+        try {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            JsonElement je = JsonParser.parseString(json);
+            return gson.toJson(je);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
