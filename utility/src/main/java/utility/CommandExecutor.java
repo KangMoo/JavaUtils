@@ -3,12 +3,24 @@ package utility;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.StringJoiner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  *
  * @author kangmoo Heo
  */
 public class CommandExecutor {
+    public static Future<String> runCommand(String... commands) {
+        ExecutorService runner = Executors.newSingleThreadExecutor();
+        try {
+            return runner.submit(() -> runCommandForOutput(commands));
+        } finally {
+            runner.shutdown();
+        }
+    }
+
     public static String runCommandForOutput(String... commands) {
         ProcessBuilder pb = new ProcessBuilder(commands);
         Process p;
