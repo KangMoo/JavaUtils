@@ -18,7 +18,7 @@ public class LogFinder {
         } else if (args.length == 2) {
             readLineTest(args[0], args[1]);
         } else{
-            System.out.println("사용법: args= 파일 [찾을 문자열]");
+            System.out.println("usage: args= file [string]");
         }
     }
 
