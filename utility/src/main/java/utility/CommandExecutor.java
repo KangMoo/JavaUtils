@@ -34,4 +34,12 @@ public class CommandExecutor {
         p.destroy();
         return result;
     }
+
+    public static String runBashCommandForOut(String... commands) throws Exception {
+        String[] newCommands = new String[commands.length+2];
+        newCommands[0] = "bash";
+        newCommands[1] = "-c";
+        System.arraycopy(commands, 0, newCommands, 2, commands.length);
+        return runCommandForOutput(newCommands);
+    }
 }
