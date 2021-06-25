@@ -21,6 +21,15 @@ public class CommandExecutor {
         }
     }
 
+    public static Future<String> runBashCommand(String... commands) {
+        ExecutorService runner = Executors.newSingleThreadExecutor();
+        try {
+            return runner.submit(() -> runBashCommandForOut(commands));
+        } finally {
+            runner.shutdown();
+        }
+    }
+
     public static String runCommandForOutput(String... commands) throws Exception {
         ProcessBuilder pb = new ProcessBuilder(commands);
         Process p;
