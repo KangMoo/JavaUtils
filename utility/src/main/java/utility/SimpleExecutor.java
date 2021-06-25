@@ -9,7 +9,7 @@ import java.util.concurrent.Future;
  *
  * @author kangmoo Heo
  */
-public class Executor {
+public class SimpleExecutor {
     public static Future<?> execute(Runnable runnable){
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         try {
