@@ -28,9 +28,15 @@ public class ReflectionUtil {
             Class rclass = Class.forName(sb.toString());
             Object obj = null;
             for (int i = methodIndex; i < scmd.length; i++) {
-                Method method = rclass.getMethod(scmd[i].substring(0, scmd[i].indexOf('(')));
                 Object[] objects = getObjects(scmd[i].substring(scmd[i].indexOf('(') + 1, scmd[i].indexOf(')')));
-                System.out.println("args = " + Arrays.toString(objects));
+                Class[] paramTypes = null;
+                if (objects != null) {
+                    paramTypes = new Class[objects.length];
+                    for (int j = 0; j < objects.length; j++) {
+                        paramTypes[j] = objects[j].getClass();
+                    }
+                }
+                Method method = rclass.getMethod(scmd[i].substring(0, scmd[i].indexOf('(')), paramTypes);
                 obj = method.invoke(obj, objects);
             }
             return obj;
@@ -41,6 +47,8 @@ public class ReflectionUtil {
     }
 
     private static Object[] getObjects(String str) {
+        str = str.trim();
+        if (str.isEmpty()) return null;
         boolean inString = false;
         List<String> args = new ArrayList<>();
 
@@ -81,7 +89,7 @@ public class ReflectionUtil {
         }
 
         try {
-            if(str.equals("true") || str.equals("false"))
+            if (str.equals("true") || str.equals("false"))
                 return Boolean.parseBoolean(str);
         } catch (Exception ignored) {
         }
