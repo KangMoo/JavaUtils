@@ -1,16 +1,108 @@
 package reflection;
 
+import com.github.javaparser.Provider;
+import com.github.javaparser.StaticJavaParser;
+import com.github.javaparser.ast.expr.Expression;
+import com.github.javaparser.ast.expr.FieldAccessExpr;
+import com.github.javaparser.ast.expr.MethodCallExpr;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Stack;
+import java.util.function.Supplier;
 
 /**
  *
  * @author kangmoo Heo
  */
 public class ReflectionUtil {
-    public static Object run(String cmd) {
+
+    public static Object run(String methodCallExpr) {
+        Stack<MethodCallExpr> scopes = new Stack<>();
+
+        MethodCallExpr exStmt = StaticJavaParser.parseExpression(methodCallExpr);
+
+        if (exStmt.isMethodCallExpr()) scopes.push(exStmt);
+        if (exStmt.hasScope()) {
+            Expression scope = exStmt.getScope().orElse(null);
+            while (scope != null) {
+                if (scope.isMethodCallExpr()) {
+                    scopes.push((MethodCallExpr) scope);
+                    scope = ((MethodCallExpr) scope).getScope().orElse(null);
+                } else if (scope.isFieldAccessExpr()) {
+                    scope = ((FieldAccessExpr) scope).getScope();
+                } else {
+                    break;
+                }
+            }
+        }
+
+        if (scopes.isEmpty()) return null;
+        Object object = null;
+        String className = scopes.get(scopes.size() - 1).getScope().orElse(null).toString();
+        for (int i = scopes.size() - 1; i >= 0; i--) {
+            MethodCallExpr scope = scopes.get(i);
+            object = run(object, className, scope);
+            className = object.getClass().getName();
+        }
+        return null;
+    }
+
+    public static Object run(Object object, String className, MethodCallExpr methodCallExpr) {
+        try {
+            Class rclass = Class.forName(className);
+            Object[] args = null;
+            Class[] paramTypes = null;
+            if (!methodCallExpr.getArguments().isEmpty()) {
+                args = new Object[methodCallExpr.getArguments().size()];
+                paramTypes = new Class[args.length];
+                for (int i = 0; i < args.length; i++) {
+                    args[i] = getObjects(methodCallExpr.getArguments());
+                    paramTypes[i] = args[i] == null ? null : args[i].getClass();
+                }
+            }
+            Method method = rclass.getMethod(methodCallExpr.getName().toString(), paramTypes);
+            return method.invoke(object, args);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Object[] getObjects(List<Expression> expressions) {
+        if (expressions == null || expressions.isEmpty()) return null;
+        Object[] res = new Object[expressions.size()];
+        for (int i = 0; i < res.length; i++) {
+            String arg = expressions.get(i).toString();
+            res[i] = getObject(arg);
+        }
+        return res;
+    }
+
+    public static Object getObject(String arg) {
+        if (arg.equals("null")) return null;
+        if (arg.startsWith("\"") && arg.endsWith("\"")) return arg;
+        try {
+            return Integer.parseInt(arg);
+        } catch (Exception ignored) {
+        }
+        try {
+            return Double.parseDouble(arg);
+        } catch (Exception ignored) {
+        }
+        try {
+            return Float.parseFloat(arg);
+        } catch (Exception ignored) {
+        }
+        try {
+            return run(arg);
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public static Object run2(String cmd) {
         String[] scmd = cmd.split("\\.");
         int methodIndex = 0;
         StringBuilder sb = new StringBuilder();
@@ -28,7 +120,7 @@ public class ReflectionUtil {
             Class rclass = Class.forName(sb.toString());
             Object obj = null;
             for (int i = methodIndex; i < scmd.length; i++) {
-                Object[] objects = getObjects(scmd[i].substring(scmd[i].indexOf('(') + 1, scmd[i].indexOf(')')));
+                Object[] objects = new Object[10]; //getObjects(scmd[i].substring(scmd[i].indexOf('(') + 1, scmd[i].indexOf(')')));
                 Class[] paramTypes = null;
                 if (objects != null) {
                     paramTypes = new Class[objects.length];
@@ -46,55 +138,11 @@ public class ReflectionUtil {
         }
     }
 
-    private static Object[] getObjects(String str) {
-        str = str.trim();
-        if (str.isEmpty()) return null;
-        boolean inString = false;
-        List<String> args = new ArrayList<>();
-
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < str.length(); i++) {
-            if (str.charAt(i) == ',' && !inString) {
-                args.add(sb.toString());
-                sb.setLength(0);
-            } else if (str.charAt(i) == '"') {
-                sb.append('"');
-                inString = !inString;
-            } else {
-                sb.append(str.charAt(i));
-            }
-        }
-        args.add(sb.toString());
-
-        if (args.isEmpty()) return null;
-        Object[] res = new Object[args.size()];
-        for (int i = 0; i < args.size(); i++) {
-            res[i] = getParsedType(args.get(i));
-        }
-        return res;
-    }
-
-    private static Object getParsedType(String str) {
-        str = str.trim();
-        if (str.startsWith("\"") && str.endsWith("\"")) return str;
-
+    public static Object exec(Supplier p) {
         try {
-            return Integer.parseInt(str);
-        } catch (Exception ignored) {
+            return p.get();
+        } catch (Exception e) {
+            return null;
         }
-
-        try {
-            return Float.parseFloat(str);
-        } catch (Exception ignored) {
-        }
-
-        try {
-            if (str.equals("true") || str.equals("false"))
-                return Boolean.parseBoolean(str);
-        } catch (Exception ignored) {
-        }
-
-        if (str.contains("(")) return run(str);
-        return null;
     }
 }
