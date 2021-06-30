@@ -149,6 +149,11 @@ public class RmqTransport {
         factory.setAutomaticRecoveryEnabled(true);
         factory.setNetworkRecoveryInterval(1000);
         factory.setRequestedHeartbeat(5);
+        factory.setConnectionTimeout(3000);
+        factory.setSocketConfigurator(socket ->{
+            socket.setTcpNoDelay(true);
+            socket.setSoTimeout(3000);
+        });
         factory.setExceptionHandler(new DefaultExceptionHandler() {
             @Override
             public void handleUnexpectedConnectionDriverException(Connection con, Throwable exception) {
