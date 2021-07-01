@@ -46,7 +46,7 @@ public class ReflectionUtil {
             object = run(object, className, scope);
             className = object.getClass().getName();
         }
-        return null;
+        return object;
     }
 
     public static Object run(Object object, String className, MethodCallExpr methodCallExpr) {
@@ -57,8 +57,9 @@ public class ReflectionUtil {
             if (!methodCallExpr.getArguments().isEmpty()) {
                 args = new Object[methodCallExpr.getArguments().size()];
                 paramTypes = new Class[args.length];
+                args = getObjects(methodCallExpr.getArguments());
                 for (int i = 0; i < args.length; i++) {
-                    args[i] = getObjects(methodCallExpr.getArguments());
+                    // args[i] = getObjects(methodCallExpr.getArguments());
                     paramTypes[i] = args[i] == null ? null : args[i].getClass();
                 }
             }
