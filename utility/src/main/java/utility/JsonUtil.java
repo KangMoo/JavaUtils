@@ -243,4 +243,8 @@ public class JsonUtil {
             return null;
         }
     }
+
+    public static String toJson(Object object){
+        return new Gson().toJson(object);
+    }
 }

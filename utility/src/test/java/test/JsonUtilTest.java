@@ -1,9 +1,13 @@
 package test;
 
 import org.junit.Test;
+import utility.JsonMaker;
 import utility.JsonUtil;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -43,6 +47,23 @@ public class JsonUtilTest {
             System.out.println(JsonUtil.json2Float(jsonSample, "WrongParam"));
         } catch (NullPointerException e) {
             System.out.println("If param Wrong. Throw [NullPointerException] Exception");
+        }
+    }
+
+    @Test
+    public void toJsonTest() {
+        System.out.println("JsonUtil.toJson(new Object()) = " + JsonUtil.toPrettyJson(JsonUtil.toJson(new sampleClass())));
+    }
+
+    public class sampleClass {
+        String name = "sampleClass";
+        int age = 30;
+        int[] stat = new int[]{180, 70};
+        Map<String, Object> child = new HashMap<>();
+
+        public sampleClass() {
+            this.child.put("name", "child");
+            this.child.put("age", 5);
         }
     }
 }

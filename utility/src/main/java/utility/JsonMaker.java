@@ -98,4 +98,8 @@ public class JsonMaker {
     public int hashCode() {
         return this.members.hashCode();
     }
+
+    public String toString(){
+        return new Gson().toJson(this.members);
+    }
 }
