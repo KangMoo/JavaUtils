@@ -56,8 +56,13 @@ public class ReflectionUtil {
                 paramTypes = new Class[args.length];
                 args = getObjects(methodCallExpr.getArguments());
                 for (int i = 0; i < args.length; i++) {
-                    // args[i] = getObjects(methodCallExpr.getArguments());
-                    paramTypes[i] = args[i] == null ? null : args[i].getClass();
+                    if (args[i] == null) paramTypes[i] = null;
+                    else {
+                        if (args[i].getClass().getName().equals("java.lang.Integer")) paramTypes[i] = Integer.TYPE;
+                        else if (args[i].getClass().getName().equals("java.lang.Double")) paramTypes[i] = Double.TYPE;
+                        else if (args[i].getClass().getName().equals("java.lang.Float")) paramTypes[i] = Float.TYPE;
+                        else paramTypes[i] = args[i].getClass();
+                    }
                 }
             }
             Method method = rclass.getMethod(methodCallExpr.getName().toString(), paramTypes);
