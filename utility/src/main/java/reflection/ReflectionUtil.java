@@ -85,7 +85,7 @@ public class ReflectionUtil {
 
     public static Object getObject(String arg) {
         if (arg.equals("null")) return null;
-        if (arg.startsWith("\"") && arg.endsWith("\"")) return arg;
+        if (arg.startsWith("\"") && arg.endsWith("\"")) return arg.substring(1, arg.length()-1);
         try {
             return Integer.parseInt(arg);
         } catch (Exception ignored) {
