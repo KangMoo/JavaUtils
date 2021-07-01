@@ -1,8 +1,7 @@
 package test;
 
-import com.rabbitmq.client.AMQP;
 import org.junit.Test;
-import rqbbitmq.*;
+import rabbitmq.*;
 
 import java.util.Date;
 import java.util.stream.IntStream;

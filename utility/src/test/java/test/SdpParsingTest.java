@@ -40,8 +40,8 @@ public class SdpParsingTest {
                     "a=rtpmap:101 telephone-event/8000\r\n" +
                     "a=ptime:20\r\n");
             MediaDescription datachannel = sdp.getMedias().get(0);
-            SCTPMapAttribute sctpmap = (SCTPMapAttribute)datachannel.getAttributes("sctpmap").get(0);
-            System.out.println(sctpmap.toString());
+            // SCTPMapAttribute sctpmap = (SCTPMapAttribute)datachannel.getAttributes("sctpmap").get(0);
+            // System.out.println(sctpmap.toString());
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(SessionDescription.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParserException ex) {
