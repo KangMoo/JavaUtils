@@ -1,16 +1,13 @@
 package reflection;
 
-import com.github.javaparser.Provider;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.FieldAccessExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-import java.util.function.Supplier;
 
 /**
  *
@@ -18,7 +15,7 @@ import java.util.function.Supplier;
  */
 public class ReflectionUtil {
 
-    public static Object run(String methodCallExpr) {
+    public static Object exec(String methodCallExpr) {
         Stack<MethodCallExpr> scopes = new Stack<>();
 
         MethodCallExpr exStmt = StaticJavaParser.parseExpression(methodCallExpr);
@@ -43,13 +40,13 @@ public class ReflectionUtil {
         String className = scopes.get(scopes.size() - 1).getScope().orElse(null).toString();
         for (int i = scopes.size() - 1; i >= 0; i--) {
             MethodCallExpr scope = scopes.get(i);
-            object = run(object, className, scope);
+            object = exec(object, className, scope);
             className = object.getClass().getName();
         }
         return object;
     }
 
-    public static Object run(Object object, String className, MethodCallExpr methodCallExpr) {
+    public static Object exec(Object object, String className, MethodCallExpr methodCallExpr) {
         try {
             Class rclass = Class.forName(className);
             Object[] args = null;
@@ -97,53 +94,9 @@ public class ReflectionUtil {
         } catch (Exception ignored) {
         }
         try {
-            return run(arg);
+            return exec(arg);
         } catch (Exception e) {
         }
         return null;
-    }
-
-    public static Object run2(String cmd) {
-        String[] scmd = cmd.split("\\.");
-        int methodIndex = 0;
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < scmd.length; i++) {
-            if (scmd[i].contains("(") && scmd[i].contains(")")) {
-                methodIndex = i;
-                break;
-            } else {
-                if (sb.length() > 0) sb.append(".");
-                sb.append(scmd[i]);
-            }
-        }
-
-        try {
-            Class rclass = Class.forName(sb.toString());
-            Object obj = null;
-            for (int i = methodIndex; i < scmd.length; i++) {
-                Object[] objects = new Object[10]; //getObjects(scmd[i].substring(scmd[i].indexOf('(') + 1, scmd[i].indexOf(')')));
-                Class[] paramTypes = null;
-                if (objects != null) {
-                    paramTypes = new Class[objects.length];
-                    for (int j = 0; j < objects.length; j++) {
-                        paramTypes[j] = objects[j].getClass();
-                    }
-                }
-                Method method = rclass.getMethod(scmd[i].substring(0, scmd[i].indexOf('(')), paramTypes);
-                obj = method.invoke(obj, objects);
-            }
-            return obj;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static Object exec(Supplier p) {
-        try {
-            return p.get();
-        } catch (Exception e) {
-            return null;
-        }
     }
 }
