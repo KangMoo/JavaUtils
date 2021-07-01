@@ -6,8 +6,7 @@ import com.github.javaparser.ast.expr.FieldAccessExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 
 import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 /**
  *
@@ -18,7 +17,7 @@ public class ReflectionUtil {
     public static Object exec(String methodCallExpr) {
         Stack<MethodCallExpr> scopes = new Stack<>();
 
-        MethodCallExpr exStmt = StaticJavaParser.parseExpression(methodCallExpr);
+        MethodCallExpr exStmt = StaticJavaParser.parseExpression(methodCallExpr).asMethodCallExpr();
 
         if (exStmt.isMethodCallExpr()) scopes.push(exStmt);
         if (exStmt.hasScope()) {
@@ -37,11 +36,13 @@ public class ReflectionUtil {
 
         if (scopes.isEmpty()) return null;
         Object object = null;
-        String className = scopes.get(scopes.size() - 1).getScope().orElse(null).toString();
+        Expression expression = scopes.get(scopes.size() - 1).getScope().orElse(null);
+        if(expression == null) return null;
+        String className = expression.toString();
         for (int i = scopes.size() - 1; i >= 0; i--) {
             MethodCallExpr scope = scopes.get(i);
             object = exec(object, className, scope);
-            className = object.getClass().getName();
+            className = object == null ? null : object.getClass().getName();
         }
         return object;
     }
@@ -58,9 +59,10 @@ public class ReflectionUtil {
                 for (int i = 0; i < args.length; i++) {
                     if (args[i] == null) paramTypes[i] = null;
                     else {
-                        if (args[i].getClass().getName().equals("java.lang.Integer")) paramTypes[i] = Integer.TYPE;
-                        else if (args[i].getClass().getName().equals("java.lang.Double")) paramTypes[i] = Double.TYPE;
-                        else if (args[i].getClass().getName().equals("java.lang.Float")) paramTypes[i] = Float.TYPE;
+
+                        if (args[i] instanceof Integer) paramTypes[i] = Integer.TYPE;
+                        else if (args[i] instanceof Double) paramTypes[i] = Double.TYPE;
+                        else if (args[i] instanceof Float) paramTypes[i] = Float.TYPE;
                         else paramTypes[i] = args[i].getClass();
                     }
                 }
@@ -85,7 +87,7 @@ public class ReflectionUtil {
 
     public static Object getObject(String arg) {
         if (arg.equals("null")) return null;
-        if (arg.startsWith("\"") && arg.endsWith("\"")) return arg.substring(1, arg.length()-1);
+        if (arg.startsWith("\"") && arg.endsWith("\"")) return arg.substring(1, arg.length() - 1);
         try {
             return Integer.parseInt(arg);
         } catch (Exception ignored) {
@@ -103,5 +105,41 @@ public class ReflectionUtil {
         } catch (Exception e) {
         }
         return null;
+    }
+
+    public static List<String> getMethodCallExpr(String expr) {
+        List<String> methodExprs = new ArrayList<>();
+
+        int bracketCount = 0;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < expr.length(); i++) {
+            char ch = expr.charAt(i);
+            switch (ch) {
+                case '(':
+                    if (bracketCount == 0) {
+                        methodExprs.add(sb.toString());
+                        sb.setLength(0);
+                    }
+                    bracketCount++;
+                    break;
+                case ')':
+                    bracketCount--;
+                    if (bracketCount == 0) {
+                        methodExprs.add(sb.toString());
+                        sb.setLength(0);
+                    }
+                    break;
+                case ',':
+                    if(bracketCount == 1){
+                        methodExprs.add(sb.toString());
+                        sb.setLength(0);
+                    }
+                default:
+                    break;
+            }
+            sb.append(ch);
+        }
+        methodExprs.add(sb.toString());
+        return methodExprs;
     }
 }
