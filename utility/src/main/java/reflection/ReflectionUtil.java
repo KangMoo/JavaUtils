@@ -52,7 +52,7 @@ public class ReflectionUtil {
             if (typeValuePair == null || typeValuePair.type == null) {
                 rclass = Class.forName(methodCallExpr.getScope().get().toString());
             } else {
-                rclass = Class.forName(typeValuePair.type.getSimpleName());
+                rclass = Class.forName(typeValuePair.type.getTypeName());
             }
             Object[] args = null;
             Class<?>[] paramTypes = null;
