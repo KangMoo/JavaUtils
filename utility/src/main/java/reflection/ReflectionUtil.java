@@ -15,7 +15,7 @@ import java.util.*;
  */
 public class ReflectionUtil {
 
-    public static TypeValuePair exec(String methodCallExpr) {
+    public static TypeValuePair exec(String methodCallExpr) throws Exception {
         List<MethodCallExpr> scopes = new ArrayList<>();
 
         MethodCallExpr exStmt = StaticJavaParser.parseExpression(methodCallExpr).asMethodCallExpr();
@@ -46,36 +46,31 @@ public class ReflectionUtil {
         return object;
     }
 
-    public static TypeValuePair exec(TypeValuePair typeValuePair, MethodCallExpr methodCallExpr) {
-        try {
-            Class<?> rclass = null;
-            if (typeValuePair == null || typeValuePair.type == null) {
-                rclass = Class.forName(methodCallExpr.getScope().get().toString());
-            } else {
-                rclass = Class.forName(typeValuePair.type.getTypeName());
-            }
-            Object[] args = null;
-            Class<?>[] paramTypes = null;
-            if (!methodCallExpr.getArguments().isEmpty()) {
-                args = new Object[methodCallExpr.getArguments().size()];
-                paramTypes = new Class[args.length];
-                TypeValuePair[] tvps = getObjects(methodCallExpr.getArguments());
-                if (tvps != null) {
-                    for (int i = 0; i < tvps.length; i++) {
-                        args[i] = tvps[i].value;
-                        paramTypes[i] = tvps[i].type;
-                    }
+    public static TypeValuePair exec(TypeValuePair typeValuePair, MethodCallExpr methodCallExpr) throws Exception {
+        Class<?> rclass = null;
+        if (typeValuePair == null || typeValuePair.type == null) {
+            rclass = Class.forName(methodCallExpr.getScope().get().toString());
+        } else {
+            rclass = Class.forName(typeValuePair.type.getTypeName());
+        }
+        Object[] args = null;
+        Class<?>[] paramTypes = null;
+        if (!methodCallExpr.getArguments().isEmpty()) {
+            args = new Object[methodCallExpr.getArguments().size()];
+            paramTypes = new Class[args.length];
+            TypeValuePair[] tvps = getObjects(methodCallExpr.getArguments());
+            if (tvps != null) {
+                for (int i = 0; i < tvps.length; i++) {
+                    args[i] = tvps[i].value;
+                    paramTypes[i] = tvps[i].type;
                 }
             }
-            Method method = rclass.getMethod(methodCallExpr.getName().toString(), paramTypes);
-            return new TypeValuePair(method.getReturnType(), method.invoke(typeValuePair == null ? null : typeValuePair.value, args));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
         }
+        Method method = rclass.getMethod(methodCallExpr.getName().toString(), paramTypes);
+        return new TypeValuePair(method.getReturnType(), method.invoke(typeValuePair == null ? null : typeValuePair.value, args));
     }
 
-    public static TypeValuePair[] getObjects(List<Expression> expressions) {
+    public static TypeValuePair[] getObjects(List<Expression> expressions) throws Exception{
         if (expressions == null || expressions.isEmpty()) return null;
         TypeValuePair[] res = new TypeValuePair[expressions.size()];
         for (int i = 0; i < res.length; i++) {
@@ -85,7 +80,7 @@ public class ReflectionUtil {
         return res;
     }
 
-    public static TypeValuePair getObject(String arg) {
+    public static TypeValuePair getObject(String arg) throws Exception {
         Expression expression = StaticJavaParser.parseExpression(arg);
         if (expression.isDoubleLiteralExpr())
             return new TypeValuePair(Double.class, expression.asDoubleLiteralExpr().asDouble());
