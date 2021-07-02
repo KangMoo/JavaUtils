@@ -99,7 +99,6 @@ public class ReflectionUtil {
             return new TypeValuePair(String.class, expression.asStringLiteralExpr().asString());
         if (expression.isCastExpr()) {
             CastExpr castExpr = expression.asCastExpr();
-            castExpr.getExpression().toString();
             String type = castExpr.getType().toString();
             String value = castExpr.getExpression().toString();
             try {
@@ -110,12 +109,14 @@ public class ReflectionUtil {
                         case "short":
                             return new TypeValuePair(short.class, Short.parseShort(value));
                         case "int":
-                            if (value.contains(".")) return new TypeValuePair(int.class, (int) Double.parseDouble(value));
+                            if (value.contains("."))
+                                return new TypeValuePair(int.class, (int) Double.parseDouble(value));
                             else return new TypeValuePair(int.class, Integer.parseInt(value));
                         case "float":
                             return new TypeValuePair(float.class, Float.parseFloat(value));
                         case "long":
-                            if (value.contains(".")) return new TypeValuePair(long.class, (long) Double.parseDouble(value));
+                            if (value.contains("."))
+                                return new TypeValuePair(long.class, (long) Double.parseDouble(value));
                             else return new TypeValuePair(long.class, Long.parseLong(value));
                         case "double":
                             return new TypeValuePair(double.class, Double.parseDouble(value));
@@ -123,20 +124,19 @@ public class ReflectionUtil {
                             return new TypeValuePair(char.class, value.charAt(0));
                         case "boolean":
                             return new TypeValuePair(boolean.class, Boolean.parseBoolean(value));
+                        default:
+                            break;
                     }
                 } else {
                     Class<?> typeClass = Class.forName(castExpr.getType().toString());
                     new TypeValuePair(typeClass, typeClass.cast(castExpr.getType().asTypeParameter().getName().toString()));
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
-        try {
-            TypeValuePair res = exec(arg);
-            return new TypeValuePair(res.type, res.value);
-        } catch (Exception e) {
-        }
-        return null;
+        TypeValuePair res = exec(arg);
+        if (res == null) return null;
+        return new TypeValuePair(res.type, res.value);
     }
 
     public static class TypeValuePair {
