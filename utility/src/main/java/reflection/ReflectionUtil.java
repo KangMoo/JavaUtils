@@ -16,16 +16,16 @@ import java.util.*;
 public class ReflectionUtil {
 
     public static TypeValuePair exec(String methodCallExpr) {
-        Stack<MethodCallExpr> scopes = new Stack<>();
+        List<MethodCallExpr> scopes = new ArrayList<>();
 
         MethodCallExpr exStmt = StaticJavaParser.parseExpression(methodCallExpr).asMethodCallExpr();
 
-        if (exStmt.isMethodCallExpr()) scopes.push(exStmt);
+        if (exStmt.isMethodCallExpr()) scopes.add(exStmt);
         if (exStmt.hasScope()) {
             Expression scope = exStmt.getScope().orElse(null);
             while (scope != null) {
                 if (scope.isMethodCallExpr()) {
-                    scopes.push((MethodCallExpr) scope);
+                    scopes.add((MethodCallExpr) scope);
                     scope = ((MethodCallExpr) scope).getScope().orElse(null);
                 } else if (scope.isFieldAccessExpr()) {
                     scope = ((FieldAccessExpr) scope).getScope();
@@ -110,11 +110,13 @@ public class ReflectionUtil {
                         case "short":
                             return new TypeValuePair(short.class, Short.parseShort(value));
                         case "int":
-                            return new TypeValuePair(int.class, Integer.parseInt(value));
+                            if (value.contains(".")) return new TypeValuePair(int.class, (int) Double.parseDouble(value));
+                            else return new TypeValuePair(int.class, Integer.parseInt(value));
                         case "float":
                             return new TypeValuePair(float.class, Float.parseFloat(value));
                         case "long":
-                            return new TypeValuePair(long.class, Long.parseLong(value));
+                            if (value.contains(".")) return new TypeValuePair(long.class, (long) Double.parseDouble(value));
+                            else return new TypeValuePair(long.class, Long.parseLong(value));
                         case "double":
                             return new TypeValuePair(double.class, Double.parseDouble(value));
                         case "char":
@@ -138,8 +140,8 @@ public class ReflectionUtil {
     }
 
     public static class TypeValuePair {
-        public Class<?> type;
-        public Object value;
+        public final Class<?> type;
+        public final Object value;
 
         public TypeValuePair(Class<?> type, Object value) {
             this.type = type;
