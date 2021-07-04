@@ -1,10 +1,7 @@
 package reflection;
 
 import com.github.javaparser.StaticJavaParser;
-import com.github.javaparser.ast.expr.CastExpr;
-import com.github.javaparser.ast.expr.Expression;
-import com.github.javaparser.ast.expr.FieldAccessExpr;
-import com.github.javaparser.ast.expr.MethodCallExpr;
+import com.github.javaparser.ast.expr.*;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -16,8 +13,31 @@ import java.util.*;
 public class ReflectionUtil {
 
     public static TypeValuePair exec(String methodCallExpr) throws Exception {
-        List<MethodCallExpr> scopes = new ArrayList<>();
+        methodCallExpr = methodCallExpr.trim();
 
+        try {
+            Expression expression = StaticJavaParser.parseExpression(methodCallExpr);
+            if (expression.isObjectCreationExpr()) {
+                ObjectCreationExpr objectCreationExpr = expression.asObjectCreationExpr();
+                Class<?> clazz = Class.forName(objectCreationExpr.getType().toString());
+                TypeValuePair[] params = getObjects(objectCreationExpr.getArguments());
+                Class<?>[] paramTypes = null;
+                Object[] args = null;
+                if (params != null) {
+                    paramTypes = new Class[params.length];
+                    args = new Object[params.length];
+                    for (int i = 0; i < params.length; i++) {
+                        paramTypes[i] = params[i].type;
+                        args[i] = params[i].value;
+                    }
+                }
+                return new TypeValuePair(clazz, clazz.getDeclaredConstructor(paramTypes).newInstance(args));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        List<MethodCallExpr> scopes = new ArrayList<>();
         MethodCallExpr exStmt = StaticJavaParser.parseExpression(methodCallExpr).asMethodCallExpr();
 
         if (exStmt.isMethodCallExpr()) scopes.add(exStmt);
@@ -86,12 +106,12 @@ public class ReflectionUtil {
             return null;
         if (expression.isDoubleLiteralExpr())
             return new TypeValuePair(double.class, expression.asDoubleLiteralExpr().asDouble());
+        if (expression.isIntegerLiteralExpr())
+            return new TypeValuePair(int.class, expression.asIntegerLiteralExpr().asNumber().intValue());
         if (expression.isLongLiteralExpr())
             return new TypeValuePair(long.class, expression.asLongLiteralExpr().asNumber().longValue());
         if (expression.isBooleanLiteralExpr())
             return new TypeValuePair(boolean.class, expression.asBooleanLiteralExpr().getValue());
-        if (expression.isIntegerLiteralExpr())
-            return new TypeValuePair(int.class, expression.asIntegerLiteralExpr().asNumber().intValue());
         if (expression.isStringLiteralExpr())
             return new TypeValuePair(String.class, expression.asStringLiteralExpr().asString());
         if (expression.isCastExpr()) {
