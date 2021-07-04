@@ -70,7 +70,7 @@ public class ReflectionUtil {
         return new TypeValuePair(method.getReturnType(), method.invoke(typeValuePair == null ? null : typeValuePair.value, args));
     }
 
-    public static TypeValuePair[] getObjects(List<Expression> expressions) throws Exception{
+    public static TypeValuePair[] getObjects(List<Expression> expressions) throws Exception {
         if (expressions == null || expressions.isEmpty()) return null;
         TypeValuePair[] res = new TypeValuePair[expressions.size()];
         for (int i = 0; i < res.length; i++) {
@@ -82,14 +82,16 @@ public class ReflectionUtil {
 
     public static TypeValuePair getObject(String arg) throws Exception {
         Expression expression = StaticJavaParser.parseExpression(arg);
+        if (expression.isNullLiteralExpr())
+            return null;
         if (expression.isDoubleLiteralExpr())
-            return new TypeValuePair(Double.class, expression.asDoubleLiteralExpr().asDouble());
+            return new TypeValuePair(double.class, expression.asDoubleLiteralExpr().asDouble());
         if (expression.isLongLiteralExpr())
-            return new TypeValuePair(Long.class, expression.asLongLiteralExpr().asNumber().longValue());
+            return new TypeValuePair(long.class, expression.asLongLiteralExpr().asNumber().longValue());
         if (expression.isBooleanLiteralExpr())
-            return new TypeValuePair(Boolean.class, expression.asBooleanLiteralExpr().getValue());
+            return new TypeValuePair(boolean.class, expression.asBooleanLiteralExpr().getValue());
         if (expression.isIntegerLiteralExpr())
-            return new TypeValuePair(Integer.class, expression.asIntegerLiteralExpr().asNumber().intValue());
+            return new TypeValuePair(int.class, expression.asIntegerLiteralExpr().asNumber().intValue());
         if (expression.isStringLiteralExpr())
             return new TypeValuePair(String.class, expression.asStringLiteralExpr().asString());
         if (expression.isCastExpr()) {
@@ -99,20 +101,16 @@ public class ReflectionUtil {
             try {
                 if (castExpr.getType().isPrimitiveType()) {
                     switch (type) {
-                        case "byte":
-                            return new TypeValuePair(byte.class, Byte.parseByte(value));
-                        case "short":
-                            return new TypeValuePair(short.class, Short.parseShort(value));
                         case "int":
-                            if (value.contains("."))
-                                return new TypeValuePair(int.class, (int) Double.parseDouble(value));
-                            else return new TypeValuePair(int.class, Integer.parseInt(value));
+                            return value.contains(".") ? new TypeValuePair(int.class, (int) Double.parseDouble(value)) : new TypeValuePair(int.class, Integer.parseInt(value));
+                        case "long":
+                            return value.contains(".") ? new TypeValuePair(long.class, (long) Double.parseDouble(value)) : new TypeValuePair(long.class, Long.parseLong(value));
+                        case "short":
+                            return value.contains(".") ? new TypeValuePair(short.class, (short) Double.parseDouble(value)) : new TypeValuePair(short.class, Short.parseShort(value));
+                        case "byte":
+                            return value.contains(".") ? new TypeValuePair(short.class, (short) Double.parseDouble(value)) : new TypeValuePair(byte.class, Byte.parseByte(value));
                         case "float":
                             return new TypeValuePair(float.class, Float.parseFloat(value));
-                        case "long":
-                            if (value.contains("."))
-                                return new TypeValuePair(long.class, (long) Double.parseDouble(value));
-                            else return new TypeValuePair(long.class, Long.parseLong(value));
                         case "double":
                             return new TypeValuePair(double.class, Double.parseDouble(value));
                         case "char":
@@ -129,9 +127,7 @@ public class ReflectionUtil {
             } catch (Exception ignored) {
             }
         }
-        TypeValuePair res = exec(arg);
-        if (res == null) return null;
-        return new TypeValuePair(res.type, res.value);
+        return exec(arg);
     }
 
     public static class TypeValuePair {
