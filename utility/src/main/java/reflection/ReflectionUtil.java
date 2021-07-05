@@ -86,10 +86,14 @@ public class ReflectionUtil {
     }
 
     public static TypeValuePair execFieldAccessExpr(FieldAccessExpr fieldAccessExpr) throws Exception {
+        try {
+            return new TypeValuePair(Class.forName(fieldAccessExpr.toString()), null);
+        } catch (Exception ignored){
+        }
         TypeValuePair object;
         try {
             object = new TypeValuePair(Class.forName(fieldAccessExpr.getScope().toString()), null);
-        } catch (Exception e){
+        } catch (Exception e2){
             object = exec(fieldAccessExpr.getScope().toString());
         }
         Field field = object.type.getDeclaredField(fieldAccessExpr.getNameAsString());
