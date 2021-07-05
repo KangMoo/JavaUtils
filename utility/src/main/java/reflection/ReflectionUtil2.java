@@ -4,65 +4,91 @@ import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.expr.*;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author kangmoo Heo
  */
-public class ReflectionUtil {
+public class ReflectionUtil2 {
 
     public static TypeValuePair exec(String methodCallExpr) throws Exception {
         methodCallExpr = methodCallExpr.trim();
-        Expression expression = StaticJavaParser.parseExpression(methodCallExpr);
-        if (expression.isObjectCreationExpr()) {
-            return execObjectCreationExpr(expression.asObjectCreationExpr());
-        } else if (expression.isMethodCallExpr()) {
-            return execMethodCallExpr(expression.asMethodCallExpr());
-        } else if (expression.isNameExpr()){
-            return new TypeValuePair(Class.forName(expression.toString()), null);
-        }
-        return null;
-    }
 
-    public static TypeValuePair execMethodCallExpr(MethodCallExpr methodCallExpr) throws Exception {
-        Class<?> clazz = null;
+        try {
+            Expression expression = StaticJavaParser.parseExpression(methodCallExpr);
+            if (expression.isObjectCreationExpr()) {
+                ObjectCreationExpr objectCreationExpr = expression.asObjectCreationExpr();
+                Class<?> clazz = Class.forName(objectCreationExpr.getType().toString());
+                TypeValuePair[] params = getObjects(objectCreationExpr.getArguments());
+                Class<?>[] paramTypes = null;
+                Object[] args = null;
+                if (params != null) {
+                    paramTypes = new Class[params.length];
+                    args = new Object[params.length];
+                    for (int i = 0; i < params.length; i++) {
+                        paramTypes[i] = params[i].type;
+                        args[i] = params[i].value;
+                    }
+                }
+                return new TypeValuePair(clazz, clazz.getDeclaredConstructor(paramTypes).newInstance(args));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        List<MethodCallExpr> scopes = new ArrayList<>();
+        MethodCallExpr exStmt = StaticJavaParser.parseExpression(methodCallExpr).asMethodCallExpr();
+
+        if (exStmt.isMethodCallExpr()) scopes.add(exStmt);
+        if (exStmt.hasScope()) {
+            Expression scope = exStmt.getScope().orElse(null);
+            while (scope != null) {
+                if (scope.isMethodCallExpr()) {
+                    scopes.add((MethodCallExpr) scope);
+                    scope = ((MethodCallExpr) scope).getScope().orElse(null);
+                } else if (scope.isFieldAccessExpr()) {
+                    scope = ((FieldAccessExpr) scope).getScope();
+                } else {
+                    break;
+                }
+            }
+        }
+
+        if (scopes.isEmpty()) return null;
         TypeValuePair object = null;
-        if (methodCallExpr.hasScope()) {
-            Expression superExpression = methodCallExpr.getScope().get();
-            object = exec(superExpression.toString());
-            clazz = object == null ? null : object.type;
+        Expression expression = scopes.get(scopes.size() - 1).getScope().orElse(null);
+        if (expression == null) return null;
+        for (int i = scopes.size() - 1; i >= 0; i--) {
+            MethodCallExpr scope = scopes.get(i);
+            object = exec(object, scope);
         }
-
-        ReflectionUtil.TypeValuePair[] params = getObjects(methodCallExpr.getArguments());
-        Class<?>[] paramTypes = null;
-        Object[] args = null;
-        if (params != null) {
-            paramTypes = new Class[params.length];
-            args = new Object[params.length];
-            for (int i = 0; i < params.length; i++) {
-                paramTypes[i] = params[i].type;
-                args[i] = params[i].value;
-            }
-        }
-        Method method = clazz.getMethod(methodCallExpr.getName().toString(), paramTypes);
-        return new ReflectionUtil.TypeValuePair(method.getReturnType(), method.invoke(object == null ? null : object.value, args));
+        return object;
     }
 
-    public static TypeValuePair execObjectCreationExpr(ObjectCreationExpr objectCreationExpr) throws Exception {
-        Class<?> clazz = Class.forName(objectCreationExpr.getType().toString());
-        ReflectionUtil.TypeValuePair[] params = getObjects(objectCreationExpr.getArguments());
-        Class<?>[] paramTypes = null;
+    public static TypeValuePair exec(TypeValuePair object, MethodCallExpr methodCallExpr) throws Exception {
+        Class<?> rclass = null;
+        if (object == null || object.type == null) {
+            rclass = Class.forName(methodCallExpr.getScope().get().toString());
+        } else {
+            rclass = Class.forName(object.type.getTypeName());
+        }
         Object[] args = null;
-        if (params != null) {
-            paramTypes = new Class[params.length];
-            args = new Object[params.length];
-            for (int i = 0; i < params.length; i++) {
-                paramTypes[i] = params[i].type;
-                args[i] = params[i].value;
+        Class<?>[] paramTypes = null;
+        if (!methodCallExpr.getArguments().isEmpty()) {
+            args = new Object[methodCallExpr.getArguments().size()];
+            paramTypes = new Class[args.length];
+            TypeValuePair[] tvps = getObjects(methodCallExpr.getArguments());
+            if (tvps != null) {
+                for (int i = 0; i < tvps.length; i++) {
+                    args[i] = tvps[i].value;
+                    paramTypes[i] = tvps[i].type;
+                }
             }
         }
-        return new ReflectionUtil.TypeValuePair(clazz, clazz.getDeclaredConstructor(paramTypes).newInstance(args));
+        Method method = rclass.getMethod(methodCallExpr.getName().toString(), paramTypes);
+        return new TypeValuePair(method.getReturnType(), method.invoke(object == null ? null : object.value, args));
     }
 
     public static TypeValuePair[] getObjects(List<Expression> expressions) throws Exception {
