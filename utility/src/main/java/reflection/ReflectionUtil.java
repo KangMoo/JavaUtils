@@ -66,12 +66,12 @@ public class ReflectionUtil {
         return object;
     }
 
-    public static TypeValuePair exec(TypeValuePair typeValuePair, MethodCallExpr methodCallExpr) throws Exception {
+    public static TypeValuePair exec(TypeValuePair object, MethodCallExpr methodCallExpr) throws Exception {
         Class<?> rclass = null;
-        if (typeValuePair == null || typeValuePair.type == null) {
+        if (object == null || object.type == null) {
             rclass = Class.forName(methodCallExpr.getScope().get().toString());
         } else {
-            rclass = Class.forName(typeValuePair.type.getTypeName());
+            rclass = Class.forName(object.type.getTypeName());
         }
         Object[] args = null;
         Class<?>[] paramTypes = null;
@@ -87,7 +87,7 @@ public class ReflectionUtil {
             }
         }
         Method method = rclass.getMethod(methodCallExpr.getName().toString(), paramTypes);
-        return new TypeValuePair(method.getReturnType(), method.invoke(typeValuePair == null ? null : typeValuePair.value, args));
+        return new TypeValuePair(method.getReturnType(), method.invoke(object == null ? null : object.value, args));
     }
 
     public static TypeValuePair[] getObjects(List<Expression> expressions) throws Exception {
