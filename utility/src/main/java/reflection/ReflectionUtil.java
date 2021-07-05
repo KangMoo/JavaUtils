@@ -53,18 +53,15 @@ public class ReflectionUtil {
             clazz = object == null ? null : object.type;
         }
 
+        TypeValuePair[] params = exec(methodCallExpr.getArguments());
         Class<?>[] paramTypes = null;
         Object[] paramValues = null;
-        List<TypeValuePair> params = new ArrayList<>();
-        for (Expression expr : methodCallExpr.getArguments()) {
-            params.add(exec(expr.toString()));
-        }
-        if (params.size() > 0) {
-            paramTypes = new Class[params.size()];
-            paramValues = new Object[params.size()];
-            for (int i = 0; i < params.size(); i++) {
-                paramTypes[i] = params.get(i).type;
-                paramValues[i] = params.get(i).value;
+        if (params != null) {
+            paramTypes = new Class[params.length];
+            paramValues = new Object[params.length];
+            for (int i = 0; i < params.length; i++) {
+                paramTypes[i] = params[i].type;
+                paramValues[i] = params[i].value;
             }
         }
 
@@ -130,7 +127,7 @@ public class ReflectionUtil {
     }
 
     public static TypeValuePair[] exec(List<Expression> expressions) throws Exception {
-        if (expressions == null || expressions.isEmpty()) return null;
+        if (expressions == null) return null;
         TypeValuePair[] res = new TypeValuePair[expressions.size()];
         IntStream.range(0, res.length).forEach(index -> {
             try {
