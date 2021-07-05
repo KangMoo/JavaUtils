@@ -3,6 +3,7 @@ package reflection;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.expr.*;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -20,8 +21,24 @@ public class ReflectionUtil {
             return execObjectCreationExpr(expr.asObjectCreationExpr());
         } else if (expr.isMethodCallExpr()) {
             return execMethodCallExpr(expr.asMethodCallExpr());
+        } else if (expr.isCastExpr()) {
+            return execCastExpr(expr.asCastExpr());
+        } else if (expr.isFieldAccessExpr()) {
+            return execFieldAccessExpr(expr.asFieldAccessExpr());
         } else if (expr.isNameExpr()) {
             return new TypeValuePair(Class.forName(expr.toString()), null);
+        } else if (expr.isNullLiteralExpr()) {
+            return new TypeValuePair(null, null);
+        } else if (expr.isDoubleLiteralExpr()) {
+            return new TypeValuePair(double.class, expr.asDoubleLiteralExpr().asDouble());
+        } else if (expr.isIntegerLiteralExpr()) {
+            return new TypeValuePair(int.class, expr.asIntegerLiteralExpr().asNumber().intValue());
+        } else if (expr.isLongLiteralExpr()) {
+            return new TypeValuePair(long.class, expr.asLongLiteralExpr().asNumber().longValue());
+        } else if (expr.isBooleanLiteralExpr()) {
+            return new TypeValuePair(boolean.class, expr.asBooleanLiteralExpr().getValue());
+        } else if (expr.isStringLiteralExpr()) {
+            return new TypeValuePair(String.class, expr.asStringLiteralExpr().asString());
         }
         return null;
     }
@@ -64,6 +81,47 @@ public class ReflectionUtil {
             }
         }
         return new ReflectionUtil.TypeValuePair(clazz, clazz.getDeclaredConstructor(paramTypes).newInstance(args));
+    }
+
+    public static TypeValuePair execFieldAccessExpr(FieldAccessExpr fieldAccessExpr) throws Exception {
+        TypeValuePair object = exec(fieldAccessExpr.getScope().toString());
+        Field field = object.type.getDeclaredField(fieldAccessExpr.getNameAsString());
+        field.setAccessible(true);
+        return new TypeValuePair(field.getType(), field.get(null));
+    }
+
+    public static TypeValuePair execCastExpr(CastExpr castExpr) throws Exception {
+        String type = castExpr.getType().toString();
+        String value = castExpr.getExpression().toString();
+        try {
+            if (castExpr.getType().isPrimitiveType()) {
+                switch (type) {
+                    case "int":
+                        return value.contains(".") ? new ReflectionUtil.TypeValuePair(int.class, (int) Double.parseDouble(value)) : new ReflectionUtil.TypeValuePair(int.class, Integer.parseInt(value));
+                    case "long":
+                        return value.contains(".") ? new ReflectionUtil.TypeValuePair(long.class, (long) Double.parseDouble(value)) : new ReflectionUtil.TypeValuePair(long.class, Long.parseLong(value));
+                    case "short":
+                        return value.contains(".") ? new ReflectionUtil.TypeValuePair(short.class, (short) Double.parseDouble(value)) : new ReflectionUtil.TypeValuePair(short.class, Short.parseShort(value));
+                    case "byte":
+                        return value.contains(".") ? new ReflectionUtil.TypeValuePair(short.class, (short) Double.parseDouble(value)) : new ReflectionUtil.TypeValuePair(byte.class, Byte.parseByte(value));
+                    case "float":
+                        return new ReflectionUtil.TypeValuePair(float.class, Float.parseFloat(value));
+                    case "double":
+                        return new ReflectionUtil.TypeValuePair(double.class, Double.parseDouble(value));
+                    case "char":
+                        return new ReflectionUtil.TypeValuePair(char.class, value.charAt(0));
+                    case "boolean":
+                        return new ReflectionUtil.TypeValuePair(boolean.class, Boolean.parseBoolean(value));
+                    default:
+                        break;
+                }
+            } else {
+                Class<?> typeClass = Class.forName(castExpr.getType().toString());
+                new ReflectionUtil.TypeValuePair(typeClass, typeClass.cast(castExpr.getType().asTypeParameter().getName().toString()));
+            }
+        } catch (Exception ignored) {
+        }
+        return null;
     }
 
     public static TypeValuePair[] getObjects(List<Expression> expressions) throws Exception {
