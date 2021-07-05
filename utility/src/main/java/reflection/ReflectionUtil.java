@@ -12,15 +12,16 @@ import java.util.*;
  */
 public class ReflectionUtil {
 
-    public static TypeValuePair exec(String methodCallExpr) throws Exception {
-        methodCallExpr = methodCallExpr.trim();
-        Expression expression = StaticJavaParser.parseExpression(methodCallExpr);
-        if (expression.isObjectCreationExpr()) {
-            return execObjectCreationExpr(expression.asObjectCreationExpr());
-        } else if (expression.isMethodCallExpr()) {
-            return execMethodCallExpr(expression.asMethodCallExpr());
-        } else if (expression.isNameExpr()){
-            return new TypeValuePair(Class.forName(expression.toString()), null);
+    public static TypeValuePair exec(String expression) throws Exception {
+        expression = expression.trim();
+        if (expression.endsWith(";")) expression = expression.substring(0, expression.length() - 1);
+        Expression expr = StaticJavaParser.parseExpression(expression);
+        if (expr.isObjectCreationExpr()) {
+            return execObjectCreationExpr(expr.asObjectCreationExpr());
+        } else if (expr.isMethodCallExpr()) {
+            return execMethodCallExpr(expr.asMethodCallExpr());
+        } else if (expr.isNameExpr()) {
+            return new TypeValuePair(Class.forName(expr.toString()), null);
         }
         return null;
     }
