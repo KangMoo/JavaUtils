@@ -52,24 +52,39 @@ public class ReflectionUtil {
             clazz = object == null ? null : object.type;
         }
 
-        ReflectionUtil.TypeValuePair[] params = getObjects(methodCallExpr.getArguments());
         Class<?>[] paramTypes = null;
-        Object[] args = null;
-        if (params != null) {
-            paramTypes = new Class[params.length];
-            args = new Object[params.length];
-            for (int i = 0; i < params.length; i++) {
-                paramTypes[i] = params[i].type;
-                args[i] = params[i].value;
+        Object[] paramValues = null;
+        List<TypeValuePair> params = new ArrayList<>();
+        for(Expression expr : methodCallExpr.getArguments()){
+            params.add(exec(expr.toString()));
+        }
+        if(params.size()>0){
+            paramTypes = new Class[params.size()];
+            paramValues = new Object[params.size()];
+            for(int i =0; i<params.size(); i++){
+                paramTypes[i] = params.get(i).type;
+                paramValues[i] = params.get(i).value;
             }
         }
+
+
+//        TypeValuePair[] params = getObjects(methodCallExpr.getArguments());
+//
+//        if (params != null) {
+//            paramTypes = new Class[params.length];
+//            paramValues = new Object[params.length];
+//            for (int i = 0; i < params.length; i++) {
+//                paramTypes[i] = params[i].type;
+//                paramValues[i] = params[i].value;
+//            }
+//        }
         Method method = clazz.getMethod(methodCallExpr.getName().toString(), paramTypes);
-        return new ReflectionUtil.TypeValuePair(method.getReturnType(), method.invoke(object == null ? null : object.value, args));
+        return new TypeValuePair(method.getReturnType(), method.invoke(object == null ? null : object.value, paramValues));
     }
 
     public static TypeValuePair execObjectCreationExpr(ObjectCreationExpr objectCreationExpr) throws Exception {
         Class<?> clazz = Class.forName(objectCreationExpr.getType().toString());
-        ReflectionUtil.TypeValuePair[] params = getObjects(objectCreationExpr.getArguments());
+        TypeValuePair[] params = getObjects(objectCreationExpr.getArguments());
         Class<?>[] paramTypes = null;
         Object[] args = null;
         if (params != null) {
@@ -80,7 +95,7 @@ public class ReflectionUtil {
                 args[i] = params[i].value;
             }
         }
-        return new ReflectionUtil.TypeValuePair(clazz, clazz.getDeclaredConstructor(paramTypes).newInstance(args));
+        return new TypeValuePair(clazz, clazz.getDeclaredConstructor(paramTypes).newInstance(args));
     }
 
     public static TypeValuePair execFieldAccessExpr(FieldAccessExpr fieldAccessExpr) throws Exception {
@@ -97,27 +112,27 @@ public class ReflectionUtil {
             if (castExpr.getType().isPrimitiveType()) {
                 switch (type) {
                     case "int":
-                        return value.contains(".") ? new ReflectionUtil.TypeValuePair(int.class, (int) Double.parseDouble(value)) : new ReflectionUtil.TypeValuePair(int.class, Integer.parseInt(value));
+                        return value.contains(".") ? new TypeValuePair(int.class, (int) Double.parseDouble(value)) : new TypeValuePair(int.class, Integer.parseInt(value));
                     case "long":
-                        return value.contains(".") ? new ReflectionUtil.TypeValuePair(long.class, (long) Double.parseDouble(value)) : new ReflectionUtil.TypeValuePair(long.class, Long.parseLong(value));
+                        return value.contains(".") ? new TypeValuePair(long.class, (long) Double.parseDouble(value)) : new TypeValuePair(long.class, Long.parseLong(value));
                     case "short":
-                        return value.contains(".") ? new ReflectionUtil.TypeValuePair(short.class, (short) Double.parseDouble(value)) : new ReflectionUtil.TypeValuePair(short.class, Short.parseShort(value));
+                        return value.contains(".") ? new TypeValuePair(short.class, (short) Double.parseDouble(value)) : new TypeValuePair(short.class, Short.parseShort(value));
                     case "byte":
-                        return value.contains(".") ? new ReflectionUtil.TypeValuePair(short.class, (short) Double.parseDouble(value)) : new ReflectionUtil.TypeValuePair(byte.class, Byte.parseByte(value));
+                        return value.contains(".") ? new TypeValuePair(short.class, (short) Double.parseDouble(value)) : new TypeValuePair(byte.class, Byte.parseByte(value));
                     case "float":
-                        return new ReflectionUtil.TypeValuePair(float.class, Float.parseFloat(value));
+                        return new TypeValuePair(float.class, Float.parseFloat(value));
                     case "double":
-                        return new ReflectionUtil.TypeValuePair(double.class, Double.parseDouble(value));
+                        return new TypeValuePair(double.class, Double.parseDouble(value));
                     case "char":
-                        return new ReflectionUtil.TypeValuePair(char.class, value.charAt(0));
+                        return new TypeValuePair(char.class, value.charAt(0));
                     case "boolean":
-                        return new ReflectionUtil.TypeValuePair(boolean.class, Boolean.parseBoolean(value));
+                        return new TypeValuePair(boolean.class, Boolean.parseBoolean(value));
                     default:
                         break;
                 }
             } else {
                 Class<?> typeClass = Class.forName(castExpr.getType().toString());
-                new ReflectionUtil.TypeValuePair(typeClass, typeClass.cast(castExpr.getType().asTypeParameter().getName().toString()));
+                new TypeValuePair(typeClass, typeClass.cast(castExpr.getType().asTypeParameter().getName().toString()));
             }
         } catch (Exception ignored) {
         }
