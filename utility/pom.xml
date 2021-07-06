@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
-    <artifactId>utility</artifactId>
+    <groupId>com.github.KangMoo</groupId>
+    <artifactId>utils</artifactId>
     <version>1.0.0</version>
 
     <dependencyManagement>
