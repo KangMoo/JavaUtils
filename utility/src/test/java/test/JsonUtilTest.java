@@ -1,12 +1,10 @@
 package test;
 
 import org.junit.Test;
-import utility.JsonMaker;
-import utility.JsonUtil;
+import com.github.kangmoo.utils.utility.JsonUtil;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

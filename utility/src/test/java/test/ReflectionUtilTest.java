@@ -1,7 +1,7 @@
 package test;
 
 import org.junit.Test;
-import reflection.ReflectionUtil;
+import com.github.kangmoo.utils.reflection.ReflectionUtil;
 
 /**
  *

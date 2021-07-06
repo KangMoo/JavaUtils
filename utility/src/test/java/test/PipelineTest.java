@@ -1,7 +1,7 @@
 package test;
 
 import org.junit.Test;
-import pipeline.Pipeline;
+import com.github.kangmoo.utils.pipeline.Pipeline;
 
 import java.util.function.UnaryOperator;
 

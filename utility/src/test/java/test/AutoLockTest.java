@@ -1,9 +1,7 @@
 package test;
 
 import org.junit.Test;
-import utility.AutoLock;
-
-import java.util.function.Supplier;
+import com.github.kangmoo.utils.utility.AutoLock;
 
 /**
  *

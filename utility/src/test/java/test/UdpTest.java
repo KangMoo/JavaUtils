@@ -1,9 +1,9 @@
 package test;
 
 import org.junit.Test;
-import udp.UdpClient;
-import udp.UdpConn;
-import udp.UdpServer;
+import com.github.kangmoo.utils.udp.UdpClient;
+import com.github.kangmoo.utils.udp.UdpConn;
+import com.github.kangmoo.utils.udp.UdpServer;
 
 import java.io.IOException;
 import java.net.SocketException;

@@ -1,9 +1,8 @@
 package test;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
-import scheduler.IntervalTaskManager;
-import scheduler.IntervalTaskUnit;
+import com.github.kangmoo.utils.scheduler.IntervalTaskManager;
+import com.github.kangmoo.utils.scheduler.IntervalTaskUnit;
 
 /**
  *

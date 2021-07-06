@@ -1,7 +1,7 @@
 package test;
 
 import org.junit.Test;
-import rabbitmq.*;
+import com.github.kangmoo.utils.rabbitmq.*;
 
 import java.util.Date;
 import java.util.stream.IntStream;
