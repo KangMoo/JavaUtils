@@ -7,6 +7,9 @@ import com.google.gson.*;
  */
 public class JsonUtil {
 
+    private JsonUtil() {
+    }
+
     public static boolean isJson(String msg) {
         if (!msg.contains("{")) return false;
         Gson gson = new Gson();
@@ -16,9 +19,6 @@ public class JsonUtil {
         } catch (com.google.gson.JsonSyntaxException ex) {
             return false;
         }
-    }
-
-    private JsonUtil() {
     }
 
     /**
