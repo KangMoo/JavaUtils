@@ -145,4 +145,12 @@ public class StringUtil {
         sb.delete(sb.length() - separator.length(), sb.length());
         return sb.toString();
     }
+
+    private static boolean isEmptyOrNull(String str) {
+        if (str != null && !str.isEmpty()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
