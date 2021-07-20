@@ -147,10 +147,6 @@ public class StringUtil {
     }
 
     private static boolean isEmptyOrNull(String str) {
-        if (str != null && !str.isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
+        return str == null || str.isEmpty();
     }
 }
