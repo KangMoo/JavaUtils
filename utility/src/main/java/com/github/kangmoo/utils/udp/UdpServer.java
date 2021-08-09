@@ -19,18 +19,24 @@ public class UdpServer extends Thread{
     public void run() {
         running = true;
         DatagramPacket dp = new DatagramPacket(new byte[66536], 66536);
-        while(running){
-            if(packetConsumer == null) continue;
-            try {
-                this.ds.receive(dp);
-            } catch (Exception e) {
-                e.printStackTrace();
-                // do nothing
+        try {
+            this.ds.setSoTimeout(1000);
+            while(running){
+                if(packetConsumer == null) continue;
+                try {
+                    this.ds.receive(dp);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    // do nothing
+                }
+                byte[] data = new byte[dp.getLength()];
+                System.arraycopy(dp.getData(), 0, data, 0, dp.getLength());
+                packetConsumer.accept(data);
             }
-            byte[] data = new byte[dp.getLength()];
-            System.arraycopy(dp.getData(), 0, data, 0, dp.getLength());
-            packetConsumer.accept(data);
+        } catch (SocketException e) {
+            e.printStackTrace();
         }
+
     }
 
     public boolean isRunning() {
@@ -38,6 +44,7 @@ public class UdpServer extends Thread{
     }
 
     public void stopServer() {
+        this.ds.disconnect();
         this.running = false;
     }
 
