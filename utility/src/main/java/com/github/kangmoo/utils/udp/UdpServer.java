@@ -9,34 +9,35 @@ import java.util.function.Consumer;
  */
 public class UdpServer extends Thread{
     private boolean running = false;
-    private DatagramSocket ds;
+    private final DatagramSocket ds;
     private Consumer<byte[]> packetConsumer;
     public UdpServer(int port, Consumer<byte[]> packetCallback) throws SocketException {
         this.ds = new DatagramSocket(port);
         this.packetConsumer = packetCallback;
     }
 
+    @Override
     public void run() {
         running = true;
         DatagramPacket dp = new DatagramPacket(new byte[66536], 66536);
         try {
             this.ds.setSoTimeout(1000);
-            while(running){
-                if(packetConsumer == null) continue;
-                try {
-                    this.ds.receive(dp);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    // do nothing
-                }
+        } catch (SocketException e) {
+            e.printStackTrace();
+            return;
+        }
+        while(true){
+            if(packetConsumer == null) continue;
+            try {
+                this.ds.receive(dp);
                 byte[] data = new byte[dp.getLength()];
                 System.arraycopy(dp.getData(), 0, data, 0, dp.getLength());
                 packetConsumer.accept(data);
+            } catch (Exception e) {
+                // do nothing
             }
-        } catch (SocketException e) {
-            e.printStackTrace();
+            if(!isRunning()) return;
         }
-
     }
 
     public boolean isRunning() {
@@ -44,8 +45,9 @@ public class UdpServer extends Thread{
     }
 
     public void stopServer() {
-        this.ds.disconnect();
         this.running = false;
+        this.ds.disconnect();
+        System.out.println("----------------------------------- Stop UDP Server -----------------------------------");
     }
 
     public Consumer<byte[]> getPacketConsumer() {
