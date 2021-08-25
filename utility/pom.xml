@@ -98,6 +98,12 @@
             <artifactId>jnativehook</artifactId>
             <version>2.1.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.github.kostaskougios</groupId>
+            <artifactId>cloning</artifactId>
+            <version>1.10.3</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -120,6 +126,31 @@
                     <target>8</target>
                 </configuration>
             </plugin>
+
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-assembly-plugin</artifactId>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>build-App</id>-->
+<!--                        <goals>-->
+<!--                            <goal>attached</goal>-->
+<!--                        </goals>-->
+<!--                        <phase>package</phase>-->
+<!--                        <configuration>-->
+<!--                            <descriptorRefs>-->
+<!--                                <descriptorRef>jar-with-dependencies</descriptorRef>-->
+<!--                            </descriptorRefs>-->
+<!--                            <finalName>UdpSender</finalName>-->
+<!--                            <archive>-->
+<!--                                <manifest>-->
+<!--                                    <mainClass>UdpSender</mainClass>-->
+<!--                                </manifest>-->
+<!--                            </archive>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 </project>
