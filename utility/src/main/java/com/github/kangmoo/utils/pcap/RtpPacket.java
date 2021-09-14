@@ -53,7 +53,39 @@ public class RtpPacket extends KaitaiStruct {
         MPV(32),
         MP2T(33),
         H263(34),
-        MPEG_PS(96);
+        MPEG_PS(96),
+        DYNAMIC_96(96),
+        DYNAMIC_97(97),
+        DYNAMIC_98(98),
+        DYNAMIC_99(99),
+        DYNAMIC_100(100),
+        DYNAMIC_101(101),
+        DYNAMIC_102(102),
+        DYNAMIC_103(103),
+        DYNAMIC_104(104),
+        DYNAMIC_105(105),
+        DYNAMIC_106(106),
+        DYNAMIC_107(107),
+        DYNAMIC_108(108),
+        DYNAMIC_109(109),
+        DYNAMIC_110(110),
+        DYNAMIC_111(111),
+        DYNAMIC_112(112),
+        DYNAMIC_113(113),
+        DYNAMIC_114(114),
+        DYNAMIC_115(115),
+        DYNAMIC_116(116),
+        DYNAMIC_117(117),
+        DYNAMIC_118(118),
+        DYNAMIC_119(119),
+        DYNAMIC_120(120),
+        DYNAMIC_121(121),
+        DYNAMIC_122(122),
+        DYNAMIC_123(123),
+        DYNAMIC_124(124),
+        DYNAMIC_125(125),
+        DYNAMIC_126(126),
+        DYNAMIC_127(127);
 
         private final long id;
         PayloadTypeEnum(long id) { this.id = id; }
@@ -87,6 +119,7 @@ public class RtpPacket extends KaitaiStruct {
         this.csrcCount = this._io.readBitsIntBe(4);
         this.marker = this._io.readBitsIntBe(1) != 0;
         this.payloadType = PayloadTypeEnum.byId(this._io.readBitsIntBe(7));
+        this.payloadTypeNum = this._io.readBitsIntBe(7);
         this._io.alignToByte();
         this.sequenceNumber = this._io.readU2be();
         this.timestamp = this._io.readU4be();
@@ -164,6 +197,7 @@ public class RtpPacket extends KaitaiStruct {
     private long csrcCount;
     private boolean marker;
     private PayloadTypeEnum payloadType;
+    private long payloadTypeNum;
     private int sequenceNumber;
     private long timestamp;
     private long ssrc;
@@ -178,6 +212,7 @@ public class RtpPacket extends KaitaiStruct {
     public long csrcCount() { return csrcCount; }
     public boolean marker() { return marker; }
     public PayloadTypeEnum payloadType() { return payloadType; }
+    public long getPayloadTypeNum() { return payloadTypeNum; }
     public int sequenceNumber() { return sequenceNumber; }
     public long timestamp() { return timestamp; }
     public long ssrc() { return ssrc; }
