@@ -5,7 +5,7 @@ package com.github.kangmoo.utils.g711codec;
  * @author kangmoo Heo
  */
 public class AlawTranscoder {
-    private static short aLawDecompressTable[] = new short[]{
+    private static final short[] aLawDecompressTable = new short[]{
             -5504, -5248, -6016, -5760, -4480, -4224, -4992, -4736,
             -7552, -7296, -8064, -7808, -6528, -6272, -7040, -6784,
             -2752, -2624, -3008, -2880, -2240, -2112, -2496, -2368,
@@ -40,8 +40,8 @@ public class AlawTranscoder {
             944, 912, 1008, 976, 816, 784, 880, 848
     };
 
-    private final static int cClip = 32635;
-    private static byte aLawCompressTable[] = new byte[] { 1, 1, 2, 2, 3, 3, 3,
+    private static final int cClip = 32635;
+    private static final byte[] aLawCompressTable = new byte[] { 1, 1, 2, 2, 3, 3, 3,
             3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
             5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
             6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7,
@@ -52,8 +52,8 @@ public class AlawTranscoder {
     public static byte[] decode(byte[] media) {
         byte[] res = new byte[media.length * 2];
         int j = 0;
-        for (int i = 0; i < media.length; i++) {
-            short s = aLawDecompressTable[media[i] & 0xff];
+        for(byte mediaByte : media){
+            short s = aLawDecompressTable[mediaByte & 0xff];
             res[j++] = (byte) s;
             res[j++] = (byte) (s >> 8);
         }
@@ -82,7 +82,7 @@ public class AlawTranscoder {
         short sample = 0;
 
         for (int i = 0; i < count; i++) {
-            sample = (short) (((src[j++] & 0xff) | (src[j++]) << 8));
+            sample = (short) ((src[j++] & 0xff) | (src[j++]) << 8);
             res[i] = linearToALawSample(sample);
         }
         return count;
@@ -95,14 +95,14 @@ public class AlawTranscoder {
         int s;
 
         sign = ((~sample) >> 8) & 0x80;
-        if (!(sign == 0x80)) {
+        if (sign != 0x80) {
             sample = (short) -sample;
         }
         if (sample > cClip) {
             sample = cClip;
         }
         if (sample >= 256) {
-            exponent = (int) aLawCompressTable[(sample >> 8) & 0x7F];
+            exponent = aLawCompressTable[(sample >> 8) & 0x7F];
             mantissa = (sample >> (exponent + 3)) & 0x0F;
             s = (exponent << 4) | mantissa;
         } else {

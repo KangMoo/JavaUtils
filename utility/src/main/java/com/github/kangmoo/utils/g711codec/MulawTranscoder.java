@@ -5,9 +5,8 @@ package com.github.kangmoo.utils.g711codec;
  * @author kangmoo Heo
  */
 public class MulawTranscoder {
-    private static final int cBias = 132;
     private static final int cClip = 32635;
-    private static short muLawDecompressTable[] = new short[]{
+    private static final short[] muLawDecompressTable = new short[]{
             -32124, -31100, -30076, -29052, -28028, -27004, -25980, -24956,
             -23932, -22908, -21884, -20860, -19836, -18812, -17788, -16764,
             -15996, -15484, -14972, -14460, -13948, -13436, -12924, -12412,
@@ -41,7 +40,7 @@ public class MulawTranscoder {
             120, 112, 104, 96, 88, 80, 72, 64,
             56, 48, 40, 32, 24, 16, 8, 0
     };
-    private static byte[] muLawCompressTable = {
+    private static final byte[] muLawCompressTable = {
             0, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3,
             4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
             5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
@@ -62,8 +61,8 @@ public class MulawTranscoder {
     public static byte[] decode(byte[] media) {
         byte[] res = new byte[media.length * 2];
         int j = 0;
-        for (int i = 0; i < media.length; i++) {
-            short s = muLawDecompressTable[media[i] & 0xff];
+        for(byte mediaByte : media){
+            short s = muLawDecompressTable[mediaByte & 0xff];
             res[j++] = (byte) s;
             res[j++] = (byte) (s >> 8);
         }
@@ -76,7 +75,7 @@ public class MulawTranscoder {
         short sample = 0;
 
         for (int i = 0; i < count; i++) {
-            sample = (short) (((src[j++] & 0xff) | (src[j++]) << 8));
+            sample = (short) ((src[j++] & 0xff) | (src[j++]) << 8);
             res[i] = linearToMuLawSample(sample);
         }
         return count;
