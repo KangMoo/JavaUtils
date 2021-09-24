@@ -55,21 +55,19 @@ public class BashServiceImpl {
     /**
      * 하나의 파일을 업로드 한다.
      *
-     * @param dir
+     * @param targetDir
      *            저장시킬 주소(서버)
      * @param file
      *            저장할 파일
      */
-    public void upload(String dir, File file) {
+    public void upload(String targetDir, File file) {
 
         FileInputStream in = null;
         try {
             in = new FileInputStream(file);
-            channelSftp.cd(dir);
+            channelSftp.cd(targetDir);
             channelSftp.put(in, file.getName());
-        } catch (SftpException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
+        } catch (SftpException | FileNotFoundException e) {
             e.printStackTrace();
         } finally {
             try {
@@ -80,21 +78,21 @@ public class BashServiceImpl {
         }
     }
 
+    public void upload(String targetDir, String file) {
+        this.upload(targetDir, new File(file));
+    }
     /**
      * 하나의 파일을 다운로드 한다.
      *
-     * @param dir
-     *            저장할 경로(서버)
      * @param downloadFileName
      *            다운로드할 파일
-     * @param path
+     * @param fileName
      *            저장될 공간
      */
-    public void download(String dir, String downloadFileName, String path) {
+    public void download(String downloadFileName, String fileName) {
         InputStream in = null;
         FileOutputStream out = null;
         try {
-            channelSftp.cd(dir);
             in = channelSftp.get(downloadFileName);
         } catch (SftpException e) {
             // TODO Auto-generated catch block
@@ -102,7 +100,7 @@ public class BashServiceImpl {
         }
 
         try {
-            out = new FileOutputStream(new File(path));
+            out = new FileOutputStream(new File(fileName));
             int i;
 
             if (in != null) {
@@ -136,10 +134,9 @@ public class BashServiceImpl {
      *            파일 경로(서버)
      *            삭제할 파일
      */
-    public void rmFile(String dir, String rmFileName) {
+    public void rmFile(String rmFileName) {
 
         try {
-            channelSftp.cd(dir);
             channelSftp.rm(rmFileName);
         } catch (SftpException e) {
             // TODO Auto-generated catch block
