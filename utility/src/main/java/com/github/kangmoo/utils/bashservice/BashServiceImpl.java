@@ -172,7 +172,6 @@ public class BashServiceImpl {
         try {
             jsch.addIdentity(privateKey);
             session = jsch.getSession(userName, host, port);
-            // session.setPassword(password);
 
             java.util.Properties config = new java.util.Properties();
             config.put("StrictHostKeyChecking", "no");
