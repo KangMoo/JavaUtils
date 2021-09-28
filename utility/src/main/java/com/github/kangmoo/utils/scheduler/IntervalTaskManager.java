@@ -69,6 +69,14 @@ public class IntervalTaskManager {
         jobs.put(name, runner);
     }
 
+    public void removeJob(String name) {
+        jobs.remove(name);
+    }
+
+    public void removeAllJob() {
+        jobs.clear();
+    }
+
     public void sessionCheck() {
         for (IntervalTaskUnit runner : jobs.values()) {
             runner.run();
