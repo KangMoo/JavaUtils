@@ -45,7 +45,7 @@ public class IntervalTaskManager {
             ScheduledExecutorService job = Executors.newSingleThreadScheduledExecutor(r -> new Thread(r, "ITV_" + runner.getClass().getSimpleName()));
             executorService.add(job);
             job.scheduleAtFixedRate(runner, runner.getInterval() - System.currentTimeMillis() % runner.getInterval(),
-                    runner.getInterval(), TimeUnit.MILLISECONDS);
+                    runner.getInterval(), runner.timeUnit);
         }
         logger.info("Interval Task Manager Start");
     }
