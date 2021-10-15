@@ -1,4 +1,4 @@
-package com.github.kangmoo.utils.g711codec;
+package com.github.kangmoo.utils.pcm;
 
 /**
  *
