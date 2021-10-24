@@ -32,11 +32,6 @@
             <artifactId>plantuml</artifactId>
             <version>1.2021.0</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.github.jeluard</groupId>-->
-<!--            <artifactId>maven-plantuml-plugin</artifactId>-->
-<!--            <version>7940</version>-->
-<!--        </dependency>-->
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -104,6 +99,19 @@
             <artifactId>cloning</artifactId>
             <version>1.10.3</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.2.4</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.restcomm.media</groupId>
+            <artifactId>core</artifactId>
+            <version>7.0.16</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -127,30 +135,30 @@
                 </configuration>
             </plugin>
 
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-assembly-plugin</artifactId>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>build-App</id>-->
-<!--                        <goals>-->
-<!--                            <goal>attached</goal>-->
-<!--                        </goals>-->
-<!--                        <phase>package</phase>-->
-<!--                        <configuration>-->
-<!--                            <descriptorRefs>-->
-<!--                                <descriptorRef>jar-with-dependencies</descriptorRef>-->
-<!--                            </descriptorRefs>-->
-<!--                            <finalName>UdpSender</finalName>-->
-<!--                            <archive>-->
-<!--                                <manifest>-->
-<!--                                    <mainClass>UdpSender</mainClass>-->
-<!--                                </manifest>-->
-<!--                            </archive>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-assembly-plugin</artifactId>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <id>build-App</id>-->
+            <!--                        <goals>-->
+            <!--                            <goal>attached</goal>-->
+            <!--                        </goals>-->
+            <!--                        <phase>package</phase>-->
+            <!--                        <configuration>-->
+            <!--                            <descriptorRefs>-->
+            <!--                                <descriptorRef>jar-with-dependencies</descriptorRef>-->
+            <!--                            </descriptorRefs>-->
+            <!--                            <finalName>UdpSender</finalName>-->
+            <!--                            <archive>-->
+            <!--                                <manifest>-->
+            <!--                                    <mainClass>UdpSender</mainClass>-->
+            <!--                                </manifest>-->
+            <!--                            </archive>-->
+            <!--                        </configuration>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
         </plugins>
     </build>
 </project>
