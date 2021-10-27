@@ -48,8 +48,6 @@ public class SdpNegoTest {
                 .mapToInt(Integer::intValue)
                 .toArray();
 
-
-
         sdp.getMediaDescription("audio").setFormats(attributes);
         sdp.getMediaDescription("audio").setPayloadTypes(payloads);
 
