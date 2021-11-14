@@ -16,7 +16,7 @@ public class LogFinder {
             if(cfg == null) return;
             List<File> files = getFileListRecursively(new File(cfg.getTarget()));
             files.parallelStream().sorted(Comparator.comparingLong(File::lastModified))
-                    .map(o -> test2(o.getAbsolutePath(), cfg.getFilters(), cfg.getSplitPattern()))
+                    .map(o -> splitAndFilter(o.getAbsolutePath(), cfg.getFilters(), cfg.getSplitPattern()))
                     .forEach(o -> o.forEach(System.out::println));
         } catch (Exception e) {
             e.printStackTrace();
@@ -54,7 +54,7 @@ public class LogFinder {
         return files;
     }
 
-    public static List<String> test2(String filePath, String[] filters, String splitPattern) {
+    public static List<String> splitAndFilter(String filePath, String[] filters, String splitPattern) {
         List<String> filteredLogs = new ArrayList<>();
         filteredLogs.add("<" + filePath + ">");
         try (Scanner sc = new Scanner(new File(filePath))) {
