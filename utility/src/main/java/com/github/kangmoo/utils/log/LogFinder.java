@@ -15,7 +15,7 @@ public class LogFinder {
             Configuration cfg = getCfg(args);
             if(cfg == null) return;
             List<File> files = getFileListRecursively(new File(cfg.getTarget()));
-            files.parallelStream().sorted(Comparator.comparingLong(File::lastModified))
+            files.parallelStream().sorted(Comparator.comparingLong(File::lastModified).reversed())
                     .map(o -> splitAndFilter(o.getAbsolutePath(), cfg.getFilters(), cfg.getSplitPattern()))
                     .forEach(o -> o.forEach(System.out::println));
         } catch (Exception e) {
