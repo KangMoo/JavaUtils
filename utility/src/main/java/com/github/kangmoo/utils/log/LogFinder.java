@@ -13,11 +13,13 @@ public class LogFinder {
     public static void main(String[] args) {
         try {
             Configuration cfg = getCfg(args);
-            if(cfg == null) return;
+            if (cfg == null) return;
             List<File> files = getFileListRecursively(new File(cfg.getTarget()));
+
             files.parallelStream().sorted(Comparator.comparingLong(File::lastModified).reversed())
                     .map(o -> splitAndFilter(o.getAbsolutePath(), cfg.getFilters(), cfg.getSplitPattern()))
                     .forEachOrdered(o -> o.forEach(System.out::println));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -56,7 +58,7 @@ public class LogFinder {
 
     public static List<String> splitAndFilter(String filePath, String[] filters, String splitPattern) {
         List<String> filteredLogs = new ArrayList<>();
-        filteredLogs.add("<" + filePath + ">");
+        filteredLogs.add("<<<" + filePath + ">>>");
         try (Scanner sc = new Scanner(new File(filePath))) {
             StringBuilder sb = new StringBuilder();
             while (sc.hasNextLine()) {

@@ -18,8 +18,8 @@ public class Configuration {
         if (opts != null) return opts;
         opts = new Options();
 
-        opts.addOption(Option.builder("f").argName("pattern").hasArg().desc("Log Pattern").build());
-        opts.addOption(Option.builder("p").argName("filters").hasArg().desc("Filtering Strings").build());
+        opts.addOption(Option.builder("p").argName("pattern").hasArg().desc("Log Pattern (regex)").build());
+        opts.addOption(Option.builder("f").argName("filters").hasArgs().desc("Filtering Strings").build());
         return opts;
     }
 
