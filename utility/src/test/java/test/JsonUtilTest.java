@@ -38,7 +38,6 @@ public class JsonUtilTest {
             System.out.println(JsonUtil.json2Int(jsonSample, "age"));
             System.out.println(JsonUtil.json2Boolean(jsonSample, "male"));
             System.out.println(JsonUtil.json2Float(jsonSample, "tree", "stem", "branch1", "branchSize"));
-            System.out.println(Arrays.toString(JsonUtil.json2FloatArr(jsonSample, "tree", "stem", "branch2", "leafSize")));
         }
 
         try {
