@@ -160,12 +160,6 @@ public class JsonUtil {
         }
     }
 
-    /**
-     * Json 문자열을 받아 파싱하고 String 형태로 반환한다.
-     * @param jsonStr 파싱할 Json 문자열
-     * @param element 파싱할 하위구조. element의 마지막 값을 String으로 반환한다
-     * @return 파싱한 String. 파싱이 실패할 경우 defaultValue return
-     */
     public static Optional<String> json2StringWithDefault(String jsonStr, String... element) {
         try {
             return json2JsonElement(jsonStr, element)
