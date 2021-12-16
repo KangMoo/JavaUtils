@@ -11,6 +11,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Json 처리를 원할하게 하기 위한 유틸
  */
 public class JsonUtil {
+
+    private JsonUtil() {}
+
     public static Optional<JsonObject> json2Object(String jsonStr, String ... elements) {
         try {
             return json2JsonElement(jsonStr, elements)
@@ -144,9 +147,6 @@ public class JsonUtil {
         } catch (Exception e){
             return Optional.empty();
         }
-    }
-
-    private JsonUtil() {
     }
 
     public static boolean isJson(String msg) {
