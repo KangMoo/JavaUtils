@@ -2,10 +2,149 @@ package com.github.kangmoo.utils.utility;
 
 import com.google.gson.*;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Json 처리를 원할하게 하기 위한 유틸
  */
 public class JsonUtil {
+    public static Optional<JsonObject> json2Object(String jsonStr, String ... elements) {
+        try {
+            return json2JsonElement(jsonStr, elements)
+                    .map(JsonElement::getAsJsonObject);
+        } catch (Exception e){
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<JsonArray> json2Array(String jsonStr, String ... elements) {
+        try {
+            return json2JsonElement(jsonStr, elements)
+                    .map(JsonElement::getAsJsonArray);
+        } catch (Exception e){
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<JsonPrimitive> json2Primitive(String jsonStr, String ... elements) {
+        try {
+            return json2JsonElement(jsonStr, elements)
+                    .map(JsonElement::getAsJsonPrimitive);
+        } catch (Exception e){
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<JsonNull> json2Null(String jsonStr, String ... elements) {
+        try {
+            return json2JsonElement(jsonStr, elements)
+                    .map(JsonElement::getAsJsonNull);
+        } catch (Exception e){
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<Boolean> json2Boolean(String jsonStr, String ... elements) {
+        try {
+            return json2JsonElement(jsonStr, elements)
+                    .map(JsonElement::getAsBoolean);
+        } catch (Exception e){
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<Number> json2Number(String jsonStr, String ... elements) {
+        try {
+            return json2JsonElement(jsonStr, elements)
+                    .map(JsonElement::getAsNumber);
+        } catch (Exception e){
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<String> json2String(String jsonStr, String ... elements) {
+        try {
+            return json2JsonElement(jsonStr, elements)
+                    .map(JsonElement::getAsString);
+        } catch (Exception e){
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<Double> json2Double(String jsonStr, String ... elements) {
+        try {
+            return json2JsonElement(jsonStr, elements)
+                    .map(JsonElement::getAsDouble);
+        } catch (Exception e){
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<Float> json2Float(String jsonStr, String ... elements) {
+        try {
+            return json2JsonElement(jsonStr, elements)
+                    .map(JsonElement::getAsFloat);
+        } catch (Exception e){
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<Long> json2Long(String jsonStr, String ... elements) {
+        try {
+            return json2JsonElement(jsonStr, elements)
+                    .map(JsonElement::getAsLong);
+        } catch (Exception e){
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<Integer> json2Int(String jsonStr, String ... elements) {
+        try {
+            return json2JsonElement(jsonStr, elements)
+                    .map(JsonElement::getAsInt);
+        } catch (Exception e){
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<Byte> json2Byte(String jsonStr, String ... elements) {
+        try {
+            return json2JsonElement(jsonStr, elements)
+                    .map(JsonElement::getAsByte);
+        } catch (Exception e){
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<BigDecimal> json2BigDecimal(String jsonStr, String ... elements) {
+        try {
+            return json2JsonElement(jsonStr, elements)
+                    .map(JsonElement::getAsBigDecimal);
+        } catch (Exception e){
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<BigInteger> json2BigInteger(String jsonStr, String ... elements) {
+        try {
+            return json2JsonElement(jsonStr, elements)
+                    .map(JsonElement::getAsBigInteger);
+        } catch (Exception e){
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<Short> json2Short(String jsonStr, String ... elements) {
+        try {
+            return json2JsonElement(jsonStr, elements)
+                    .map(JsonElement::getAsShort);
+        } catch (Exception e){
+            return Optional.empty();
+        }
+    }
 
     private JsonUtil() {
     }
@@ -16,221 +155,33 @@ public class JsonUtil {
         try {
             gson.fromJson(msg, Object.class);
             return true;
-        } catch (com.google.gson.JsonSyntaxException ex) {
+        } catch (JsonSyntaxException ex) {
             return false;
         }
     }
 
     /**
-     * Json 문자열을 받아 파싱하고 JsonElement 형태로 반환한다
-     * ex)
-     *    jsonStr = { "A" : {"B": { "C": "D"}}}
-     *    element = ["A", "B"]
-     *    return = (JsonElement) {"C":"D"}
-     * @param jsonStr 파싱할 Json 문자열
-     * @param element 파싱할 하위구조. element의 마지막 값을 JsonElement형태로 반환한다
-     * @return 파싱한 JsonElement
-     * @throws IllegalArgumentException
-     */
-    public static JsonElement json2Element(String jsonStr, String... element) {
-        if (element.length == 0) throw new IllegalStateException("Element length must more than 0");
-        Gson gson = new Gson();
-        JsonObject jo = gson.fromJson(jsonStr, JsonObject.class);
-        for (int i = 0; i < element.length - 1; i++) {
-            jo = jo.getAsJsonObject(element[i]);
-        }
-        return jo.get(element[element.length - 1]);
-    }
-
-    /**
-     * Json 문자열을 받아 파싱하고 int 형태로 반환한다
-     * ex)
-     *    jsonStr = { "A" : {"B": { "C": 123}}}
-     *    element = ["A", "B", "C"]
-     *    return = (int) 123
-     * @param jsonStr 파싱할 Json 문자열
-     * @param element 파싱할 하위구조. element의 마지막 값을 int로 반환한다
-     * @return 파싱한 int
-     * @throws IllegalArgumentException
-     */
-    public static int json2Int(String jsonStr, String... element) {
-        return json2Element(jsonStr, element).getAsInt();
-    }
-
-    /**
-     * Json 문자열을 받아 파싱하고 String 형태로 반환한다
-     * ex)
-     *    jsonStr = { "A" : {"B": { "C": "result"}}}
-     *    element = ["A", "B", "C"]
-     *    return = (String) "result"
-     * @param jsonStr 파싱할 Json 문자열
-     * @param element 파싱할 하위구조. element의 마지막 값을 String으로 반환한다
-     * @return 파싱한 String
-     * @throws IllegalArgumentException
-     */
-    public static String json2String(String jsonStr, String... element) {
-        return json2Element(jsonStr, element).getAsString();
-    }
-
-    /**
      * Json 문자열을 받아 파싱하고 String 형태로 반환한다.
      * @param jsonStr 파싱할 Json 문자열
-     * @param defaultValue 파싱이 실패할 경우 반환할 값.
      * @param element 파싱할 하위구조. element의 마지막 값을 String으로 반환한다
      * @return 파싱한 String. 파싱이 실패할 경우 defaultValue return
      */
-    public static String json2StringWithDefault(String jsonStr, String defaultValue, String... element) {
+    public static Optional<String> json2StringWithDefault(String jsonStr, String... element) {
         try {
-            return json2Element(jsonStr, element).getAsString();
+            return json2JsonElement(jsonStr, element)
+                    .map(JsonElement::getAsString);
         } catch (Exception e) {
-            return defaultValue;
+            return Optional.empty();
         }
     }
 
-    /**
-     * Json 문자열을 받아 파싱하고 boolean  형태로 반환한다
-     * ex)
-     *    jsonStr = { "A" : {"B": { "C": true}}}
-     *    element = ["A", "B", "C"]
-     *    return = (boolean) true
-     * @param jsonStr 파싱할 Json 문자열
-     * @param element 파싱할 하위구조. element의 마지막 값을 boolean으로 반환한다
-     * @return 파싱한 boolean
-     * @throws IllegalArgumentException
-     */
-    public static boolean json2Boolean(String jsonStr, String... element) {
-        return json2Element(jsonStr, element).getAsBoolean();
-    }
-
-    /**
-     * Json 문자열을 받아 파싱하고 float 형태로 반환한다
-     * ex)
-     *    jsonStr = { "A" : {"B": { "C": 3.14}}}
-     *    element = ["A", "B", "C"]
-     *    return = (float) 3.14
-     * @param jsonStr 파싱할 Json 문자열
-     * @param element 파싱할 하위구조. element의 마지막 값을 float으로 반환한다
-     * @return 파싱한 float
-     * @throws IllegalArgumentException
-     */
-    public static float json2Float(String jsonStr, String... element) {
-        return json2Element(jsonStr, element).getAsFloat();
-    }
-
-    /**
-     * Json 문자열을 받아 파싱하고 int[] 형태로 반환한다
-     * ex)
-     *    jsonStr = { "A" : {"B": { "C": [1,2,3]}}}
-     *    element = ["A", "B", "C"]
-     *    return = (int[]) {1,2,3}
-     * @param jsonStr 파싱할 Json 문자열
-     * @param element 파싱할 하위구조. element의 마지막 값을 int[]로 반환한다
-     * @return 파싱한 int[]
-     * @throws IllegalArgumentException
-     */
-    public static int[] json2IntArr(String jsonStr, String... element) {
-        JsonElement jsonelement = json2Element(jsonStr, element);
-        return jsonArr2IntArr(jsonelement.getAsJsonArray());
-    }
-
-    /**
-     * Json 문자열을 받아 파싱하고 String[] 형태로 반환한다
-     * ex)
-     *    jsonStr = { "A" : {"B": { "C": ["aa","bb","cc"]}}}
-     *    element = ["A", "B", "C"]
-     *    return = (String[]) {"aa","bb","cc"}
-     * @param jsonStr 파싱할 Json 문자열
-     * @param element 파싱할 하위구조. element의 마지막 값을 String[]로 반환한다
-     * @return 파싱한 String[]
-     * @throws IllegalArgumentException
-     */
-    public static String[] json2StringArr(String jsonStr, String... element) {
-        JsonElement jsonelement = json2Element(jsonStr, element);
-        return jsonArr2StringArr(jsonelement.getAsJsonArray());
-    }
-
-    /**
-     * Json 문자열을 받아 파싱하고 int[] 형태로 반환한다
-     * ex)
-     *    jsonStr = { "A" : {"B": { "C": [1.1, 2.2, 3.3]}}}
-     *    element = ["A", "B", "C"]
-     *    return = (float[]) {1.1, 2.2, 3.3}
-     * @param jsonStr 파싱할 Json 문자열
-     * @param element 파싱할 하위구조. element의 마지막 값을 float[]로 반환한다
-     * @return 파싱한 float[]
-     * @throws IllegalArgumentException
-     */
-    public static float[] json2FloatArr(String jsonStr, String... element) {
-        JsonElement jsonelement = json2Element(jsonStr, element);
-        return jsonArr2FloatArr(jsonelement.getAsJsonArray());
-    }
-
-    /**
-     * Json 문자열을 받아 파싱하고 boolean[] 형태로 반환한다
-     * ex)
-     *    jsonStr = { "A" : {"B": { "C": [true, false, true]}}}
-     *    element = ["A", "B", "C"]
-     *    return = (boolean[]) {true, false, true}
-     * @param jsonStr 파싱할 Json 문자열
-     * @param element 파싱할 하위구조. element의 마지막 값을 boolean[]로 반환한다
-     * @return 파싱한 boolean[]
-     * @throws IllegalArgumentException
-     */
-    public static boolean[] json2BooleanArr(String jsonStr, String... element) {
-        JsonElement jsonelement = json2Element(jsonStr, element);
-        return jsonArr2BooleanArr(jsonelement.getAsJsonArray());
-    }
-
-    /**
-     * JsonArray를 받아 int[]로 반환한다
-     * @param jsonArray
-     * @return
-     */
-    public static int[] jsonArr2IntArr(JsonArray jsonArray) {
-        int[] ret = new int[jsonArray.size()];
-        for (int i = 0; i < jsonArray.size(); i++) {
-            ret[i] = jsonArray.get(i).getAsInt();
+    public static Optional<JsonElement> json2JsonElement(String jsonStr, String... element) {
+        Optional<JsonObject> optionalJsonObject = Optional.ofNullable(new Gson().fromJson(jsonStr, JsonObject.class));
+        for (AtomicInteger i = new AtomicInteger(); i.get() < element.length - 1; i.getAndIncrement()) {
+            optionalJsonObject = optionalJsonObject.map(o -> o.get(element[i.get()]))
+                    .map(JsonElement::getAsJsonObject);
         }
-        return ret;
-    }
-
-    /**
-     * JsonArray를 받아 String[]로 반환한다
-     * @param jsonArray
-     * @return
-     */
-    public static String[] jsonArr2StringArr(JsonArray jsonArray) {
-        String[] ret = new String[jsonArray.size()];
-        for (int i = 0; i < jsonArray.size(); i++) {
-            ret[i] = jsonArray.get(i).getAsString();
-        }
-        return ret;
-    }
-
-    /**
-     * JsonArray를 받아 boolean[]로 반환한다
-     * @param jsonArray
-     * @return
-     */
-    public static boolean[] jsonArr2BooleanArr(JsonArray jsonArray) {
-        boolean[] ret = new boolean[jsonArray.size()];
-        for (int i = 0; i < jsonArray.size(); i++) {
-            ret[i] = jsonArray.get(i).getAsBoolean();
-        }
-        return ret;
-    }
-
-    /**
-     * JsonArray를 받아 float[]로 반환한다
-     * @param jsonArray
-     * @return
-     */
-    public static float[] jsonArr2FloatArr(JsonArray jsonArray) {
-        float[] ret = new float[jsonArray.size()];
-        for (int i = 0; i < jsonArray.size(); i++) {
-            ret[i] = jsonArray.get(i).getAsFloat();
-        }
-        return ret;
+        return optionalJsonObject.map(o -> o.get(element[element.length - 1]));
     }
 
     public static String toPrettyJson(String json) {
@@ -244,7 +195,7 @@ public class JsonUtil {
         }
     }
 
-    public static String toJson(Object object){
+    public static String toJson(Object object) {
         return new Gson().toJson(object);
     }
 }
