@@ -178,14 +178,13 @@ public class JsonUtil {
         return optionalJsonObject.map(o -> o.get(element[element.length - 1]));
     }
 
-    public static String toPrettyJson(String json) {
+    public static Optional<String> toPrettyJson(String json) {
         try {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             JsonElement je = JsonParser.parseString(json);
-            return gson.toJson(je);
+            return Optional.of(gson.toJson(je));
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            return Optional.empty();
         }
     }
 
