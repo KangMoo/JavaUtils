@@ -5,11 +5,10 @@ import com.github.javaparser.ast.expr.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.List;
 import java.util.stream.IntStream;
 
 /**
- *
  * @author kangmoo Heo
  */
 public class ReflectionUtil {
@@ -88,12 +87,12 @@ public class ReflectionUtil {
     public static TypeValuePair execFieldAccessExpr(FieldAccessExpr fieldAccessExpr) throws Exception {
         try {
             return new TypeValuePair(Class.forName(fieldAccessExpr.toString()), null);
-        } catch (Exception ignored){
+        } catch (Exception ignored) {
         }
         TypeValuePair object;
         try {
             object = new TypeValuePair(Class.forName(fieldAccessExpr.getScope().toString()), null);
-        } catch (Exception e2){
+        } catch (Exception e2) {
             object = exec(fieldAccessExpr.getScope().toString());
         }
         Field field = object.type.getDeclaredField(fieldAccessExpr.getNameAsString());

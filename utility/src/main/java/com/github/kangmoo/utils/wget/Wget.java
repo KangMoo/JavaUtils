@@ -5,15 +5,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- *
  * @author kangmoo Heo
  */
 public class Wget {
 
     public static WgetStatus wGet(String saveAsFile, String urlOfFile) {
         try (InputStream httpIn = new BufferedInputStream(new URL(urlOfFile).openStream());
-             OutputStream fileOutput =  new FileOutputStream(saveAsFile);
-             OutputStream bufferedOut = new BufferedOutputStream(fileOutput, 1024);){
+             OutputStream fileOutput = new FileOutputStream(saveAsFile);
+             OutputStream bufferedOut = new BufferedOutputStream(fileOutput, 1024)) {
 
             byte[] data = new byte[1024];
             boolean fileComplete = false;

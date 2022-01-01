@@ -1,7 +1,6 @@
 package com.github.kangmoo.utils.codec.g711;
 
 /**
- *
  * @author kangmoo Heo
  */
 public class AlawTranscoder {
@@ -41,18 +40,18 @@ public class AlawTranscoder {
     };
 
     private static final int cClip = 32635;
-    private static final byte[] aLawCompressTable = new byte[] { 1, 1, 2, 2, 3, 3, 3,
+    private static final byte[] aLawCompressTable = new byte[]{1, 1, 2, 2, 3, 3, 3,
             3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
             5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
             6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7,
             7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
             7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-            7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7 };
+            7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7};
 
     public static byte[] decode(byte[] media) {
         byte[] res = new byte[media.length * 2];
         int j = 0;
-        for(byte mediaByte : media){
+        for (byte mediaByte : media) {
             short s = aLawDecompressTable[mediaByte & 0xff];
             res[j++] = (byte) s;
             res[j++] = (byte) (s >> 8);
@@ -71,7 +70,7 @@ public class AlawTranscoder {
     }
 
     public static byte[] encode(byte[] data) {
-        byte[] res = new byte[data.length/2];
+        byte[] res = new byte[data.length / 2];
         encode(data, 0, data.length, res);
         return res;
     }

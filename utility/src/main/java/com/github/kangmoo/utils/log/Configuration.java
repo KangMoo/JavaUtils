@@ -1,5 +1,8 @@
 package com.github.kangmoo.utils.log;
-import org.apache.commons.cli.*;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
 
 public class Configuration {
     private static Options opts;

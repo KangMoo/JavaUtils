@@ -1,16 +1,18 @@
 package com.github.kangmoo.utils.udp;
 
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.SocketException;
 import java.util.function.Consumer;
 
 /**
- *
  * @author kangmoo Heo
  */
-public class UdpServer extends Thread{
-    private boolean running = false;
+public class UdpServer extends Thread {
     private final DatagramSocket ds;
+    private boolean running = false;
     private Consumer<byte[]> packetConsumer;
+
     public UdpServer(int port, Consumer<byte[]> packetCallback) throws SocketException {
         this.ds = new DatagramSocket(port);
         this.packetConsumer = packetCallback;
@@ -26,8 +28,8 @@ public class UdpServer extends Thread{
             e.printStackTrace();
             return;
         }
-        while(true){
-            if(packetConsumer == null) continue;
+        while (true) {
+            if (packetConsumer == null) continue;
             try {
                 this.ds.receive(dp);
                 byte[] data = new byte[dp.getLength()];
@@ -36,7 +38,7 @@ public class UdpServer extends Thread{
             } catch (Exception e) {
                 // do nothing
             }
-            if(!isRunning()) return;
+            if (!isRunning()) return;
         }
     }
 

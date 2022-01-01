@@ -9,7 +9,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author kangmoo Heo
  */
 public class PcapUtil {

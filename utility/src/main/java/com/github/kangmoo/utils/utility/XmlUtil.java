@@ -10,14 +10,13 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- *
  * @author kangmoo Heo
  */
 public class XmlUtil {
     public static Optional<Document> parse(String xml) {
-        try(InputStream xmlStream = new ByteArrayInputStream(xml.getBytes())){
+        try (InputStream xmlStream = new ByteArrayInputStream(xml.getBytes())) {
             return Optional.of(new SAXReader().read(xmlStream));
-        } catch (Exception e){
+        } catch (Exception e) {
             return Optional.empty();
         }
     }
@@ -32,11 +31,11 @@ public class XmlUtil {
      * item[k] : <item>엘리먼트 중에서 k번 째 <item>엘리먼트
      * item[@attr = val] : attr이라는 속성이 val값을 가지는 모든 <item>엘리먼트
      */
-    public static Node selectSingleNode(String xml, String xpathExpression){
+    public static Node selectSingleNode(String xml, String xpathExpression) {
         return parse(xml).map(o -> o.selectSingleNode(xpathExpression)).orElse(null);
     }
 
-    public static List<Node> selectNodes(String xml, String xpathExpression){
+    public static List<Node> selectNodes(String xml, String xpathExpression) {
         return parse(xml).map(o -> o.selectNodes(xpathExpression)).orElse(null);
     }
 }

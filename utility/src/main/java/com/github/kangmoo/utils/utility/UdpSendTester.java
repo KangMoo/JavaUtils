@@ -6,7 +6,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 /**
- *
  * @author kangmoo Heo
  */
 public class UdpSendTester {

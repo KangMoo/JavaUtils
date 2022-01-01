@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- *
  * @author kangmoo Heo
  */
 
@@ -122,7 +121,7 @@ public final class ObjectUtil {
     }
 
     public static <T> T[] checkNonEmpty(T[] array, String name) {
-        if (((Object[])checkNotNull(array, name)).length == 0) {
+        if (checkNotNull(array, name).length == 0) {
             throw new IllegalArgumentException("Param '" + name + "' must not be empty");
         } else {
             return array;
@@ -130,7 +129,7 @@ public final class ObjectUtil {
     }
 
     public static byte[] checkNonEmpty(byte[] array, String name) {
-        if (((byte[])checkNotNull(array, name)).length == 0) {
+        if (checkNotNull(array, name).length == 0) {
             throw new IllegalArgumentException("Param '" + name + "' must not be empty");
         } else {
             return array;
@@ -138,7 +137,7 @@ public final class ObjectUtil {
     }
 
     public static char[] checkNonEmpty(char[] array, String name) {
-        if (((char[])checkNotNull(array, name)).length == 0) {
+        if (checkNotNull(array, name).length == 0) {
             throw new IllegalArgumentException("Param '" + name + "' must not be empty");
         } else {
             return array;
@@ -146,7 +145,7 @@ public final class ObjectUtil {
     }
 
     public static <T extends Collection<?>> T checkNonEmpty(T collection, String name) {
-        if (((Collection)checkNotNull(collection, name)).size() == 0) {
+        if (checkNotNull(collection, name).size() == 0) {
             throw new IllegalArgumentException("Param '" + name + "' must not be empty");
         } else {
             return collection;
@@ -154,7 +153,7 @@ public final class ObjectUtil {
     }
 
     public static String checkNonEmpty(String value, String name) {
-        if (((String)checkNotNull(value, name)).isEmpty()) {
+        if (checkNotNull(value, name).isEmpty()) {
             throw new IllegalArgumentException("Param '" + name + "' must not be empty");
         } else {
             return value;
@@ -162,7 +161,7 @@ public final class ObjectUtil {
     }
 
     public static <K, V, T extends Map<K, V>> T checkNonEmpty(T value, String name) {
-        if (((Map)checkNotNull(value, name)).isEmpty()) {
+        if (checkNotNull(value, name).isEmpty()) {
             throw new IllegalArgumentException("Param '" + name + "' must not be empty");
         } else {
             return value;
@@ -170,7 +169,7 @@ public final class ObjectUtil {
     }
 
     public static CharSequence checkNonEmpty(CharSequence value, String name) {
-        if (((CharSequence)checkNotNull(value, name)).length() == 0) {
+        if (checkNotNull(value, name).length() == 0) {
             throw new IllegalArgumentException("Param '" + name + "' must not be empty");
         } else {
             return value;
@@ -178,7 +177,7 @@ public final class ObjectUtil {
     }
 
     public static String checkNonEmptyAfterTrim(String value, String name) {
-        String trimmed = ((String)checkNotNull(value, name)).trim();
+        String trimmed = checkNotNull(value, name).trim();
         return checkNonEmpty(trimmed, name);
     }
 

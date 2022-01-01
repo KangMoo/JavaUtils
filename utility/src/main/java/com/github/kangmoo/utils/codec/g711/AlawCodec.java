@@ -1,7 +1,6 @@
 package com.github.kangmoo.utils.codec.g711;
 
 /**
- *
  * @author kangmoo Heo
  */
 public class AlawCodec {

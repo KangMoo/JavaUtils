@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 public class RmqSender extends RmqTransport {
 
     private static final Logger logger = LoggerFactory.getLogger(RmqSender.class);
-    private AMQP.BasicProperties properties;
+    private final AMQP.BasicProperties properties;
 
     /**
      * constructor by RMQ information

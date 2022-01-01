@@ -9,7 +9,6 @@ import java.nio.charset.Charset;
 import java.util.Date;
 
 /**
- *
  * @author kangmoo Heo
  */
 public class RmqSendTester {

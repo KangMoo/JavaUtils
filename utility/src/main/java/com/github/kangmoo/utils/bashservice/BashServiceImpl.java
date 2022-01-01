@@ -6,7 +6,6 @@ import com.jcraft.jsch.*;
 import java.io.*;
 
 /**
- *
  * @author kangmoo Heo
  */
 public class BashServiceImpl {
@@ -20,14 +19,10 @@ public class BashServiceImpl {
     /**
      * 서버와 연결에 필요한 값들을 가져와 초기화 시킴
      *
-     * @param host
-     *            서버 주소
-     * @param userName
-     *            접속에 사용될 아이디
-     * @param password
-     *            비밀번호
-     * @param port
-     *            포트번호
+     * @param host     서버 주소
+     * @param userName 접속에 사용될 아이디
+     * @param password 비밀번호
+     * @param port     포트번호
      */
     public int init(String host, String userName, String password, int port) {
 
@@ -55,10 +50,8 @@ public class BashServiceImpl {
     /**
      * 하나의 파일을 업로드 한다.
      *
-     * @param targetDir
-     *            저장시킬 주소(서버)
-     * @param file
-     *            저장할 파일
+     * @param targetDir 저장시킬 주소(서버)
+     * @param file      저장할 파일
      */
     public void upload(String targetDir, File file) {
 
@@ -81,13 +74,12 @@ public class BashServiceImpl {
     public void upload(String targetDir, String file) {
         this.upload(targetDir, new File(file));
     }
+
     /**
      * 하나의 파일을 다운로드 한다.
      *
-     * @param downloadFileName
-     *            다운로드할 파일
-     * @param fileName
-     *            저장될 공간
+     * @param downloadFileName 다운로드할 파일
+     * @param fileName         저장될 공간
      */
     public void download(String downloadFileName, String fileName) {
         InputStream in = null;
@@ -130,8 +122,7 @@ public class BashServiceImpl {
     /**
      * 하나의 파일을 삭제 한다.
      *
-     * @param dir
-     *            파일 경로(서버)
+     * @param dir 파일 경로(서버)
      *            삭제할 파일
      */
     public void rmFile(String rmFileName) {
@@ -158,14 +149,10 @@ public class BashServiceImpl {
     /**
      * 서버와 연결에 필요한 값들을 가져와 초기화 시킴
      *
-     * @param host
-     *            서버 주소
-     * @param userName
-     *            접속에 사용될 아이디
-     * @param privateKey
-     *            키( ex - aws key.pem )
-     * @param port
-     *            포트번호
+     * @param host       서버 주소
+     * @param userName   접속에 사용될 아이디
+     * @param privateKey 키( ex - aws key.pem )
+     * @param port       포트번호
      */
     public void initSSHKey(String host, String userName, String privateKey, int port) {
         JSch jsch = new JSch();
@@ -190,14 +177,10 @@ public class BashServiceImpl {
     /**
      * 서버와 연결에 필요한 값들을 가져와 초기화 시킴
      *
-     * @param host
-     *            서버 주소
-     * @param userName
-     *            접속에 사용될 아이디
-     * @param password
-     *            비밀번호
-     * @param port
-     *            포트번호
+     * @param host     서버 주소
+     * @param userName 접속에 사용될 아이디
+     * @param password 비밀번호
+     * @param port     포트번호
      */
     public void initSSHPassword(String host, String userName, String password, int port) {
         JSch jsch = new JSch();
@@ -222,8 +205,7 @@ public class BashServiceImpl {
     /**
      * 명령어를 실행 시킨다.
      *
-     * @param command
-     *            실행시킬 명령어
+     * @param command 실행시킬 명령어
      */
     public String exec(String command) {
         String output = "";

@@ -4,18 +4,19 @@ import java.io.*;
 import java.util.Objects;
 
 /**
- *
  * @author kangmoo Heo
  */
 public class WaveFile {
     /**
      * Make Wave Header Bytes
+     *
      * @param sampleRate  Sample rate - 8000, 16000, etc.
      * @param channel Number of channels - Mono = 1, Stereo = 2, etc..
      * @param format Number of bits per sample (16 here)
      * @param dataSize Raw Data size
      */
-    private static int DEFAULT_BUFFER_SIZE = 8192;
+    private static final int DEFAULT_BUFFER_SIZE = 8192;
+
     public static byte[] getData(int sampleRate, int channel, int format, int dataSize) {
         byte[] header = new byte[44];
         long totalDataLen = (long) dataSize + 36;

@@ -1,12 +1,14 @@
 package com.github.kangmoo.utils.log;
 
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
 
 import java.io.File;
 import java.util.*;
 
 /**
- *
  * @author kangmoo Heo
  */
 public class LogFinder {
@@ -25,7 +27,7 @@ public class LogFinder {
         }
     }
 
-    public static Configuration getCfg(String args[]) {
+    public static Configuration getCfg(String[] args) {
         try {
             CommandLineParser parser = new DefaultParser();
             Configuration cfg;

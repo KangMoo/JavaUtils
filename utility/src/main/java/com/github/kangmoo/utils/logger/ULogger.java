@@ -8,10 +8,11 @@ import org.slf4j.Marker;
 /**
  * Logger will print Throwable full stack trace if log level is more than DEBUG.
  * Logger will print Throwable simple message if log level below DEBUG.
+ *
  * @author kangmoo Heo
  */
 public class ULogger implements Logger {
-    private Logger logger;
+    private final Logger logger;
 
     public ULogger(Logger logger) {
         this.logger = logger;
@@ -171,7 +172,7 @@ public class ULogger implements Logger {
             Pair<Object[], Throwable> ex = extractThrowableAnRearrangeArguments(arguments);
             arguments = ex.getLeft();
             Throwable t = ex.getRight();
-            if(t != null){
+            if (t != null) {
                 format = String.format("%s. Exception by %s", format, t);
             }
         }
@@ -216,7 +217,7 @@ public class ULogger implements Logger {
             Pair<Object[], Throwable> ex = extractThrowableAnRearrangeArguments(arguments);
             arguments = ex.getLeft();
             Throwable t = ex.getRight();
-            if(t != null){
+            if (t != null) {
                 format = String.format("%s. Exception by %s", format, t);
             }
         }
@@ -256,7 +257,7 @@ public class ULogger implements Logger {
             Pair<Object[], Throwable> ex = extractThrowableAnRearrangeArguments(arguments);
             arguments = ex.getLeft();
             Throwable t = ex.getRight();
-            if(t != null){
+            if (t != null) {
                 format = String.format("%s. Exception by %s", format, t);
             }
         }
@@ -306,7 +307,7 @@ public class ULogger implements Logger {
             Pair<Object[], Throwable> ex = extractThrowableAnRearrangeArguments(arguments);
             arguments = ex.getLeft();
             Throwable t = ex.getRight();
-            if(t != null){
+            if (t != null) {
                 format = String.format("%s. Exception by %s", format, t);
             }
         }
@@ -351,7 +352,7 @@ public class ULogger implements Logger {
             Pair<Object[], Throwable> ex = extractThrowableAnRearrangeArguments(arguments);
             arguments = ex.getLeft();
             Throwable t = ex.getRight();
-            if(t != null){
+            if (t != null) {
                 format = String.format("%s. Exception by %s", format, t);
             }
         }
@@ -396,7 +397,7 @@ public class ULogger implements Logger {
             Pair<Object[], Throwable> ex = extractThrowableAnRearrangeArguments(arguments);
             arguments = ex.getLeft();
             Throwable t = ex.getRight();
-            if(t != null){
+            if (t != null) {
                 format = String.format("%s. Exception by %s", format, t);
             }
         }

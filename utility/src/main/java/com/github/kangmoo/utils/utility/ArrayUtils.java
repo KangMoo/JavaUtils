@@ -6,21 +6,21 @@ package com.github.kangmoo.utils.utility;
 /**
  * Copyright (c) 2011, The University of Southampton and the individual contributors.
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
- *
- *   * 	Redistributions of source code must retain the above copyright notice,
- * 	this list of conditions and the following disclaimer.
- *
- *   *	Redistributions in binary form must reproduce the above copyright notice,
- * 	this list of conditions and the following disclaimer in the documentation
- * 	and/or other materials provided with the distribution.
- *
- *   *	Neither the name of the University of Southampton nor the names of its
- * 	contributors may be used to endorse or promote products derived from this
- * 	software without specific prior written permission.
- *
+ * <p>
+ * * 	Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ * <p>
+ * *	Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ * <p>
+ * *	Neither the name of the University of Southampton nor the names of its
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -32,6 +32,7 @@ package com.github.kangmoo.utils.utility;
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 import java.lang.reflect.Array;
 
 /**
@@ -42,7 +43,7 @@ import java.lang.reflect.Array;
  *
  */
 public class ArrayUtils {
-    private ArrayUtils () {
+    private ArrayUtils() {
 
     }
 
@@ -61,8 +62,7 @@ public class ArrayUtils {
         StringBuffer localStringBuffer = new StringBuffer();
         localStringBuffer.append("[");
         int i = arr.length - 1;
-        for (int j = 0; j <= i; ++j)
-        {
+        for (int j = 0; j <= i; ++j) {
             localStringBuffer.append(String.format(fmt, arr[j]));
             if (j >= i)
                 continue;
@@ -87,8 +87,7 @@ public class ArrayUtils {
         StringBuffer localStringBuffer = new StringBuffer();
         localStringBuffer.append("[");
         int i = arr.length - 1;
-        for (int j = 0; j <= i; ++j)
-        {
+        for (int j = 0; j <= i; ++j) {
             localStringBuffer.append(String.format(fmt, arr[j]));
             if (j >= i)
                 continue;
@@ -113,8 +112,7 @@ public class ArrayUtils {
         StringBuffer localStringBuffer = new StringBuffer();
         localStringBuffer.append("[");
         int i = arr.length - 1;
-        for (int j = 0; j <= i; ++j)
-        {
+        for (int j = 0; j <= i; ++j) {
             localStringBuffer.append(String.format(fmt, arr[j]));
             if (j >= i)
                 continue;
@@ -139,8 +137,7 @@ public class ArrayUtils {
         StringBuffer localStringBuffer = new StringBuffer();
         localStringBuffer.append("[");
         int i = arr.length - 1;
-        for (int j = 0; j <= i; ++j)
-        {
+        for (int j = 0; j <= i; ++j) {
             localStringBuffer.append(String.format(fmt, arr[j]));
             if (j >= i)
                 continue;
@@ -165,8 +162,7 @@ public class ArrayUtils {
         StringBuffer localStringBuffer = new StringBuffer();
         localStringBuffer.append("[");
         int i = arr.length - 1;
-        for (int j = 0; j <= i; ++j)
-        {
+        for (int j = 0; j <= i; ++j) {
             localStringBuffer.append(String.format(fmt, arr[j]));
             if (j >= i)
                 continue;
@@ -191,8 +187,7 @@ public class ArrayUtils {
         StringBuffer localStringBuffer = new StringBuffer();
         localStringBuffer.append("[");
         int i = arr.length - 1;
-        for (int j = 0; j <= i; ++j)
-        {
+        for (int j = 0; j <= i; ++j) {
             localStringBuffer.append(String.format(fmt, arr[j]));
             if (j >= i)
                 continue;
@@ -1137,9 +1132,8 @@ public class ArrayUtils {
      *            The scalar
      * @return the array
      */
-    public static double[] subtract(final double[] a1, final double s)
-    {
-        return add(a1, (double)(-s));
+    public static double[] subtract(final double[] a1, final double s) {
+        return add(a1, -s);
     }
 
 
@@ -1153,9 +1147,8 @@ public class ArrayUtils {
      *            The scalar
      * @return the array
      */
-    public static float[] subtract(final float[] a1, final float s)
-    {
-        return add(a1, (float)(-s));
+    public static float[] subtract(final float[] a1, final float s) {
+        return add(a1, -s);
     }
 
 
@@ -1169,9 +1162,8 @@ public class ArrayUtils {
      *            The scalar
      * @return the array
      */
-    public static int[] subtract(final int[] a1, final int s)
-    {
-        return add(a1, (int)(-s));
+    public static int[] subtract(final int[] a1, final int s) {
+        return add(a1, -s);
     }
 
 
@@ -1185,9 +1177,8 @@ public class ArrayUtils {
      *            The scalar
      * @return the array
      */
-    public static long[] subtract(final long[] a1, final long s)
-    {
-        return add(a1, (long)(-s));
+    public static long[] subtract(final long[] a1, final long s) {
+        return add(a1, -s);
     }
 
 
@@ -1201,9 +1192,8 @@ public class ArrayUtils {
      *            The scalar
      * @return the array
      */
-    public static byte[] subtract(final byte[] a1, final byte s)
-    {
-        return add(a1, (byte)(-s));
+    public static byte[] subtract(final byte[] a1, final byte s) {
+        return add(a1, (byte) (-s));
     }
 
 
@@ -1217,9 +1207,8 @@ public class ArrayUtils {
      *            The scalar
      * @return the array
      */
-    public static short[] subtract(final short[] a1, final short s)
-    {
-        return add(a1, (short)(-s));
+    public static short[] subtract(final short[] a1, final short s) {
+        return add(a1, (short) (-s));
     }
 
 
@@ -1532,8 +1521,7 @@ public class ArrayUtils {
      *            the second array
      * @return The first array
      */
-    public static double[] multiply(final double[] a1, final double[] a2)
-    {
+    public static double[] multiply(final double[] a1, final double[] a2) {
         for (int j = 0; j < a1.length; j++)
             a1[j] *= a2[j];
         return a1;
@@ -1548,8 +1536,7 @@ public class ArrayUtils {
      *            second array
      * @return Updated first array
      */
-    public static double[][] multiply(final double[][] a1, final double[][] a2)
-    {
+    public static double[][] multiply(final double[][] a1, final double[][] a2) {
         for (int j = 0; j < a1.length; j++)
             multiply(a1[j], a2[j]);
         return a1;
@@ -1565,8 +1552,7 @@ public class ArrayUtils {
      *            the second array
      * @return The first array
      */
-    public static float[] multiply(final float[] a1, final float[] a2)
-    {
+    public static float[] multiply(final float[] a1, final float[] a2) {
         for (int j = 0; j < a1.length; j++)
             a1[j] *= a2[j];
         return a1;
@@ -1581,8 +1567,7 @@ public class ArrayUtils {
      *            second array
      * @return Updated first array
      */
-    public static float[][] multiply(final float[][] a1, final float[][] a2)
-    {
+    public static float[][] multiply(final float[][] a1, final float[][] a2) {
         for (int j = 0; j < a1.length; j++)
             multiply(a1[j], a2[j]);
         return a1;
@@ -1598,8 +1583,7 @@ public class ArrayUtils {
      *            the second array
      * @return The first array
      */
-    public static int[] multiply(final int[] a1, final int[] a2)
-    {
+    public static int[] multiply(final int[] a1, final int[] a2) {
         for (int j = 0; j < a1.length; j++)
             a1[j] *= a2[j];
         return a1;
@@ -1614,8 +1598,7 @@ public class ArrayUtils {
      *            second array
      * @return Updated first array
      */
-    public static int[][] multiply(final int[][] a1, final int[][] a2)
-    {
+    public static int[][] multiply(final int[][] a1, final int[][] a2) {
         for (int j = 0; j < a1.length; j++)
             multiply(a1[j], a2[j]);
         return a1;
@@ -1631,8 +1614,7 @@ public class ArrayUtils {
      *            the second array
      * @return The first array
      */
-    public static long[] multiply(final long[] a1, final long[] a2)
-    {
+    public static long[] multiply(final long[] a1, final long[] a2) {
         for (int j = 0; j < a1.length; j++)
             a1[j] *= a2[j];
         return a1;
@@ -1647,8 +1629,7 @@ public class ArrayUtils {
      *            second array
      * @return Updated first array
      */
-    public static long[][] multiply(final long[][] a1, final long[][] a2)
-    {
+    public static long[][] multiply(final long[][] a1, final long[][] a2) {
         for (int j = 0; j < a1.length; j++)
             multiply(a1[j], a2[j]);
         return a1;
@@ -1664,8 +1645,7 @@ public class ArrayUtils {
      *            the second array
      * @return The first array
      */
-    public static byte[] multiply(final byte[] a1, final byte[] a2)
-    {
+    public static byte[] multiply(final byte[] a1, final byte[] a2) {
         for (int j = 0; j < a1.length; j++)
             a1[j] *= a2[j];
         return a1;
@@ -1680,8 +1660,7 @@ public class ArrayUtils {
      *            second array
      * @return Updated first array
      */
-    public static byte[][] multiply(final byte[][] a1, final byte[][] a2)
-    {
+    public static byte[][] multiply(final byte[][] a1, final byte[][] a2) {
         for (int j = 0; j < a1.length; j++)
             multiply(a1[j], a2[j]);
         return a1;
@@ -1697,8 +1676,7 @@ public class ArrayUtils {
      *            the second array
      * @return The first array
      */
-    public static short[] multiply(final short[] a1, final short[] a2)
-    {
+    public static short[] multiply(final short[] a1, final short[] a2) {
         for (int j = 0; j < a1.length; j++)
             a1[j] *= a2[j];
         return a1;
@@ -1713,8 +1691,7 @@ public class ArrayUtils {
      *            second array
      * @return Updated first array
      */
-    public static short[][] multiply(final short[][] a1, final short[][] a2)
-    {
+    public static short[][] multiply(final short[][] a1, final short[][] a2) {
         for (int j = 0; j < a1.length; j++)
             multiply(a1[j], a2[j]);
         return a1;
@@ -1730,8 +1707,7 @@ public class ArrayUtils {
      *            the constant to divide by
      * @return THe input
      */
-    public static double[] divide(final double[] fs, final double x)
-    {
+    public static double[] divide(final double[] fs, final double x) {
         for (int i = 0; i < fs.length; i++)
             fs[i] /= x;
         return fs;
@@ -1747,8 +1723,7 @@ public class ArrayUtils {
      *            the constant to divide by
      * @return THe input
      */
-    public static float[] divide(final float[] fs, final float x)
-    {
+    public static float[] divide(final float[] fs, final float x) {
         for (int i = 0; i < fs.length; i++)
             fs[i] /= x;
         return fs;
@@ -1764,8 +1739,7 @@ public class ArrayUtils {
      *            the constant to divide by
      * @return THe input
      */
-    public static int[] divide(final int[] fs, final int x)
-    {
+    public static int[] divide(final int[] fs, final int x) {
         for (int i = 0; i < fs.length; i++)
             fs[i] /= x;
         return fs;
@@ -1781,8 +1755,7 @@ public class ArrayUtils {
      *            the constant to divide by
      * @return THe input
      */
-    public static long[] divide(final long[] fs, final long x)
-    {
+    public static long[] divide(final long[] fs, final long x) {
         for (int i = 0; i < fs.length; i++)
             fs[i] /= x;
         return fs;
@@ -1798,8 +1771,7 @@ public class ArrayUtils {
      *            the constant to divide by
      * @return THe input
      */
-    public static byte[] divide(final byte[] fs, final byte x)
-    {
+    public static byte[] divide(final byte[] fs, final byte x) {
         for (int i = 0; i < fs.length; i++)
             fs[i] /= x;
         return fs;
@@ -1815,8 +1787,7 @@ public class ArrayUtils {
      *            the constant to divide by
      * @return THe input
      */
-    public static short[] divide(final short[] fs, final short x)
-    {
+    public static short[] divide(final short[] fs, final short x) {
         for (int i = 0; i < fs.length; i++)
             fs[i] /= x;
         return fs;
@@ -2011,8 +1982,7 @@ public class ArrayUtils {
      *            array of doubles to convert
      * @return array of doubles
      */
-    public static double[][] convertToDouble(final double[][] array)
-    {
+    public static double[][] convertToDouble(final double[][] array) {
         final double[][] darr = new double[array.length][];
         for (int i = 0; i < array.length; i++)
             darr[i] = convertToDouble(array[i]);
@@ -2043,8 +2013,7 @@ public class ArrayUtils {
      *            array of floats to convert
      * @return array of doubles
      */
-    public static double[][] convertToDouble(final float[][] array)
-    {
+    public static double[][] convertToDouble(final float[][] array) {
         final double[][] darr = new double[array.length][];
         for (int i = 0; i < array.length; i++)
             darr[i] = convertToDouble(array[i]);
@@ -2075,8 +2044,7 @@ public class ArrayUtils {
      *            array of ints to convert
      * @return array of doubles
      */
-    public static double[][] convertToDouble(final int[][] array)
-    {
+    public static double[][] convertToDouble(final int[][] array) {
         final double[][] darr = new double[array.length][];
         for (int i = 0; i < array.length; i++)
             darr[i] = convertToDouble(array[i]);
@@ -2107,8 +2075,7 @@ public class ArrayUtils {
      *            array of longs to convert
      * @return array of doubles
      */
-    public static double[][] convertToDouble(final long[][] array)
-    {
+    public static double[][] convertToDouble(final long[][] array) {
         final double[][] darr = new double[array.length][];
         for (int i = 0; i < array.length; i++)
             darr[i] = convertToDouble(array[i]);
@@ -2139,8 +2106,7 @@ public class ArrayUtils {
      *            array of bytes to convert
      * @return array of doubles
      */
-    public static double[][] convertToDouble(final byte[][] array)
-    {
+    public static double[][] convertToDouble(final byte[][] array) {
         final double[][] darr = new double[array.length][];
         for (int i = 0; i < array.length; i++)
             darr[i] = convertToDouble(array[i]);
@@ -2171,8 +2137,7 @@ public class ArrayUtils {
      *            array of shorts to convert
      * @return array of doubles
      */
-    public static double[][] convertToDouble(final short[][] array)
-    {
+    public static double[][] convertToDouble(final short[][] array) {
         final double[][] darr = new double[array.length][];
         for (int i = 0; i < array.length; i++)
             darr[i] = convertToDouble(array[i]);
@@ -2203,8 +2168,7 @@ public class ArrayUtils {
      *            array of doubles to convert
      * @return array of doubles
      */
-    public static float[][] convertToFloat(final double[][] array)
-    {
+    public static float[][] convertToFloat(final double[][] array) {
         final float[][] darr = new float[array.length][];
         for (int i = 0; i < array.length; i++)
             darr[i] = convertToFloat(array[i]);
@@ -2223,7 +2187,7 @@ public class ArrayUtils {
         final float[] farr = new float[array.length];
 
         for (int i = 0; i < array.length; i++) {
-            farr[i] = (float) array[i];
+            farr[i] = array[i];
         }
         return farr;
     }
@@ -2235,8 +2199,7 @@ public class ArrayUtils {
      *            array of floats to convert
      * @return array of doubles
      */
-    public static float[][] convertToFloat(final float[][] array)
-    {
+    public static float[][] convertToFloat(final float[][] array) {
         final float[][] darr = new float[array.length][];
         for (int i = 0; i < array.length; i++)
             darr[i] = convertToFloat(array[i]);
@@ -2267,8 +2230,7 @@ public class ArrayUtils {
      *            array of ints to convert
      * @return array of doubles
      */
-    public static float[][] convertToFloat(final int[][] array)
-    {
+    public static float[][] convertToFloat(final int[][] array) {
         final float[][] darr = new float[array.length][];
         for (int i = 0; i < array.length; i++)
             darr[i] = convertToFloat(array[i]);
@@ -2299,8 +2261,7 @@ public class ArrayUtils {
      *            array of longs to convert
      * @return array of doubles
      */
-    public static float[][] convertToFloat(final long[][] array)
-    {
+    public static float[][] convertToFloat(final long[][] array) {
         final float[][] darr = new float[array.length][];
         for (int i = 0; i < array.length; i++)
             darr[i] = convertToFloat(array[i]);
@@ -2319,7 +2280,7 @@ public class ArrayUtils {
         final float[] farr = new float[array.length];
 
         for (int i = 0; i < array.length; i++) {
-            farr[i] = (float) array[i];
+            farr[i] = array[i];
         }
         return farr;
     }
@@ -2331,8 +2292,7 @@ public class ArrayUtils {
      *            array of bytes to convert
      * @return array of doubles
      */
-    public static float[][] convertToFloat(final byte[][] array)
-    {
+    public static float[][] convertToFloat(final byte[][] array) {
         final float[][] darr = new float[array.length][];
         for (int i = 0; i < array.length; i++)
             darr[i] = convertToFloat(array[i]);
@@ -2351,7 +2311,7 @@ public class ArrayUtils {
         final float[] farr = new float[array.length];
 
         for (int i = 0; i < array.length; i++) {
-            farr[i] = (float) array[i];
+            farr[i] = array[i];
         }
         return farr;
     }
@@ -2363,8 +2323,7 @@ public class ArrayUtils {
      *            array of shorts to convert
      * @return array of doubles
      */
-    public static float[][] convertToFloat(final short[][] array)
-    {
+    public static float[][] convertToFloat(final short[][] array) {
         final float[][] darr = new float[array.length][];
         for (int i = 0; i < array.length; i++)
             darr[i] = convertToFloat(array[i]);
@@ -2419,8 +2378,7 @@ public class ArrayUtils {
             }
         }
 
-        @SuppressWarnings("unchecked")
-        final T[] concat = (T[]) Array.newInstance(type, length);
+        @SuppressWarnings("unchecked") final T[] concat = (T[]) Array.newInstance(type, length);
 
         int current = 0;
         for (final T[] arr : arrays) {
@@ -2591,9 +2549,9 @@ public class ArrayUtils {
      */
     public static double[][] concatenate(final double[][]... arrays) {
         final double[][] concat = new double[arrays[0].length][];
-        for(int i = 0; i < concat.length; i++){
+        for (int i = 0; i < concat.length; i++) {
             final double[][] row = new double[arrays.length][];
-            for(int j = 0; j < row.length; j++){
+            for (int j = 0; j < row.length; j++) {
                 row[j] = arrays[j][i];
             }
             concat[i] = concatenate(row);
@@ -2612,9 +2570,9 @@ public class ArrayUtils {
      */
     public static float[][] concatenate(final float[][]... arrays) {
         final float[][] concat = new float[arrays[0].length][];
-        for(int i = 0; i < concat.length; i++){
+        for (int i = 0; i < concat.length; i++) {
             final float[][] row = new float[arrays.length][];
-            for(int j = 0; j < row.length; j++){
+            for (int j = 0; j < row.length; j++) {
                 row[j] = arrays[j][i];
             }
             concat[i] = concatenate(row);
@@ -2633,9 +2591,9 @@ public class ArrayUtils {
      */
     public static int[][] concatenate(final int[][]... arrays) {
         final int[][] concat = new int[arrays[0].length][];
-        for(int i = 0; i < concat.length; i++){
+        for (int i = 0; i < concat.length; i++) {
             final int[][] row = new int[arrays.length][];
-            for(int j = 0; j < row.length; j++){
+            for (int j = 0; j < row.length; j++) {
                 row[j] = arrays[j][i];
             }
             concat[i] = concatenate(row);
@@ -2654,9 +2612,9 @@ public class ArrayUtils {
      */
     public static long[][] concatenate(final long[][]... arrays) {
         final long[][] concat = new long[arrays[0].length][];
-        for(int i = 0; i < concat.length; i++){
+        for (int i = 0; i < concat.length; i++) {
             final long[][] row = new long[arrays.length][];
-            for(int j = 0; j < row.length; j++){
+            for (int j = 0; j < row.length; j++) {
                 row[j] = arrays[j][i];
             }
             concat[i] = concatenate(row);
@@ -2675,9 +2633,9 @@ public class ArrayUtils {
      */
     public static byte[][] concatenate(final byte[][]... arrays) {
         final byte[][] concat = new byte[arrays[0].length][];
-        for(int i = 0; i < concat.length; i++){
+        for (int i = 0; i < concat.length; i++) {
             final byte[][] row = new byte[arrays.length][];
-            for(int j = 0; j < row.length; j++){
+            for (int j = 0; j < row.length; j++) {
                 row[j] = arrays[j][i];
             }
             concat[i] = concatenate(row);
@@ -2696,9 +2654,9 @@ public class ArrayUtils {
      */
     public static short[][] concatenate(final short[][]... arrays) {
         final short[][] concat = new short[arrays[0].length][];
-        for(int i = 0; i < concat.length; i++){
+        for (int i = 0; i < concat.length; i++) {
             final short[][] row = new short[arrays.length][];
-            for(int j = 0; j < row.length; j++){
+            for (int j = 0; j < row.length; j++) {
                 row[j] = arrays[j][i];
             }
             concat[i] = concatenate(row);
@@ -2953,8 +2911,8 @@ public class ArrayUtils {
     public static double sumValues(final double[][] array) {
         double sum = 0;
 
-        for (int i=0; i<array.length; i++)
-            for (int j=0; j<array[i].length; j++)
+        for (int i = 0; i < array.length; i++)
+            for (int j = 0; j < array[i].length; j++)
                 sum += array[i][j];
 
         return sum;
@@ -2990,8 +2948,8 @@ public class ArrayUtils {
     public static float sumValues(final float[][] array) {
         float sum = 0;
 
-        for (int i=0; i<array.length; i++)
-            for (int j=0; j<array[i].length; j++)
+        for (int i = 0; i < array.length; i++)
+            for (int j = 0; j < array[i].length; j++)
                 sum += array[i][j];
 
         return sum;
@@ -3027,8 +2985,8 @@ public class ArrayUtils {
     public static long sumValues(final int[][] array) {
         long sum = 0;
 
-        for (int i=0; i<array.length; i++)
-            for (int j=0; j<array[i].length; j++)
+        for (int i = 0; i < array.length; i++)
+            for (int j = 0; j < array[i].length; j++)
                 sum += array[i][j];
 
         return sum;
@@ -3064,8 +3022,8 @@ public class ArrayUtils {
     public static long sumValues(final long[][] array) {
         long sum = 0;
 
-        for (int i=0; i<array.length; i++)
-            for (int j=0; j<array[i].length; j++)
+        for (int i = 0; i < array.length; i++)
+            for (int j = 0; j < array[i].length; j++)
                 sum += array[i][j];
 
         return sum;
@@ -3101,8 +3059,8 @@ public class ArrayUtils {
     public static int sumValues(final byte[][] array) {
         int sum = 0;
 
-        for (int i=0; i<array.length; i++)
-            for (int j=0; j<array[i].length; j++)
+        for (int i = 0; i < array.length; i++)
+            for (int j = 0; j < array[i].length; j++)
                 sum += array[i][j];
 
         return sum;
@@ -3138,8 +3096,8 @@ public class ArrayUtils {
     public static int sumValues(final short[][] array) {
         int sum = 0;
 
-        for (int i=0; i<array.length; i++)
-            for (int j=0; j<array[i].length; j++)
+        for (int i = 0; i < array.length; i++)
+            for (int j = 0; j < array[i].length; j++)
                 sum += array[i][j];
 
         return sum;
@@ -3394,8 +3352,8 @@ public class ArrayUtils {
         if (vector.length == 0) return sum;
 
         sum[0] = vector[0];
-        for (int i=1; i<vector.length; i++)
-            sum[i] = vector[i] + sum[i-1];
+        for (int i = 1; i < vector.length; i++)
+            sum[i] = vector[i] + sum[i - 1];
 
         return sum;
     }
@@ -3433,8 +3391,8 @@ public class ArrayUtils {
         if (vector.length == 0) return sum;
 
         sum[0] = vector[0];
-        for (int i=1; i<vector.length; i++)
-            sum[i] = vector[i] + sum[i-1];
+        for (int i = 1; i < vector.length; i++)
+            sum[i] = vector[i] + sum[i - 1];
 
         return sum;
     }
@@ -3472,8 +3430,8 @@ public class ArrayUtils {
         if (vector.length == 0) return sum;
 
         sum[0] = vector[0];
-        for (int i=1; i<vector.length; i++)
-            sum[i] = vector[i] + sum[i-1];
+        for (int i = 1; i < vector.length; i++)
+            sum[i] = vector[i] + sum[i - 1];
 
         return sum;
     }
@@ -3511,8 +3469,8 @@ public class ArrayUtils {
         if (vector.length == 0) return sum;
 
         sum[0] = vector[0];
-        for (int i=1; i<vector.length; i++)
-            sum[i] = vector[i] + sum[i-1];
+        for (int i = 1; i < vector.length; i++)
+            sum[i] = vector[i] + sum[i - 1];
 
         return sum;
     }
@@ -3550,8 +3508,8 @@ public class ArrayUtils {
         if (vector.length == 0) return sum;
 
         sum[0] = vector[0];
-        for (int i=1; i<vector.length; i++)
-            sum[i] = vector[i] + sum[i-1];
+        for (int i = 1; i < vector.length; i++)
+            sum[i] = vector[i] + sum[i - 1];
 
         return sum;
     }
@@ -3589,8 +3547,8 @@ public class ArrayUtils {
         if (vector.length == 0) return sum;
 
         sum[0] = vector[0];
-        for (int i=1; i<vector.length; i++)
-            sum[i] = vector[i] + sum[i-1];
+        for (int i = 1; i < vector.length; i++)
+            sum[i] = vector[i] + sum[i - 1];
 
         return sum;
     }
@@ -3625,8 +3583,8 @@ public class ArrayUtils {
     public static double[] rowSum(final double[][] array) {
         double[] sum = new double[array.length];
 
-        for (int i=0; i<array.length; i++)
-            for (int j=0; j<array[i].length; j++)
+        for (int i = 0; i < array.length; i++)
+            for (int j = 0; j < array[i].length; j++)
                 sum[i] += array[i][j];
 
         return sum;
@@ -3662,8 +3620,8 @@ public class ArrayUtils {
     public static float[] rowSum(final float[][] array) {
         float[] sum = new float[array.length];
 
-        for (int i=0; i<array.length; i++)
-            for (int j=0; j<array[i].length; j++)
+        for (int i = 0; i < array.length; i++)
+            for (int j = 0; j < array[i].length; j++)
                 sum[i] += array[i][j];
 
         return sum;
@@ -3699,8 +3657,8 @@ public class ArrayUtils {
     public static long[] rowSum(final int[][] array) {
         long[] sum = new long[array.length];
 
-        for (int i=0; i<array.length; i++)
-            for (int j=0; j<array[i].length; j++)
+        for (int i = 0; i < array.length; i++)
+            for (int j = 0; j < array[i].length; j++)
                 sum[i] += array[i][j];
 
         return sum;
@@ -3736,8 +3694,8 @@ public class ArrayUtils {
     public static long[] rowSum(final long[][] array) {
         long[] sum = new long[array.length];
 
-        for (int i=0; i<array.length; i++)
-            for (int j=0; j<array[i].length; j++)
+        for (int i = 0; i < array.length; i++)
+            for (int j = 0; j < array[i].length; j++)
                 sum[i] += array[i][j];
 
         return sum;
@@ -3773,8 +3731,8 @@ public class ArrayUtils {
     public static int[] rowSum(final byte[][] array) {
         int[] sum = new int[array.length];
 
-        for (int i=0; i<array.length; i++)
-            for (int j=0; j<array[i].length; j++)
+        for (int i = 0; i < array.length; i++)
+            for (int j = 0; j < array[i].length; j++)
                 sum[i] += array[i][j];
 
         return sum;
@@ -3810,8 +3768,8 @@ public class ArrayUtils {
     public static int[] rowSum(final short[][] array) {
         int[] sum = new int[array.length];
 
-        for (int i=0; i<array.length; i++)
-            for (int j=0; j<array[i].length; j++)
+        for (int i = 0; i < array.length; i++)
+            for (int j = 0; j < array[i].length; j++)
                 sum[i] += array[i][j];
 
         return sum;
@@ -3847,8 +3805,8 @@ public class ArrayUtils {
     public static double[] colSum(final double[][] array) {
         double[] sum = new double[array[0].length];
 
-        for (int i=0; i<array.length; i++)
-            for (int j=0; j<array[0].length; j++)
+        for (int i = 0; i < array.length; i++)
+            for (int j = 0; j < array[0].length; j++)
                 sum[j] += array[i][j];
 
         return sum;
@@ -3884,8 +3842,8 @@ public class ArrayUtils {
     public static float[] colSum(final float[][] array) {
         float[] sum = new float[array[0].length];
 
-        for (int i=0; i<array.length; i++)
-            for (int j=0; j<array[0].length; j++)
+        for (int i = 0; i < array.length; i++)
+            for (int j = 0; j < array[0].length; j++)
                 sum[j] += array[i][j];
 
         return sum;
@@ -3921,8 +3879,8 @@ public class ArrayUtils {
     public static long[] colSum(final int[][] array) {
         long[] sum = new long[array[0].length];
 
-        for (int i=0; i<array.length; i++)
-            for (int j=0; j<array[0].length; j++)
+        for (int i = 0; i < array.length; i++)
+            for (int j = 0; j < array[0].length; j++)
                 sum[j] += array[i][j];
 
         return sum;
@@ -3958,8 +3916,8 @@ public class ArrayUtils {
     public static long[] colSum(final long[][] array) {
         long[] sum = new long[array[0].length];
 
-        for (int i=0; i<array.length; i++)
-            for (int j=0; j<array[0].length; j++)
+        for (int i = 0; i < array.length; i++)
+            for (int j = 0; j < array[0].length; j++)
                 sum[j] += array[i][j];
 
         return sum;
@@ -3995,8 +3953,8 @@ public class ArrayUtils {
     public static int[] colSum(final byte[][] array) {
         int[] sum = new int[array[0].length];
 
-        for (int i=0; i<array.length; i++)
-            for (int j=0; j<array[0].length; j++)
+        for (int i = 0; i < array.length; i++)
+            for (int j = 0; j < array[0].length; j++)
                 sum[j] += array[i][j];
 
         return sum;
@@ -4032,8 +3990,8 @@ public class ArrayUtils {
     public static int[] colSum(final short[][] array) {
         int[] sum = new int[array[0].length];
 
-        for (int i=0; i<array.length; i++)
-            for (int j=0; j<array[0].length; j++)
+        for (int i = 0; i < array.length; i++)
+            for (int j = 0; j < array[0].length; j++)
                 sum[j] += array[i][j];
 
         return sum;
@@ -4072,8 +4030,8 @@ public class ArrayUtils {
             if (a[i] == value)
                 count++;
 
-        int [] ret = new int[count];
-        for (int i = 0, j=0; i < a.length; i++)
+        int[] ret = new int[count];
+        for (int i = 0, j = 0; i < a.length; i++)
             if (a[i] == value) ret[j++] = i;
 
         return ret;
@@ -4096,8 +4054,8 @@ public class ArrayUtils {
             if (a[i] == value)
                 count++;
 
-        int [] ret = new int[count];
-        for (int i = 0, j=0; i < a.length; i++)
+        int[] ret = new int[count];
+        for (int i = 0, j = 0; i < a.length; i++)
             if (a[i] == value) ret[j++] = i;
 
         return ret;
@@ -4120,8 +4078,8 @@ public class ArrayUtils {
             if (a[i] == value)
                 count++;
 
-        int [] ret = new int[count];
-        for (int i = 0, j=0; i < a.length; i++)
+        int[] ret = new int[count];
+        for (int i = 0, j = 0; i < a.length; i++)
             if (a[i] == value) ret[j++] = i;
 
         return ret;
@@ -4144,8 +4102,8 @@ public class ArrayUtils {
             if (a[i] == value)
                 count++;
 
-        int [] ret = new int[count];
-        for (int i = 0, j=0; i < a.length; i++)
+        int[] ret = new int[count];
+        for (int i = 0, j = 0; i < a.length; i++)
             if (a[i] == value) ret[j++] = i;
 
         return ret;
@@ -4168,8 +4126,8 @@ public class ArrayUtils {
             if (a[i] == value)
                 count++;
 
-        int [] ret = new int[count];
-        for (int i = 0, j=0; i < a.length; i++)
+        int[] ret = new int[count];
+        for (int i = 0, j = 0; i < a.length; i++)
             if (a[i] == value) ret[j++] = i;
 
         return ret;
@@ -4192,8 +4150,8 @@ public class ArrayUtils {
             if (a[i] == value)
                 count++;
 
-        int [] ret = new int[count];
-        for (int i = 0, j=0; i < a.length; i++)
+        int[] ret = new int[count];
+        for (int i = 0, j = 0; i < a.length; i++)
             if (a[i] == value) ret[j++] = i;
 
         return ret;
@@ -4691,8 +4649,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final double[] main, final double[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -4760,8 +4717,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final double[] main, final float[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -4829,8 +4785,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final double[] main, final int[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -4898,8 +4853,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final double[] main, final long[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -4967,8 +4921,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final double[] main, final byte[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -5036,8 +4989,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final double[] main, final short[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -5105,8 +5057,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final float[] main, final double[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -5174,8 +5125,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final float[] main, final float[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -5243,8 +5193,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final float[] main, final int[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -5312,8 +5261,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final float[] main, final long[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -5381,8 +5329,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final float[] main, final byte[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -5450,8 +5397,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final float[] main, final short[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -5519,8 +5465,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final int[] main, final double[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -5588,8 +5533,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final int[] main, final float[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -5657,8 +5601,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final int[] main, final int[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -5726,8 +5669,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final int[] main, final long[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -5795,8 +5737,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final int[] main, final byte[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -5864,8 +5805,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final int[] main, final short[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -5933,8 +5873,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final long[] main, final double[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -6002,8 +5941,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final long[] main, final float[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -6071,8 +6009,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final long[] main, final int[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -6140,8 +6077,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final long[] main, final long[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -6209,8 +6145,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final long[] main, final byte[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -6278,8 +6213,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final long[] main, final short[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -6347,8 +6281,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final byte[] main, final double[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -6416,8 +6349,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final byte[] main, final float[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -6485,8 +6417,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final byte[] main, final int[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -6554,8 +6485,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final byte[] main, final long[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -6623,8 +6553,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final byte[] main, final byte[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -6692,8 +6621,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final byte[] main, final short[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -6761,8 +6689,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final short[] main, final double[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -6830,8 +6757,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final short[] main, final float[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -6899,8 +6825,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final short[] main, final int[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -6968,8 +6893,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final short[] main, final long[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -7037,8 +6961,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final short[] main, final byte[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -7106,8 +7029,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void parallelQuicksortDescending(final short[] main, final short[] indices, final int left,
-                                                   final int right)
-    {
+                                                   final int right) {
         if (right <= left)
             return;
 
@@ -7175,8 +7097,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final double[] main, final double[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final double[] main, final double[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -7244,8 +7165,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final double[] main, final float[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final double[] main, final float[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -7313,8 +7233,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final double[] main, final int[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final double[] main, final int[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -7382,8 +7301,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final double[] main, final long[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final double[] main, final long[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -7451,8 +7369,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final double[] main, final byte[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final double[] main, final byte[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -7520,8 +7437,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final double[] main, final short[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final double[] main, final short[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -7589,8 +7505,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final float[] main, final double[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final float[] main, final double[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -7658,8 +7573,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final float[] main, final float[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final float[] main, final float[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -7727,8 +7641,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final float[] main, final int[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final float[] main, final int[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -7796,8 +7709,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final float[] main, final long[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final float[] main, final long[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -7865,8 +7777,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final float[] main, final byte[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final float[] main, final byte[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -7934,8 +7845,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final float[] main, final short[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final float[] main, final short[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -8003,8 +7913,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final int[] main, final double[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final int[] main, final double[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -8072,8 +7981,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final int[] main, final float[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final int[] main, final float[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -8141,8 +8049,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final int[] main, final int[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final int[] main, final int[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -8210,8 +8117,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final int[] main, final long[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final int[] main, final long[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -8279,8 +8185,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final int[] main, final byte[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final int[] main, final byte[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -8348,8 +8253,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final int[] main, final short[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final int[] main, final short[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -8417,8 +8321,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final long[] main, final double[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final long[] main, final double[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -8486,8 +8389,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final long[] main, final float[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final long[] main, final float[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -8555,8 +8457,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final long[] main, final int[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final long[] main, final int[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -8624,8 +8525,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final long[] main, final long[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final long[] main, final long[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -8693,8 +8593,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final long[] main, final byte[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final long[] main, final byte[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -8762,8 +8661,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final long[] main, final short[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final long[] main, final short[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -8831,8 +8729,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final byte[] main, final double[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final byte[] main, final double[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -8900,8 +8797,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final byte[] main, final float[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final byte[] main, final float[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -8969,8 +8865,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final byte[] main, final int[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final byte[] main, final int[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -9038,8 +8933,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final byte[] main, final long[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final byte[] main, final long[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -9107,8 +9001,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final byte[] main, final byte[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final byte[] main, final byte[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -9176,8 +9069,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final byte[] main, final short[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final byte[] main, final short[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -9245,8 +9137,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final short[] main, final double[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final short[] main, final double[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -9314,8 +9205,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final short[] main, final float[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final short[] main, final float[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -9383,8 +9273,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final short[] main, final int[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final short[] main, final int[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -9452,8 +9341,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final short[] main, final long[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final short[] main, final long[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -9521,8 +9409,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final short[] main, final byte[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final short[] main, final byte[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -9590,8 +9477,7 @@ public class ArrayUtils {
      *            the ending index
      */
     public static void
-    parallelQuicksortAscending(final short[] main, final short[] indices, final int left, final int right)
-    {
+    parallelQuicksortAscending(final short[] main, final short[] indices, final int left, final int right) {
         if (right <= left)
             return;
 
@@ -10084,8 +9970,7 @@ public class ArrayUtils {
 
     // partition a[left] to a[right], assumes left < right
     private static int partition(final double[] a, final int[] index,
-                                 final int left, final int right)
-    {
+                                 final int left, final int right) {
         int i = left - 1;
         int j = right;
         while (true) {
@@ -10135,8 +10020,7 @@ public class ArrayUtils {
 
     // partition a[left] to a[right], assumes left < right
     private static int partition(final float[] a, final int[] index,
-                                 final int left, final int right)
-    {
+                                 final int left, final int right) {
         int i = left - 1;
         int j = right;
         while (true) {
@@ -10186,8 +10070,7 @@ public class ArrayUtils {
 
     // partition a[left] to a[right], assumes left < right
     private static int partition(final int[] a, final int[] index,
-                                 final int left, final int right)
-    {
+                                 final int left, final int right) {
         int i = left - 1;
         int j = right;
         while (true) {
@@ -10237,8 +10120,7 @@ public class ArrayUtils {
 
     // partition a[left] to a[right], assumes left < right
     private static int partition(final long[] a, final int[] index,
-                                 final int left, final int right)
-    {
+                                 final int left, final int right) {
         int i = left - 1;
         int j = right;
         while (true) {
@@ -10288,8 +10170,7 @@ public class ArrayUtils {
 
     // partition a[left] to a[right], assumes left < right
     private static int partition(final byte[] a, final int[] index,
-                                 final int left, final int right)
-    {
+                                 final int left, final int right) {
         int i = left - 1;
         int j = right;
         while (true) {
@@ -10339,8 +10220,7 @@ public class ArrayUtils {
 
     // partition a[left] to a[right], assumes left < right
     private static int partition(final short[] a, final int[] index,
-                                 final int left, final int right)
-    {
+                                 final int left, final int right) {
         int i = left - 1;
         int j = right;
         while (true) {
@@ -10433,8 +10313,7 @@ public class ArrayUtils {
      *            The value
      * @return The array
      */
-    public static double[][] fill(final double[][] a1, final double i)
-    {
+    public static double[][] fill(final double[][] a1, final double i) {
         for (int j = 0; j < a1.length; j++)
             fill(a1[j], i);
         return a1;
@@ -10453,8 +10332,7 @@ public class ArrayUtils {
      *            The length of the fill
      * @return The array
      */
-    public static double[] fill(final double[] a1, final double i, final int s, final int l)
-    {
+    public static double[] fill(final double[] a1, final double i, final int s, final int l) {
         for (int j = s; j < s + l; j++)
             a1[j] = i;
         return a1;
@@ -10469,8 +10347,7 @@ public class ArrayUtils {
      *            The value
      * @return The array
      */
-    public static double[] fill(final double[] a1, final double i)
-    {
+    public static double[] fill(final double[] a1, final double i) {
         for (int j = 0; j < a1.length; j++)
             a1[j] = i;
         return a1;
@@ -10486,8 +10363,7 @@ public class ArrayUtils {
      *            The value
      * @return The array
      */
-    public static float[][] fill(final float[][] a1, final float i)
-    {
+    public static float[][] fill(final float[][] a1, final float i) {
         for (int j = 0; j < a1.length; j++)
             fill(a1[j], i);
         return a1;
@@ -10506,8 +10382,7 @@ public class ArrayUtils {
      *            The length of the fill
      * @return The array
      */
-    public static float[] fill(final float[] a1, final float i, final int s, final int l)
-    {
+    public static float[] fill(final float[] a1, final float i, final int s, final int l) {
         for (int j = s; j < s + l; j++)
             a1[j] = i;
         return a1;
@@ -10522,8 +10397,7 @@ public class ArrayUtils {
      *            The value
      * @return The array
      */
-    public static float[] fill(final float[] a1, final float i)
-    {
+    public static float[] fill(final float[] a1, final float i) {
         for (int j = 0; j < a1.length; j++)
             a1[j] = i;
         return a1;
@@ -10539,8 +10413,7 @@ public class ArrayUtils {
      *            The value
      * @return The array
      */
-    public static int[][] fill(final int[][] a1, final int i)
-    {
+    public static int[][] fill(final int[][] a1, final int i) {
         for (int j = 0; j < a1.length; j++)
             fill(a1[j], i);
         return a1;
@@ -10559,8 +10432,7 @@ public class ArrayUtils {
      *            The length of the fill
      * @return The array
      */
-    public static int[] fill(final int[] a1, final int i, final int s, final int l)
-    {
+    public static int[] fill(final int[] a1, final int i, final int s, final int l) {
         for (int j = s; j < s + l; j++)
             a1[j] = i;
         return a1;
@@ -10575,8 +10447,7 @@ public class ArrayUtils {
      *            The value
      * @return The array
      */
-    public static int[] fill(final int[] a1, final int i)
-    {
+    public static int[] fill(final int[] a1, final int i) {
         for (int j = 0; j < a1.length; j++)
             a1[j] = i;
         return a1;
@@ -10592,8 +10463,7 @@ public class ArrayUtils {
      *            The value
      * @return The array
      */
-    public static long[][] fill(final long[][] a1, final long i)
-    {
+    public static long[][] fill(final long[][] a1, final long i) {
         for (int j = 0; j < a1.length; j++)
             fill(a1[j], i);
         return a1;
@@ -10612,8 +10482,7 @@ public class ArrayUtils {
      *            The length of the fill
      * @return The array
      */
-    public static long[] fill(final long[] a1, final long i, final int s, final int l)
-    {
+    public static long[] fill(final long[] a1, final long i, final int s, final int l) {
         for (int j = s; j < s + l; j++)
             a1[j] = i;
         return a1;
@@ -10628,8 +10497,7 @@ public class ArrayUtils {
      *            The value
      * @return The array
      */
-    public static long[] fill(final long[] a1, final long i)
-    {
+    public static long[] fill(final long[] a1, final long i) {
         for (int j = 0; j < a1.length; j++)
             a1[j] = i;
         return a1;
@@ -10645,8 +10513,7 @@ public class ArrayUtils {
      *            The value
      * @return The array
      */
-    public static byte[][] fill(final byte[][] a1, final byte i)
-    {
+    public static byte[][] fill(final byte[][] a1, final byte i) {
         for (int j = 0; j < a1.length; j++)
             fill(a1[j], i);
         return a1;
@@ -10665,8 +10532,7 @@ public class ArrayUtils {
      *            The length of the fill
      * @return The array
      */
-    public static byte[] fill(final byte[] a1, final byte i, final int s, final int l)
-    {
+    public static byte[] fill(final byte[] a1, final byte i, final int s, final int l) {
         for (int j = s; j < s + l; j++)
             a1[j] = i;
         return a1;
@@ -10681,8 +10547,7 @@ public class ArrayUtils {
      *            The value
      * @return The array
      */
-    public static byte[] fill(final byte[] a1, final byte i)
-    {
+    public static byte[] fill(final byte[] a1, final byte i) {
         for (int j = 0; j < a1.length; j++)
             a1[j] = i;
         return a1;
@@ -10698,8 +10563,7 @@ public class ArrayUtils {
      *            The value
      * @return The array
      */
-    public static short[][] fill(final short[][] a1, final short i)
-    {
+    public static short[][] fill(final short[][] a1, final short i) {
         for (int j = 0; j < a1.length; j++)
             fill(a1[j], i);
         return a1;
@@ -10718,8 +10582,7 @@ public class ArrayUtils {
      *            The length of the fill
      * @return The array
      */
-    public static short[] fill(final short[] a1, final short i, final int s, final int l)
-    {
+    public static short[] fill(final short[] a1, final short i, final int s, final int l) {
         for (int j = s; j < s + l; j++)
             a1[j] = i;
         return a1;
@@ -10734,8 +10597,7 @@ public class ArrayUtils {
      *            The value
      * @return The array
      */
-    public static short[] fill(final short[] a1, final short i)
-    {
+    public static short[] fill(final short[] a1, final short i) {
         for (int j = 0; j < a1.length; j++)
             a1[j] = i;
         return a1;
@@ -10749,8 +10611,7 @@ public class ArrayUtils {
      *            The array to fill
      * @return the array
      */
-    public static int[] fill(final int[] array)
-    {
+    public static int[] fill(final int[] array) {
         for (int i = 0; i < array.length; i++)
             array[i] = i;
         return array;
@@ -10766,8 +10627,7 @@ public class ArrayUtils {
      *            The size to truncate it to
      * @return The truncated array
      */
-    public static double[] truncate(final double[] array, final int index)
-    {
+    public static double[] truncate(final double[] array, final int index) {
         final double[] d = new double[index];
         System.arraycopy(array, 0, d, 0, index);
         return d;
@@ -10782,8 +10642,7 @@ public class ArrayUtils {
      *            The size to truncate it to
      * @return The truncated array
      */
-    public static double[][] truncate(final double[][] array, final int index)
-    {
+    public static double[][] truncate(final double[][] array, final int index) {
         final double[][] d = new double[Math.min(array.length, index)][index];
         for (int i = 0; i < d.length; i++)
             d[i] = truncate(array[i], index);
@@ -10800,8 +10659,7 @@ public class ArrayUtils {
      *            The size to truncate it to
      * @return The truncated array
      */
-    public static float[] truncate(final float[] array, final int index)
-    {
+    public static float[] truncate(final float[] array, final int index) {
         final float[] d = new float[index];
         System.arraycopy(array, 0, d, 0, index);
         return d;
@@ -10816,8 +10674,7 @@ public class ArrayUtils {
      *            The size to truncate it to
      * @return The truncated array
      */
-    public static float[][] truncate(final float[][] array, final int index)
-    {
+    public static float[][] truncate(final float[][] array, final int index) {
         final float[][] d = new float[Math.min(array.length, index)][index];
         for (int i = 0; i < d.length; i++)
             d[i] = truncate(array[i], index);
@@ -10834,8 +10691,7 @@ public class ArrayUtils {
      *            The size to truncate it to
      * @return The truncated array
      */
-    public static int[] truncate(final int[] array, final int index)
-    {
+    public static int[] truncate(final int[] array, final int index) {
         final int[] d = new int[index];
         System.arraycopy(array, 0, d, 0, index);
         return d;
@@ -10850,8 +10706,7 @@ public class ArrayUtils {
      *            The size to truncate it to
      * @return The truncated array
      */
-    public static int[][] truncate(final int[][] array, final int index)
-    {
+    public static int[][] truncate(final int[][] array, final int index) {
         final int[][] d = new int[Math.min(array.length, index)][index];
         for (int i = 0; i < d.length; i++)
             d[i] = truncate(array[i], index);
@@ -10868,8 +10723,7 @@ public class ArrayUtils {
      *            The size to truncate it to
      * @return The truncated array
      */
-    public static long[] truncate(final long[] array, final int index)
-    {
+    public static long[] truncate(final long[] array, final int index) {
         final long[] d = new long[index];
         System.arraycopy(array, 0, d, 0, index);
         return d;
@@ -10884,8 +10738,7 @@ public class ArrayUtils {
      *            The size to truncate it to
      * @return The truncated array
      */
-    public static long[][] truncate(final long[][] array, final int index)
-    {
+    public static long[][] truncate(final long[][] array, final int index) {
         final long[][] d = new long[Math.min(array.length, index)][index];
         for (int i = 0; i < d.length; i++)
             d[i] = truncate(array[i], index);
@@ -10902,8 +10755,7 @@ public class ArrayUtils {
      *            The size to truncate it to
      * @return The truncated array
      */
-    public static byte[] truncate(final byte[] array, final int index)
-    {
+    public static byte[] truncate(final byte[] array, final int index) {
         final byte[] d = new byte[index];
         System.arraycopy(array, 0, d, 0, index);
         return d;
@@ -10918,8 +10770,7 @@ public class ArrayUtils {
      *            The size to truncate it to
      * @return The truncated array
      */
-    public static byte[][] truncate(final byte[][] array, final int index)
-    {
+    public static byte[][] truncate(final byte[][] array, final int index) {
         final byte[][] d = new byte[Math.min(array.length, index)][index];
         for (int i = 0; i < d.length; i++)
             d[i] = truncate(array[i], index);
@@ -10936,8 +10787,7 @@ public class ArrayUtils {
      *            The size to truncate it to
      * @return The truncated array
      */
-    public static short[] truncate(final short[] array, final int index)
-    {
+    public static short[] truncate(final short[] array, final int index) {
         final short[] d = new short[index];
         System.arraycopy(array, 0, d, 0, index);
         return d;
@@ -10952,8 +10802,7 @@ public class ArrayUtils {
      *            The size to truncate it to
      * @return The truncated array
      */
-    public static short[][] truncate(final short[][] array, final int index)
-    {
+    public static short[][] truncate(final short[][] array, final int index) {
         final short[][] d = new short[Math.min(array.length, index)][index];
         for (int i = 0; i < d.length; i++)
             d[i] = truncate(array[i], index);
@@ -10975,7 +10824,7 @@ public class ArrayUtils {
      *            the item to select
      * @return the selected item
      */
-    public static double quickSelect(double arr[], int n) {
+    public static double quickSelect(double[] arr, int n) {
         return quickSelect(arr, n, 0, arr.length - 1);
     }
 
@@ -10997,7 +10846,7 @@ public class ArrayUtils {
      *            the ending position in the array (exclusive)
      * @return the selected item
      */
-    public static double quickSelect(double arr[], int n, int low, int high) {
+    public static double quickSelect(double[] arr, int n, int low, int high) {
         high--; // make high inclusive
 
         int middle, ll, hh;
@@ -11023,7 +10872,6 @@ public class ArrayUtils {
                 tmp = arr[middle];
                 arr[middle] = arr[high];
                 arr[high] = tmp;
-                ;
             }
             if (arr[low] > arr[high]) {
                 tmp = arr[low];
@@ -11044,7 +10892,7 @@ public class ArrayUtils {
             /* Nibble from each end towards middle, swapping items when stuck */
             ll = low + 1;
             hh = high;
-            for (;;) {
+            for (; ; ) {
                 do
                     ll++;
                 while (arr[low] > arr[ll]);
@@ -11088,7 +10936,7 @@ public class ArrayUtils {
      *            the item to select
      * @return the selected item
      */
-    public static float quickSelect(float arr[], int n) {
+    public static float quickSelect(float[] arr, int n) {
         return quickSelect(arr, n, 0, arr.length - 1);
     }
 
@@ -11110,7 +10958,7 @@ public class ArrayUtils {
      *            the ending position in the array (exclusive)
      * @return the selected item
      */
-    public static float quickSelect(float arr[], int n, int low, int high) {
+    public static float quickSelect(float[] arr, int n, int low, int high) {
         high--; // make high inclusive
 
         int middle, ll, hh;
@@ -11136,7 +10984,6 @@ public class ArrayUtils {
                 tmp = arr[middle];
                 arr[middle] = arr[high];
                 arr[high] = tmp;
-                ;
             }
             if (arr[low] > arr[high]) {
                 tmp = arr[low];
@@ -11157,7 +11004,7 @@ public class ArrayUtils {
             /* Nibble from each end towards middle, swapping items when stuck */
             ll = low + 1;
             hh = high;
-            for (;;) {
+            for (; ; ) {
                 do
                     ll++;
                 while (arr[low] > arr[ll]);
@@ -11201,7 +11048,7 @@ public class ArrayUtils {
      *            the item to select
      * @return the selected item
      */
-    public static int quickSelect(int arr[], int n) {
+    public static int quickSelect(int[] arr, int n) {
         return quickSelect(arr, n, 0, arr.length - 1);
     }
 
@@ -11223,7 +11070,7 @@ public class ArrayUtils {
      *            the ending position in the array (exclusive)
      * @return the selected item
      */
-    public static int quickSelect(int arr[], int n, int low, int high) {
+    public static int quickSelect(int[] arr, int n, int low, int high) {
         high--; // make high inclusive
 
         int middle, ll, hh;
@@ -11249,7 +11096,6 @@ public class ArrayUtils {
                 tmp = arr[middle];
                 arr[middle] = arr[high];
                 arr[high] = tmp;
-                ;
             }
             if (arr[low] > arr[high]) {
                 tmp = arr[low];
@@ -11270,7 +11116,7 @@ public class ArrayUtils {
             /* Nibble from each end towards middle, swapping items when stuck */
             ll = low + 1;
             hh = high;
-            for (;;) {
+            for (; ; ) {
                 do
                     ll++;
                 while (arr[low] > arr[ll]);
@@ -11314,7 +11160,7 @@ public class ArrayUtils {
      *            the item to select
      * @return the selected item
      */
-    public static long quickSelect(long arr[], int n) {
+    public static long quickSelect(long[] arr, int n) {
         return quickSelect(arr, n, 0, arr.length - 1);
     }
 
@@ -11336,7 +11182,7 @@ public class ArrayUtils {
      *            the ending position in the array (exclusive)
      * @return the selected item
      */
-    public static long quickSelect(long arr[], int n, int low, int high) {
+    public static long quickSelect(long[] arr, int n, int low, int high) {
         high--; // make high inclusive
 
         int middle, ll, hh;
@@ -11362,7 +11208,6 @@ public class ArrayUtils {
                 tmp = arr[middle];
                 arr[middle] = arr[high];
                 arr[high] = tmp;
-                ;
             }
             if (arr[low] > arr[high]) {
                 tmp = arr[low];
@@ -11383,7 +11228,7 @@ public class ArrayUtils {
             /* Nibble from each end towards middle, swapping items when stuck */
             ll = low + 1;
             hh = high;
-            for (;;) {
+            for (; ; ) {
                 do
                     ll++;
                 while (arr[low] > arr[ll]);
@@ -11427,7 +11272,7 @@ public class ArrayUtils {
      *            the item to select
      * @return the selected item
      */
-    public static byte quickSelect(byte arr[], int n) {
+    public static byte quickSelect(byte[] arr, int n) {
         return quickSelect(arr, n, 0, arr.length - 1);
     }
 
@@ -11449,7 +11294,7 @@ public class ArrayUtils {
      *            the ending position in the array (exclusive)
      * @return the selected item
      */
-    public static byte quickSelect(byte arr[], int n, int low, int high) {
+    public static byte quickSelect(byte[] arr, int n, int low, int high) {
         high--; // make high inclusive
 
         int middle, ll, hh;
@@ -11475,7 +11320,6 @@ public class ArrayUtils {
                 tmp = arr[middle];
                 arr[middle] = arr[high];
                 arr[high] = tmp;
-                ;
             }
             if (arr[low] > arr[high]) {
                 tmp = arr[low];
@@ -11496,7 +11340,7 @@ public class ArrayUtils {
             /* Nibble from each end towards middle, swapping items when stuck */
             ll = low + 1;
             hh = high;
-            for (;;) {
+            for (; ; ) {
                 do
                     ll++;
                 while (arr[low] > arr[ll]);
@@ -11540,7 +11384,7 @@ public class ArrayUtils {
      *            the item to select
      * @return the selected item
      */
-    public static short quickSelect(short arr[], int n) {
+    public static short quickSelect(short[] arr, int n) {
         return quickSelect(arr, n, 0, arr.length - 1);
     }
 
@@ -11562,7 +11406,7 @@ public class ArrayUtils {
      *            the ending position in the array (exclusive)
      * @return the selected item
      */
-    public static short quickSelect(short arr[], int n, int low, int high) {
+    public static short quickSelect(short[] arr, int n, int low, int high) {
         high--; // make high inclusive
 
         int middle, ll, hh;
@@ -11588,7 +11432,6 @@ public class ArrayUtils {
                 tmp = arr[middle];
                 arr[middle] = arr[high];
                 arr[high] = tmp;
-                ;
             }
             if (arr[low] > arr[high]) {
                 tmp = arr[low];
@@ -11609,7 +11452,7 @@ public class ArrayUtils {
             /* Nibble from each end towards middle, swapping items when stuck */
             ll = low + 1;
             hh = high;
-            for (;;) {
+            for (; ; ) {
                 do
                     ll++;
                 while (arr[low] > arr[ll]);
@@ -11638,6 +11481,101 @@ public class ArrayUtils {
         }
     }
 
+    /**
+     * Compute the p-norm of the array
+     *
+     * @param array the array
+     * @param p the p value
+     * @return the p-norm
+     */
+    public static double pnorm(final double[] array, final int p) {
+        double sum = 0;
+
+        for (int i = 0; i < array.length; i++)
+            sum += Math.pow(Math.abs(array[i]), p);
+
+        return Math.pow(sum, 1.0 / p);
+    }
+
+    /**
+     * Compute the p-norm of the array
+     *
+     * @param array the array
+     * @param p the p value
+     * @return the p-norm
+     */
+    public static double pnorm(final float[] array, final int p) {
+        double sum = 0;
+
+        for (int i = 0; i < array.length; i++)
+            sum += Math.pow(Math.abs(array[i]), p);
+
+        return Math.pow(sum, 1.0 / p);
+    }
+
+    /**
+     * Compute the p-norm of the array
+     *
+     * @param array the array
+     * @param p the p value
+     * @return the p-norm
+     */
+    public static double pnorm(final int[] array, final int p) {
+        double sum = 0;
+
+        for (int i = 0; i < array.length; i++)
+            sum += Math.pow(Math.abs(array[i]), p);
+
+        return Math.pow(sum, 1.0 / p);
+    }
+
+    /**
+     * Compute the p-norm of the array
+     *
+     * @param array the array
+     * @param p the p value
+     * @return the p-norm
+     */
+    public static double pnorm(final long[] array, final int p) {
+        double sum = 0;
+
+        for (int i = 0; i < array.length; i++)
+            sum += Math.pow(Math.abs(array[i]), p);
+
+        return Math.pow(sum, 1.0 / p);
+    }
+
+    /**
+     * Compute the p-norm of the array
+     *
+     * @param array the array
+     * @param p the p value
+     * @return the p-norm
+     */
+    public static double pnorm(final byte[] array, final int p) {
+        double sum = 0;
+
+        for (int i = 0; i < array.length; i++)
+            sum += Math.pow(Math.abs(array[i]), p);
+
+        return Math.pow(sum, 1.0 / p);
+    }
+
+    /**
+     * Compute the p-norm of the array
+     *
+     * @param array the array
+     * @param p the p value
+     * @return the p-norm
+     */
+    public static double pnorm(final short[] array, final int p) {
+        double sum = 0;
+
+        for (int i = 0; i < array.length; i++)
+            sum += Math.pow(Math.abs(array[i]), p);
+
+        return Math.pow(sum, 1.0 / p);
+    }
 
     /**
      * Convert from Double[] to double[]. This will create a new array and copy the contents.
@@ -11648,7 +11586,7 @@ public class ArrayUtils {
     public double[] convert(Double[] array) {
         double[] out = new double[array.length];
 
-        for (int i=0; i<array.length; i++) {
+        for (int i = 0; i < array.length; i++) {
             out[i] = array[i];
         }
 
@@ -11664,13 +11602,12 @@ public class ArrayUtils {
     public Double[] convert(double[] array) {
         Double[] out = new Double[array.length];
 
-        for (int i=0; i<array.length; i++) {
+        for (int i = 0; i < array.length; i++) {
             out[i] = array[i];
         }
 
         return out;
     }
-
 
     /**
      * Convert from Float[] to float[]. This will create a new array and copy the contents.
@@ -11681,7 +11618,7 @@ public class ArrayUtils {
     public float[] convert(Float[] array) {
         float[] out = new float[array.length];
 
-        for (int i=0; i<array.length; i++) {
+        for (int i = 0; i < array.length; i++) {
             out[i] = array[i];
         }
 
@@ -11697,13 +11634,12 @@ public class ArrayUtils {
     public Float[] convert(float[] array) {
         Float[] out = new Float[array.length];
 
-        for (int i=0; i<array.length; i++) {
+        for (int i = 0; i < array.length; i++) {
             out[i] = array[i];
         }
 
         return out;
     }
-
 
     /**
      * Convert from Integer[] to int[]. This will create a new array and copy the contents.
@@ -11714,7 +11650,7 @@ public class ArrayUtils {
     public int[] convert(Integer[] array) {
         int[] out = new int[array.length];
 
-        for (int i=0; i<array.length; i++) {
+        for (int i = 0; i < array.length; i++) {
             out[i] = array[i];
         }
 
@@ -11730,13 +11666,12 @@ public class ArrayUtils {
     public Integer[] convert(int[] array) {
         Integer[] out = new Integer[array.length];
 
-        for (int i=0; i<array.length; i++) {
+        for (int i = 0; i < array.length; i++) {
             out[i] = array[i];
         }
 
         return out;
     }
-
 
     /**
      * Convert from Long[] to long[]. This will create a new array and copy the contents.
@@ -11747,7 +11682,7 @@ public class ArrayUtils {
     public long[] convert(Long[] array) {
         long[] out = new long[array.length];
 
-        for (int i=0; i<array.length; i++) {
+        for (int i = 0; i < array.length; i++) {
             out[i] = array[i];
         }
 
@@ -11763,13 +11698,12 @@ public class ArrayUtils {
     public Long[] convert(long[] array) {
         Long[] out = new Long[array.length];
 
-        for (int i=0; i<array.length; i++) {
+        for (int i = 0; i < array.length; i++) {
             out[i] = array[i];
         }
 
         return out;
     }
-
 
     /**
      * Convert from Byte[] to byte[]. This will create a new array and copy the contents.
@@ -11780,7 +11714,7 @@ public class ArrayUtils {
     public byte[] convert(Byte[] array) {
         byte[] out = new byte[array.length];
 
-        for (int i=0; i<array.length; i++) {
+        for (int i = 0; i < array.length; i++) {
             out[i] = array[i];
         }
 
@@ -11796,13 +11730,12 @@ public class ArrayUtils {
     public Byte[] convert(byte[] array) {
         Byte[] out = new Byte[array.length];
 
-        for (int i=0; i<array.length; i++) {
+        for (int i = 0; i < array.length; i++) {
             out[i] = array[i];
         }
 
         return out;
     }
-
 
     /**
      * Convert from Short[] to short[]. This will create a new array and copy the contents.
@@ -11813,7 +11746,7 @@ public class ArrayUtils {
     public short[] convert(Short[] array) {
         short[] out = new short[array.length];
 
-        for (int i=0; i<array.length; i++) {
+        for (int i = 0; i < array.length; i++) {
             out[i] = array[i];
         }
 
@@ -11829,112 +11762,10 @@ public class ArrayUtils {
     public Short[] convert(short[] array) {
         Short[] out = new Short[array.length];
 
-        for (int i=0; i<array.length; i++) {
+        for (int i = 0; i < array.length; i++) {
             out[i] = array[i];
         }
 
         return out;
-    }
-
-
-    /**
-     * Compute the p-norm of the array
-     *
-     * @param array the array
-     * @param p the p value
-     * @return the p-norm
-     */
-    public static double pnorm(final double[] array, final int p) {
-        double sum = 0;
-
-        for (int i=0; i<array.length; i++)
-            sum += Math.pow(Math.abs(array[i]), p);
-
-        return Math.pow(sum, 1.0/p);
-    }
-
-
-    /**
-     * Compute the p-norm of the array
-     *
-     * @param array the array
-     * @param p the p value
-     * @return the p-norm
-     */
-    public static double pnorm(final float[] array, final int p) {
-        double sum = 0;
-
-        for (int i=0; i<array.length; i++)
-            sum += Math.pow(Math.abs(array[i]), p);
-
-        return Math.pow(sum, 1.0/p);
-    }
-
-
-    /**
-     * Compute the p-norm of the array
-     *
-     * @param array the array
-     * @param p the p value
-     * @return the p-norm
-     */
-    public static double pnorm(final int[] array, final int p) {
-        double sum = 0;
-
-        for (int i=0; i<array.length; i++)
-            sum += Math.pow(Math.abs(array[i]), p);
-
-        return Math.pow(sum, 1.0/p);
-    }
-
-
-    /**
-     * Compute the p-norm of the array
-     *
-     * @param array the array
-     * @param p the p value
-     * @return the p-norm
-     */
-    public static double pnorm(final long[] array, final int p) {
-        double sum = 0;
-
-        for (int i=0; i<array.length; i++)
-            sum += Math.pow(Math.abs(array[i]), p);
-
-        return Math.pow(sum, 1.0/p);
-    }
-
-
-    /**
-     * Compute the p-norm of the array
-     *
-     * @param array the array
-     * @param p the p value
-     * @return the p-norm
-     */
-    public static double pnorm(final byte[] array, final int p) {
-        double sum = 0;
-
-        for (int i=0; i<array.length; i++)
-            sum += Math.pow(Math.abs(array[i]), p);
-
-        return Math.pow(sum, 1.0/p);
-    }
-
-
-    /**
-     * Compute the p-norm of the array
-     *
-     * @param array the array
-     * @param p the p value
-     * @return the p-norm
-     */
-    public static double pnorm(final short[] array, final int p) {
-        double sum = 0;
-
-        for (int i=0; i<array.length; i++)
-            sum += Math.pow(Math.abs(array[i]), p);
-
-        return Math.pow(sum, 1.0/p);
     }
 }

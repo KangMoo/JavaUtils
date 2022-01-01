@@ -1,7 +1,6 @@
 package com.github.kangmoo.utils.codec.g711;
 
 /**
- *
  * @author kangmoo Heo
  */
 public class MulawTranscoder {
@@ -61,7 +60,7 @@ public class MulawTranscoder {
     public static byte[] decode(byte[] media) {
         byte[] res = new byte[media.length * 2];
         int j = 0;
-        for(byte mediaByte : media){
+        for (byte mediaByte : media) {
             short s = muLawDecompressTable[mediaByte & 0xff];
             res[j++] = (byte) s;
             res[j++] = (byte) (s >> 8);
@@ -82,7 +81,7 @@ public class MulawTranscoder {
     }
 
     public static byte[] encode(byte[] data) {
-        byte[] res = new byte[data.length/2];
+        byte[] res = new byte[data.length / 2];
         encode(data, 0, data.length, res);
         return res;
     }

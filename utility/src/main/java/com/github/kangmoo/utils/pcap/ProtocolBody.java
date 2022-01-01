@@ -16,19 +16,106 @@ import java.util.Map;
 /**
  * Protocol body represents particular payload on transport level (OSI
  * layer 4).
- *
+ * <p>
  * Typically this payload in encapsulated into network level (OSI layer
  * 3) packet, which includes "protocol number" field that would be used
  * to decide what's inside the payload and how to parse it. Thanks to
  * IANA's standardization effort, multiple network level use the same
  * IDs for these payloads named "protocol numbers".
- *
+ * <p>
  * This is effectively a "router" type: it expects to get protocol
  * number as a parameter, and then invokes relevant type parser based
  * on that parameter.
+ *
  * @see <a href="http://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml">Source</a>
  */
 public class ProtocolBody extends KaitaiStruct {
+
+    private ProtocolEnum protocol;
+    private KaitaiStruct body;
+    private final int protocolNum;
+    private final ProtocolBody _root;
+    private final KaitaiStruct _parent;
+
+    public ProtocolBody(KaitaiStream _io, int protocolNum) {
+        this(_io, null, null, protocolNum);
+    }
+
+    public ProtocolBody(KaitaiStream _io, KaitaiStruct _parent, int protocolNum) {
+        this(_io, _parent, null, protocolNum);
+    }
+
+    public ProtocolBody(KaitaiStream _io, KaitaiStruct _parent, ProtocolBody _root, int protocolNum) {
+        super(_io);
+        this._parent = _parent;
+        this._root = _root == null ? this : _root;
+        this.protocolNum = protocolNum;
+        _read();
+    }
+
+    private void _read() {
+        {
+            ProtocolEnum on = protocol();
+            if (on != null) {
+                switch (protocol()) {
+                    case IPV6_NONXT: {
+                        this.body = new NoNextHeader(this._io, this, _root);
+                        break;
+                    }
+                    case IPV4: {
+                        this.body = new Ipv4Packet(this._io);
+                        break;
+                    }
+                    case UDP: {
+                        this.body = new UdpDatagram(this._io);
+                        break;
+                    }
+                    case ICMP: {
+                        this.body = new IcmpPacket(this._io);
+                        break;
+                    }
+                    case HOPOPT: {
+                        this.body = new OptionHopByHop(this._io, this, _root);
+                        break;
+                    }
+                    case IPV6: {
+                        this.body = new Ipv6Packet(this._io);
+                        break;
+                    }
+                    case TCP: {
+                        this.body = new TcpSegment(this._io);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    public ProtocolEnum protocol() {
+        if (this.protocol != null)
+            return this.protocol;
+        this.protocol = ProtocolEnum.byId(protocolNum());
+        return this.protocol;
+    }
+
+    public KaitaiStruct body() {
+        return body;
+    }
+
+    /**
+     * Protocol number as an integer.
+     */
+    public int protocolNum() {
+        return protocolNum;
+    }
+
+    public ProtocolBody _root() {
+        return _root;
+    }
+
+    public KaitaiStruct _parent() {
+        return _parent;
+    }
 
     public enum ProtocolEnum {
         HOPOPT(0),
@@ -176,67 +263,25 @@ public class ProtocolBody extends KaitaiStruct {
         ROHC(142),
         RESERVED_255(255);
 
-        private final long id;
-        ProtocolEnum(long id) { this.id = id; }
-        public long id() { return id; }
         private static final Map<Long, ProtocolEnum> byId = new HashMap<Long, ProtocolEnum>(144);
+
         static {
             for (ProtocolEnum e : ProtocolEnum.values())
                 byId.put(e.id(), e);
         }
-        public static ProtocolEnum byId(long id) { return byId.get(id); }
-    }
 
-    public ProtocolBody(KaitaiStream _io, int protocolNum) {
-        this(_io, null, null, protocolNum);
-    }
+        private final long id;
 
-    public ProtocolBody(KaitaiStream _io, KaitaiStruct _parent, int protocolNum) {
-        this(_io, _parent, null, protocolNum);
-    }
+        ProtocolEnum(long id) {
+            this.id = id;
+        }
 
-    public ProtocolBody(KaitaiStream _io, KaitaiStruct _parent, ProtocolBody _root, int protocolNum) {
-        super(_io);
-        this._parent = _parent;
-        this._root = _root == null ? this : _root;
-        this.protocolNum = protocolNum;
-        _read();
-    }
-    private void _read() {
-        {
-            ProtocolEnum on = protocol();
-            if (on != null) {
-                switch (protocol()) {
-                    case IPV6_NONXT: {
-                        this.body = new NoNextHeader(this._io, this, _root);
-                        break;
-                    }
-                    case IPV4: {
-                        this.body = new Ipv4Packet(this._io);
-                        break;
-                    }
-                    case UDP: {
-                        this.body = new UdpDatagram(this._io);
-                        break;
-                    }
-                    case ICMP: {
-                        this.body = new IcmpPacket(this._io);
-                        break;
-                    }
-                    case HOPOPT: {
-                        this.body = new OptionHopByHop(this._io, this, _root);
-                        break;
-                    }
-                    case IPV6: {
-                        this.body = new Ipv6Packet(this._io);
-                        break;
-                    }
-                    case TCP: {
-                        this.body = new TcpSegment(this._io);
-                        break;
-                    }
-                }
-            }
+        public static ProtocolEnum byId(long id) {
+            return byId.get(id);
+        }
+
+        public long id() {
+            return id;
         }
     }
 
@@ -244,9 +289,8 @@ public class ProtocolBody extends KaitaiStruct {
      * Dummy type for IPv6 "no next header" type, which signifies end of headers chain.
      */
     public static class NoNextHeader extends KaitaiStruct {
-        public static NoNextHeader fromFile(String fileName) throws IOException {
-            return new NoNextHeader(new ByteBufferKaitaiStream(fileName));
-        }
+        private final ProtocolBody _root;
+        private final ProtocolBody _parent;
 
         public NoNextHeader(KaitaiStream _io) {
             this(_io, null, null);
@@ -262,68 +306,76 @@ public class ProtocolBody extends KaitaiStruct {
             this._root = _root;
             _read();
         }
-        private void _read() {
-        }
-        private ProtocolBody _root;
-        private ProtocolBody _parent;
-        public ProtocolBody _root() { return _root; }
-        public ProtocolBody _parent() { return _parent; }
-    }
-    public static class OptionHopByHop extends KaitaiStruct {
-        public static OptionHopByHop fromFile(String fileName) throws IOException {
-            return new OptionHopByHop(new ByteBufferKaitaiStream(fileName));
+
+        public static NoNextHeader fromFile(String fileName) throws IOException {
+            return new NoNextHeader(new ByteBufferKaitaiStream(fileName));
         }
 
+        private void _read() {
+        }
+
+        public ProtocolBody _root() {
+            return _root;
+        }
+
+        public ProtocolBody _parent() {
+            return _parent;
+        }
+    }
+
+    public static class OptionHopByHop extends KaitaiStruct {
+        private int nextHeaderType;
+        private int hdrExtLen;
+        private byte[] body;
+        private ProtocolBody nextHeader;
+        private final ProtocolBody _root;
+        private final ProtocolBody _parent;
         public OptionHopByHop(KaitaiStream _io) {
             this(_io, null, null);
         }
-
         public OptionHopByHop(KaitaiStream _io, ProtocolBody _parent) {
             this(_io, _parent, null);
         }
-
         public OptionHopByHop(KaitaiStream _io, ProtocolBody _parent, ProtocolBody _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
+
+        public static OptionHopByHop fromFile(String fileName) throws IOException {
+            return new OptionHopByHop(new ByteBufferKaitaiStream(fileName));
+        }
+
         private void _read() {
             this.nextHeaderType = this._io.readU1();
             this.hdrExtLen = this._io.readU1();
             this.body = this._io.readBytes((hdrExtLen() - 1));
             this.nextHeader = new ProtocolBody(this._io, nextHeaderType());
         }
-        private int nextHeaderType;
-        private int hdrExtLen;
-        private byte[] body;
-        private ProtocolBody nextHeader;
-        private ProtocolBody _root;
-        private ProtocolBody _parent;
-        public int nextHeaderType() { return nextHeaderType; }
-        public int hdrExtLen() { return hdrExtLen; }
-        public byte[] body() { return body; }
-        public ProtocolBody nextHeader() { return nextHeader; }
-        public ProtocolBody _root() { return _root; }
-        public ProtocolBody _parent() { return _parent; }
-    }
-    private ProtocolEnum protocol;
-    public ProtocolEnum protocol() {
-        if (this.protocol != null)
-            return this.protocol;
-        this.protocol = ProtocolEnum.byId(protocolNum());
-        return this.protocol;
-    }
-    private KaitaiStruct body;
-    private int protocolNum;
-    private ProtocolBody _root;
-    private KaitaiStruct _parent;
-    public KaitaiStruct body() { return body; }
 
-    /**
-     * Protocol number as an integer.
-     */
-    public int protocolNum() { return protocolNum; }
-    public ProtocolBody _root() { return _root; }
-    public KaitaiStruct _parent() { return _parent; }
+        public int nextHeaderType() {
+            return nextHeaderType;
+        }
+
+        public int hdrExtLen() {
+            return hdrExtLen;
+        }
+
+        public byte[] body() {
+            return body;
+        }
+
+        public ProtocolBody nextHeader() {
+            return nextHeader;
+        }
+
+        public ProtocolBody _root() {
+            return _root;
+        }
+
+        public ProtocolBody _parent() {
+            return _parent;
+        }
+    }
 }

@@ -5,12 +5,14 @@ import java.nio.ByteOrder;
 
 /**
  * Mix Linear PCM Data
+ *
  * @author kangmoo Heo
  */
 public class AudioMixer {
 
     /**
      * Mix 16bit, mono pcm
+     *
      * @param is1
      * @param is2
      * @return
@@ -37,6 +39,7 @@ public class AudioMixer {
 
     /**
      * Mix 32bit, mono pcm
+     *
      * @param is1
      * @param is2
      * @return
@@ -46,16 +49,16 @@ public class AudioMixer {
 
         byte[] average = new byte[bufferLength];
 
-        int[] ints1 = new int[bufferLength/4];
+        int[] ints1 = new int[bufferLength / 4];
         ByteBuffer.wrap(is1).order(ByteOrder.LITTLE_ENDIAN).asIntBuffer().get(ints1);
 
-        int[] ints2 = new int[bufferLength/4];
+        int[] ints2 = new int[bufferLength / 4];
         ByteBuffer.wrap(is2).order(ByteOrder.LITTLE_ENDIAN).asIntBuffer().get(ints2);
 
-        int[] result = new int[bufferLength/4];
+        int[] result = new int[bufferLength / 4];
 
-        for (int i=0; i<result.length; i++) {
-            result[i] = ((ints1[i] + ints2[i])/2);
+        for (int i = 0; i < result.length; i++) {
+            result[i] = ((ints1[i] + ints2[i]) / 2);
         }
 
         ByteBuffer.wrap(average).order(ByteOrder.LITTLE_ENDIAN).asIntBuffer().put(result);
@@ -70,7 +73,7 @@ public class AudioMixer {
 
         private final int value;
 
-        private BitType(int value) {
+        BitType(int value) {
             this.value = value;
         }
 

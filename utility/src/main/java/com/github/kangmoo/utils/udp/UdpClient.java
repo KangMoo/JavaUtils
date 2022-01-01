@@ -4,13 +4,12 @@ import java.io.IOException;
 import java.net.*;
 
 /**
- *
  * @author kangmoo Heo
  */
 public class UdpClient {
-    private int fromPort;
-    private String toIp;
-    private int toPort;
+    private final int fromPort;
+    private final String toIp;
+    private final int toPort;
     private InetAddress ia;
     private DatagramSocket ds;
 

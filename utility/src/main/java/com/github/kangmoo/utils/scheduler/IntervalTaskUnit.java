@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class IntervalTaskUnit implements Runnable {
     protected int interval;
-    protected TimeUnit timeUnit = TimeUnit.MILLISECONDS;;
+    protected TimeUnit timeUnit = TimeUnit.MILLISECONDS;
 
     public IntervalTaskUnit(int interval) {
         this.interval = interval;

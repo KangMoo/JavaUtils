@@ -22,7 +22,7 @@ public class RmqReceiver extends RmqTransport {
     private static final Logger logger = LoggerFactory.getLogger(RmqReceiver.class);
 
     RmqCallback callback;
-    private Consumer consumer = new DefaultConsumer(getChannel()) {
+    private final Consumer consumer = new DefaultConsumer(getChannel()) {
         @Override
         public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) {
             String msg = new String(body, StandardCharsets.US_ASCII);

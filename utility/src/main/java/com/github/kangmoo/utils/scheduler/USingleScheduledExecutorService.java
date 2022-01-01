@@ -5,12 +5,11 @@ import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 /**
- *
  * @author kangmoo Heo
  */
 public class USingleScheduledExecutorService {
-    private ScheduledExecutorService scheduler;
-    private BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(1024, true);
+    private final ScheduledExecutorService scheduler;
+    private final BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(1024, true);
 
     public USingleScheduledExecutorService() {
         scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -39,7 +38,8 @@ public class USingleScheduledExecutorService {
 
     public void execute(Runnable command) {
         workQueue.add(command);
-        Consumer bindedWork = o -> {};
+        Consumer bindedWork = o -> {
+        };
         while (true) {
             Runnable r = workQueue.poll();
             if (r == null) break;

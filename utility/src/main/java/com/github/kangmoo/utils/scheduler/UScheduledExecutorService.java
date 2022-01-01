@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- *
  * @author kangmoo Heo
  */
 public class UScheduledExecutorService {
@@ -63,29 +62,29 @@ public class UScheduledExecutorService {
 
 
     public void shutdown() {
-        for(int i=0; i<corePoolSize; i++){
+        for (int i = 0; i < corePoolSize; i++) {
             scheduler[i].shutdown();
         }
     }
 
     public List<Runnable> shutdownNow() {
         List<Runnable> list = new ArrayList<>();
-        for(int i=0; i<corePoolSize; i++){
+        for (int i = 0; i < corePoolSize; i++) {
             list.addAll(scheduler[i].shutdownNow());
         }
         return list;
     }
 
     public boolean isShutdown() {
-        for(int i=0; i<corePoolSize; i++){
-            if(!scheduler[i].isShutdown()) return false;
+        for (int i = 0; i < corePoolSize; i++) {
+            if (!scheduler[i].isShutdown()) return false;
         }
         return true;
     }
 
     public boolean isTerminated() {
-        for(int i=0; i<corePoolSize; i++){
-            if(!scheduler[i].isTerminated()) return false;
+        for (int i = 0; i < corePoolSize; i++) {
+            if (!scheduler[i].isTerminated()) return false;
         }
         return true;
     }

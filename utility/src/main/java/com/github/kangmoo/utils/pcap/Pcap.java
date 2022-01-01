@@ -16,11 +16,60 @@ import java.util.Map;
  * network traffic grabbed by network sniffers. It is typically
  * produced by tools like [tcpdump](https://www.tcpdump.org/) or
  * [Wireshark](https://www.wireshark.org/).
+ *
  * @see <a href="http://wiki.wireshark.org/Development/LibpcapFileFormat">Source</a>
  */
 public class Pcap extends KaitaiStruct {
+    private Header hdr;
+    private ArrayList<Packet> packets;
+    private final Pcap _root;
+    private final KaitaiStruct _parent;
+
+    public Pcap(KaitaiStream _io) {
+        this(_io, null, null);
+    }
+
+    public Pcap(KaitaiStream _io, KaitaiStruct _parent) {
+        this(_io, _parent, null);
+    }
+
+    public Pcap(KaitaiStream _io, KaitaiStruct _parent, Pcap _root) {
+        super(_io);
+        this._parent = _parent;
+        this._root = _root == null ? this : _root;
+        _read();
+    }
+
     public static Pcap fromFile(String fileName) throws IOException {
         return new Pcap(new ByteBufferKaitaiStream(fileName));
+    }
+
+    private void _read() {
+        this.hdr = new Header(this._io, this, _root);
+        this.packets = new ArrayList<Packet>();
+        {
+            int i = 0;
+            while (!this._io.isEof()) {
+                this.packets.add(new Packet(this._io, this, _root));
+                i++;
+            }
+        }
+    }
+
+    public Header hdr() {
+        return hdr;
+    }
+
+    public ArrayList<Packet> packets() {
+        return packets;
+    }
+
+    public Pcap _root() {
+        return _root;
+    }
+
+    public KaitaiStruct _parent() {
+        return _parent;
     }
 
     public enum Linktype {
@@ -129,40 +178,25 @@ public class Pcap extends KaitaiStruct {
         WATTSTOPPER_DLM(263),
         ISO_14443(264);
 
-        private final long id;
-        Linktype(long id) { this.id = id; }
-        public long id() { return id; }
         private static final Map<Long, Linktype> byId = new HashMap<Long, Linktype>(104);
+
         static {
             for (Linktype e : Linktype.values())
                 byId.put(e.id(), e);
         }
-        public static Linktype byId(long id) { return byId.get(id); }
-    }
 
-    public Pcap(KaitaiStream _io) {
-        this(_io, null, null);
-    }
+        private final long id;
 
-    public Pcap(KaitaiStream _io, KaitaiStruct _parent) {
-        this(_io, _parent, null);
-    }
+        Linktype(long id) {
+            this.id = id;
+        }
 
-    public Pcap(KaitaiStream _io, KaitaiStruct _parent, Pcap _root) {
-        super(_io);
-        this._parent = _parent;
-        this._root = _root == null ? this : _root;
-        _read();
-    }
-    private void _read() {
-        this.hdr = new Header(this._io, this, _root);
-        this.packets = new ArrayList<Packet>();
-        {
-            int i = 0;
-            while (!this._io.isEof()) {
-                this.packets.add(new Packet(this._io, this, _root));
-                i++;
-            }
+        public static Linktype byId(long id) {
+            return byId.get(id);
+        }
+
+        public long id() {
+            return id;
         }
     }
 
@@ -170,28 +204,36 @@ public class Pcap extends KaitaiStruct {
      * @see <a href="https://wiki.wireshark.org/Development/LibpcapFileFormat#Global_Header">Source</a>
      */
     public static class Header extends KaitaiStruct {
-        public static Header fromFile(String fileName) throws IOException {
-            return new Header(new ByteBufferKaitaiStream(fileName));
-        }
-
+        private byte[] magicNumber;
+        private int versionMajor;
+        private int versionMinor;
+        private int thiszone;
+        private long sigfigs;
+        private long snaplen;
+        private Linktype network;
+        private final Pcap _root;
+        private final Pcap _parent;
         public Header(KaitaiStream _io) {
             this(_io, null, null);
         }
-
         public Header(KaitaiStream _io, Pcap _parent) {
             this(_io, _parent, null);
         }
-
         public Header(KaitaiStream _io, Pcap _parent, Pcap _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
+
+        public static Header fromFile(String fileName) throws IOException {
+            return new Header(new ByteBufferKaitaiStream(fileName));
+        }
+
         private void _read() {
             this.magicNumber = this._io.readBytes(4);
-            if (!(Arrays.equals(magicNumber(), new byte[] { -44, -61, -78, -95 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -44, -61, -78, -95 }, magicNumber(), _io(), "/types/header/seq/0");
+            if (!(Arrays.equals(magicNumber(), new byte[]{-44, -61, -78, -95}))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[]{-44, -61, -78, -95}, magicNumber(), _io(), "/types/header/seq/0");
             }
             this.versionMajor = this._io.readU2le();
             this.versionMinor = this._io.readU2le();
@@ -200,69 +242,90 @@ public class Pcap extends KaitaiStruct {
             this.snaplen = this._io.readU4le();
             this.network = Linktype.byId(this._io.readU4le());
         }
-        private byte[] magicNumber;
-        private int versionMajor;
-        private int versionMinor;
-        private int thiszone;
-        private long sigfigs;
-        private long snaplen;
-        private Linktype network;
-        private Pcap _root;
-        private Pcap _parent;
-        public byte[] magicNumber() { return magicNumber; }
-        public int versionMajor() { return versionMajor; }
-        public int versionMinor() { return versionMinor; }
+
+        public byte[] magicNumber() {
+            return magicNumber;
+        }
+
+        public int versionMajor() {
+            return versionMajor;
+        }
+
+        public int versionMinor() {
+            return versionMinor;
+        }
 
         /**
          * Correction time in seconds between UTC and the local
          * timezone of the following packet header timestamps.
          */
-        public int thiszone() { return thiszone; }
+        public int thiszone() {
+            return thiszone;
+        }
 
         /**
          * In theory, the accuracy of time stamps in the capture; in
          * practice, all tools set it to 0.
          */
-        public long sigfigs() { return sigfigs; }
+        public long sigfigs() {
+            return sigfigs;
+        }
 
         /**
          * The "snapshot length" for the capture (typically 65535 or
          * even more, but might be limited by the user), see: incl_len
          * vs. orig_len.
          */
-        public long snaplen() { return snaplen; }
+        public long snaplen() {
+            return snaplen;
+        }
 
         /**
          * Link-layer header type, specifying the type of headers at
          * the beginning of the packet.
          */
-        public Linktype network() { return network; }
-        public Pcap _root() { return _root; }
-        public Pcap _parent() { return _parent; }
+        public Linktype network() {
+            return network;
+        }
+
+        public Pcap _root() {
+            return _root;
+        }
+
+        public Pcap _parent() {
+            return _parent;
+        }
     }
 
     /**
      * @see <a href="https://wiki.wireshark.org/Development/LibpcapFileFormat#Record_.28Packet.29_Header">Source</a>
      */
     public static class Packet extends KaitaiStruct {
-        public static Packet fromFile(String fileName) throws IOException {
-            return new Packet(new ByteBufferKaitaiStream(fileName));
-        }
-
+        private long tsSec;
+        private long tsUsec;
+        private long inclLen;
+        private long origLen;
+        private Object body;
+        private final Pcap _root;
+        private final Pcap _parent;
+        private byte[] _raw_body;
         public Packet(KaitaiStream _io) {
             this(_io, null, null);
         }
-
         public Packet(KaitaiStream _io, Pcap _parent) {
             this(_io, _parent, null);
         }
-
         public Packet(KaitaiStream _io, Pcap _parent, Pcap _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
+
+        public static Packet fromFile(String fileName) throws IOException {
+            return new Packet(new ByteBufferKaitaiStream(fileName));
+        }
+
         private void _read() {
             this.tsSec = this._io.readU4le();
             this.tsUsec = this._io.readU4le();
@@ -294,41 +357,46 @@ public class Pcap extends KaitaiStruct {
                 }
             }
         }
-        private long tsSec;
-        private long tsUsec;
-        private long inclLen;
-        private long origLen;
-        private Object body;
-        private Pcap _root;
-        private Pcap _parent;
-        private byte[] _raw_body;
-        public long tsSec() { return tsSec; }
-        public long tsUsec() { return tsUsec; }
+
+        public long tsSec() {
+            return tsSec;
+        }
+
+        public long tsUsec() {
+            return tsUsec;
+        }
 
         /**
          * Number of bytes of packet data actually captured and saved in the file.
          */
-        public long inclLen() { return inclLen; }
+        public long inclLen() {
+            return inclLen;
+        }
 
         /**
          * Length of the packet as it appeared on the network when it was captured.
          */
-        public long origLen() { return origLen; }
+        public long origLen() {
+            return origLen;
+        }
 
         /**
          * @see <a href="https://wiki.wireshark.org/Development/LibpcapFileFormat#Packet_Data">Source</a>
          */
-        public Object body() { return body; }
-        public Pcap _root() { return _root; }
-        public Pcap _parent() { return _parent; }
-        public byte[] _raw_body() { return _raw_body; }
+        public Object body() {
+            return body;
+        }
+
+        public Pcap _root() {
+            return _root;
+        }
+
+        public Pcap _parent() {
+            return _parent;
+        }
+
+        public byte[] _raw_body() {
+            return _raw_body;
+        }
     }
-    private Header hdr;
-    private ArrayList<Packet> packets;
-    private Pcap _root;
-    private KaitaiStruct _parent;
-    public Header hdr() { return hdr; }
-    public ArrayList<Packet> packets() { return packets; }
-    public Pcap _root() { return _root; }
-    public KaitaiStruct _parent() { return _parent; }
 }

@@ -7,14 +7,12 @@ import org.jnativehook.mouse.NativeMouseListener;
 import org.jnativehook.mouse.NativeMouseMotionListener;
 import org.slf4j.Logger;
 
-
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- *
  * @author kangmoo Heo
  */
 public class JnativeHookSample {
@@ -52,7 +50,7 @@ public class JnativeHookSample {
 
         @Override
         public void nativeKeyTyped(NativeKeyEvent e) {
-            System.out.println("Key Typed: " + e.getKeyText(e.getKeyCode()));
+            System.out.println("Key Typed: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
         }
     }
 

@@ -3,7 +3,6 @@ package com.github.kangmoo.utils.rtp;
 import java.util.Arrays;
 
 /**
- *
  * @author kangmoo Heo
  */
 
@@ -83,7 +82,7 @@ public class RtpPacket {
         if (packetSize >= HEADER_SIZE) {
             //get the header bitsream:
             this.header = new byte[HEADER_SIZE];
-            this.header = Arrays.copyOf(packet,packet.length);
+            this.header = Arrays.copyOf(packet, packet.length);
 
             //get the payload bitstream:
             payloadSize = packetSize - HEADER_SIZE;
@@ -97,9 +96,9 @@ public class RtpPacket {
             sequenceNumber = (header[3] & 0xFF) + ((header[2] & 0xFF) << 8);
             timeStamp = (header[7] & 0xFF) + ((header[6] & 0xFF) << 8) + ((header[5] & 0xFF) << 16) + ((header[4] & 0xFF) << 24);
             ssrc = ((long) (header[8] & 0xFF) << 24) |
-                    ((long) (header[8+ 1] & 0xFF) << 16) |
-                    ((long) (header[8+ 2] & 0xFF) << 8) |
-                    ((long) (header[8+ 3] & 0xFF));
+                    ((long) (header[8 + 1] & 0xFF) << 16) |
+                    ((long) (header[8 + 2] & 0xFF) << 8) |
+                    ((long) (header[8 + 3] & 0xFF));
         }
     }
 

@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.stream.IntStream;
 
 /**
- *
  * @author kangmoo Heo
  */
 public class IteratorTest {

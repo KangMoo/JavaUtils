@@ -1,7 +1,6 @@
 package com.github.kangmoo.utils.utility;
 
 /**
- *
  * @author kangmoo Heo
  */
 public class Converter {
@@ -63,7 +62,7 @@ public class Converter {
     }
 
     public static float toFloat32(float input) {
-        return (float) (input / FLOAT_TYPE_MAX);
+        return input / FLOAT_TYPE_MAX;
 
     }
 
@@ -392,51 +391,27 @@ public class Converter {
     }
 
     public static boolean isInt8Unsigned(int input) {
-        if (input >= 0 && input <= 255) {
-            return true;
-        } else {
-            return false;
-        }
+        return input >= 0 && input <= 255;
     }
 
     public static boolean isInt8Signed(int input) {
-        if (input <= INT_8_SIGNED_MAX && input >= INT_8_SIGNED_MIN) {
-            return true;
-        } else {
-            return false;
-        }
+        return input <= INT_8_SIGNED_MAX && input >= INT_8_SIGNED_MIN;
     }
 
     public static boolean isInt16Signed(int input) {
-        if (input <= INT_16_SIGNED_MAX && input >= INT_16_SIGNED_MAX) {
-            return true;
-        } else {
-            return false;
-        }
+        return input <= INT_16_SIGNED_MAX && input >= INT_16_SIGNED_MAX;
     }
 
     public static boolean isInt24Signed(int input) {
-        if (input <= INT_24_SIGNED_MAX && input >= INT_24_SIGNED_MIN) {
-            return true;
-        } else {
-            return false;
-        }
+        return input <= INT_24_SIGNED_MAX && input >= INT_24_SIGNED_MIN;
     }
 
     public static boolean isInt32Signed(double input) {
-        if (input <= INT_32_SIGNED_MAX && input >= INT_32_SIGNED_MIN) {
-            return true;
-        } else {
-            return false;
-        }
+        return input <= INT_32_SIGNED_MAX && input >= INT_32_SIGNED_MIN;
     }
 
     public static boolean isFloat32(float input) {
-        if (input <= 1 && input >= -1) {
-            return true;
-        } else {
-            return false;
-        }
+        return input <= 1 && input >= -1;
     }
 
 }

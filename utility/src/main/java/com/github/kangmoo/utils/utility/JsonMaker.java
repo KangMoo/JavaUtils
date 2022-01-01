@@ -98,7 +98,7 @@ public class JsonMaker {
         return this.members.hashCode();
     }
 
-    public String toString(){
+    public String toString() {
         return new Gson().toJson(this.members);
     }
 }

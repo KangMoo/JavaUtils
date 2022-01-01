@@ -2,12 +2,8 @@ package com.github.kangmoo.utils.utility;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
- *
  * @author kangmoo Heo
  */
 public class AutoLock {

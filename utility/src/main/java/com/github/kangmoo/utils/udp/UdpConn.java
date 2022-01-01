@@ -8,7 +8,6 @@ import java.net.SocketException;
 import java.util.function.Consumer;
 
 /**
- *
  * @author kangmoo Heo
  */
 public class UdpConn {
@@ -30,7 +29,7 @@ public class UdpConn {
         startServer();
     }
 
-    public void startServer(){
+    public void startServer() {
         this.handler = new Thread(this::packetHandle);
         this.handler.start();
     }
@@ -43,7 +42,7 @@ public class UdpConn {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if(onPacketRecv == null) continue;
+            if (onPacketRecv == null) continue;
             byte[] data = new byte[dp.getLength()];
             System.arraycopy(dp.getData(), 0, data, 0, dp.getLength());
             onPacketRecv.accept(data);
@@ -52,7 +51,7 @@ public class UdpConn {
 
     public void setRecvCallBack(Consumer<byte[]> consumer) {
         this.onPacketRecv = consumer;
-        if(handler == null || handler.isInterrupted()){
+        if (handler == null || handler.isInterrupted()) {
             startServer();
         }
     }

@@ -12,139 +12,140 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class JsonUtil {
 
-    private JsonUtil() {}
+    private JsonUtil() {
+    }
 
-    public static Optional<JsonObject> json2Object(String jsonStr, String ... elements) {
+    public static Optional<JsonObject> json2Object(String jsonStr, String... elements) {
         try {
             return json2JsonElement(jsonStr, elements)
                     .map(JsonElement::getAsJsonObject);
-        } catch (Exception e){
+        } catch (Exception e) {
             return Optional.empty();
         }
     }
 
-    public static Optional<JsonArray> json2Array(String jsonStr, String ... elements) {
+    public static Optional<JsonArray> json2Array(String jsonStr, String... elements) {
         try {
             return json2JsonElement(jsonStr, elements)
                     .map(JsonElement::getAsJsonArray);
-        } catch (Exception e){
+        } catch (Exception e) {
             return Optional.empty();
         }
     }
 
-    public static Optional<JsonPrimitive> json2Primitive(String jsonStr, String ... elements) {
+    public static Optional<JsonPrimitive> json2Primitive(String jsonStr, String... elements) {
         try {
             return json2JsonElement(jsonStr, elements)
                     .map(JsonElement::getAsJsonPrimitive);
-        } catch (Exception e){
+        } catch (Exception e) {
             return Optional.empty();
         }
     }
 
-    public static Optional<JsonNull> json2Null(String jsonStr, String ... elements) {
+    public static Optional<JsonNull> json2Null(String jsonStr, String... elements) {
         try {
             return json2JsonElement(jsonStr, elements)
                     .map(JsonElement::getAsJsonNull);
-        } catch (Exception e){
+        } catch (Exception e) {
             return Optional.empty();
         }
     }
 
-    public static Optional<Boolean> json2Boolean(String jsonStr, String ... elements) {
+    public static Optional<Boolean> json2Boolean(String jsonStr, String... elements) {
         try {
             return json2JsonElement(jsonStr, elements)
                     .map(JsonElement::getAsBoolean);
-        } catch (Exception e){
+        } catch (Exception e) {
             return Optional.empty();
         }
     }
 
-    public static Optional<Number> json2Number(String jsonStr, String ... elements) {
+    public static Optional<Number> json2Number(String jsonStr, String... elements) {
         try {
             return json2JsonElement(jsonStr, elements)
                     .map(JsonElement::getAsNumber);
-        } catch (Exception e){
+        } catch (Exception e) {
             return Optional.empty();
         }
     }
 
-    public static Optional<String> json2String(String jsonStr, String ... elements) {
+    public static Optional<String> json2String(String jsonStr, String... elements) {
         try {
             return json2JsonElement(jsonStr, elements)
                     .map(JsonElement::getAsString);
-        } catch (Exception e){
+        } catch (Exception e) {
             return Optional.empty();
         }
     }
 
-    public static Optional<Double> json2Double(String jsonStr, String ... elements) {
+    public static Optional<Double> json2Double(String jsonStr, String... elements) {
         try {
             return json2JsonElement(jsonStr, elements)
                     .map(JsonElement::getAsDouble);
-        } catch (Exception e){
+        } catch (Exception e) {
             return Optional.empty();
         }
     }
 
-    public static Optional<Float> json2Float(String jsonStr, String ... elements) {
+    public static Optional<Float> json2Float(String jsonStr, String... elements) {
         try {
             return json2JsonElement(jsonStr, elements)
                     .map(JsonElement::getAsFloat);
-        } catch (Exception e){
+        } catch (Exception e) {
             return Optional.empty();
         }
     }
 
-    public static Optional<Long> json2Long(String jsonStr, String ... elements) {
+    public static Optional<Long> json2Long(String jsonStr, String... elements) {
         try {
             return json2JsonElement(jsonStr, elements)
                     .map(JsonElement::getAsLong);
-        } catch (Exception e){
+        } catch (Exception e) {
             return Optional.empty();
         }
     }
 
-    public static Optional<Integer> json2Int(String jsonStr, String ... elements) {
+    public static Optional<Integer> json2Int(String jsonStr, String... elements) {
         try {
             return json2JsonElement(jsonStr, elements)
                     .map(JsonElement::getAsInt);
-        } catch (Exception e){
+        } catch (Exception e) {
             return Optional.empty();
         }
     }
 
-    public static Optional<Byte> json2Byte(String jsonStr, String ... elements) {
+    public static Optional<Byte> json2Byte(String jsonStr, String... elements) {
         try {
             return json2JsonElement(jsonStr, elements)
                     .map(JsonElement::getAsByte);
-        } catch (Exception e){
+        } catch (Exception e) {
             return Optional.empty();
         }
     }
 
-    public static Optional<BigDecimal> json2BigDecimal(String jsonStr, String ... elements) {
+    public static Optional<BigDecimal> json2BigDecimal(String jsonStr, String... elements) {
         try {
             return json2JsonElement(jsonStr, elements)
                     .map(JsonElement::getAsBigDecimal);
-        } catch (Exception e){
+        } catch (Exception e) {
             return Optional.empty();
         }
     }
 
-    public static Optional<BigInteger> json2BigInteger(String jsonStr, String ... elements) {
+    public static Optional<BigInteger> json2BigInteger(String jsonStr, String... elements) {
         try {
             return json2JsonElement(jsonStr, elements)
                     .map(JsonElement::getAsBigInteger);
-        } catch (Exception e){
+        } catch (Exception e) {
             return Optional.empty();
         }
     }
 
-    public static Optional<Short> json2Short(String jsonStr, String ... elements) {
+    public static Optional<Short> json2Short(String jsonStr, String... elements) {
         try {
             return json2JsonElement(jsonStr, elements)
                     .map(JsonElement::getAsShort);
-        } catch (Exception e){
+        } catch (Exception e) {
             return Optional.empty();
         }
     }

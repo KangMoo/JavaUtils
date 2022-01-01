@@ -3,11 +3,13 @@ package com.github.kangmoo.utils.scheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Session Manager
@@ -26,12 +28,12 @@ public class IntervalTaskManager {
     private IntervalTaskManager() {
     }
 
-    public IntervalTaskManager init() {
-        return this;
-    }
-
     public static IntervalTaskManager getInstance() {
         return instance;
+    }
+
+    public IntervalTaskManager init() {
+        return this;
     }
 
     public void start() {

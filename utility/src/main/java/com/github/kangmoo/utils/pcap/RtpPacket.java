@@ -9,12 +9,150 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
  * @author kangmoo Heo
  */
 public class RtpPacket extends KaitaiStruct {
+    private Integer lenPaddingIfExists;
+    private Integer lenPadding;
+    private long version;
+    private boolean hasPadding;
+    private boolean hasExtension;
+    private long csrcCount;
+    private boolean marker;
+    private PayloadTypeEnum payloadType;
+    private long payloadTypeNum;
+    private int sequenceNumber;
+    private long timestamp;
+    private long ssrc;
+    private HeaderExtention headerExtension;
+    private byte[] data;
+    private byte[] padding;
+    private final RtpPacket _root;
+    private final KaitaiStruct _parent;
+    public RtpPacket(KaitaiStream _io) {
+        this(_io, null, null);
+    }
+    public RtpPacket(KaitaiStream _io, KaitaiStruct _parent) {
+        this(_io, _parent, null);
+    }
+    public RtpPacket(KaitaiStream _io, KaitaiStruct _parent, RtpPacket _root) {
+        super(_io);
+        this._parent = _parent;
+        this._root = _root == null ? this : _root;
+        _read();
+    }
+
     public static RtpPacket fromFile(String fileName) throws IOException {
         return new RtpPacket(new ByteBufferKaitaiStream(fileName));
+    }
+
+    private void _read() {
+        this.version = this._io.readBitsIntBe(2);
+        this.hasPadding = this._io.readBitsIntBe(1) != 0;
+        this.hasExtension = this._io.readBitsIntBe(1) != 0;
+        this.csrcCount = this._io.readBitsIntBe(4);
+        this.marker = this._io.readBitsIntBe(1) != 0;
+        this.payloadTypeNum = this._io.readBitsIntBe(7);
+        this.payloadType = PayloadTypeEnum.byId(payloadTypeNum);
+        this._io.alignToByte();
+        this.sequenceNumber = this._io.readU2be();
+        this.timestamp = this._io.readU4be();
+        this.ssrc = this._io.readU4be();
+        if (hasExtension()) {
+            this.headerExtension = new HeaderExtention(this._io, this, _root);
+        }
+        this.data = this._io.readBytes(((_io().size() - _io().pos()) - lenPadding()));
+        this.padding = this._io.readBytes(lenPadding());
+    }
+
+    /**
+     * If padding bit is enabled, last byte of data contains number of
+     * bytes appended to the payload as padding.
+     */
+    public Integer lenPaddingIfExists() {
+        if (this.lenPaddingIfExists != null)
+            return this.lenPaddingIfExists;
+        if (hasPadding()) {
+            long _pos = this._io.pos();
+            this._io.seek((_io().size() - 1));
+            this.lenPaddingIfExists = this._io.readU1();
+            this._io.seek(_pos);
+        }
+        return this.lenPaddingIfExists;
+    }
+
+    /**
+     * Always returns number of padding bytes to in the payload.
+     */
+    public Integer lenPadding() {
+        if (this.lenPadding != null)
+            return this.lenPadding;
+        int _tmp = (hasPadding() ? lenPaddingIfExists() : 0);
+        this.lenPadding = _tmp;
+        return this.lenPadding;
+    }
+
+    public long version() {
+        return version;
+    }
+
+    public boolean hasPadding() {
+        return hasPadding;
+    }
+
+    public boolean hasExtension() {
+        return hasExtension;
+    }
+
+    public long csrcCount() {
+        return csrcCount;
+    }
+
+    public boolean marker() {
+        return marker;
+    }
+
+    public PayloadTypeEnum payloadType() {
+        return payloadType;
+    }
+
+    public long getPayloadTypeNum() {
+        return payloadTypeNum;
+    }
+
+    public int sequenceNumber() {
+        return sequenceNumber;
+    }
+
+    public long timestamp() {
+        return timestamp;
+    }
+
+    public long ssrc() {
+        return ssrc;
+    }
+
+    public HeaderExtention headerExtension() {
+        return headerExtension;
+    }
+
+    /**
+     * Payload without padding.
+     */
+    public byte[] data() {
+        return data;
+    }
+
+    public byte[] padding() {
+        return padding;
+    }
+
+    public RtpPacket _root() {
+        return _root;
+    }
+
+    public KaitaiStruct _parent() {
+        return _parent;
     }
 
     public enum PayloadTypeEnum {
@@ -87,53 +225,33 @@ public class RtpPacket extends KaitaiStruct {
         DYNAMIC_126(126),
         DYNAMIC_127(127);
 
-        private final long id;
-        PayloadTypeEnum(long id) { this.id = id; }
-        public long id() { return id; }
         private static final Map<Long, PayloadTypeEnum> byId = new HashMap<Long, PayloadTypeEnum>(36);
+
         static {
             for (PayloadTypeEnum e : PayloadTypeEnum.values())
                 byId.put(e.id(), e);
         }
-        public static PayloadTypeEnum byId(long id) { return byId.get(id); }
-    }
 
-    public RtpPacket(KaitaiStream _io) {
-        this(_io, null, null);
-    }
+        private final long id;
 
-    public RtpPacket(KaitaiStream _io, KaitaiStruct _parent) {
-        this(_io, _parent, null);
-    }
-
-    public RtpPacket(KaitaiStream _io, KaitaiStruct _parent, RtpPacket _root) {
-        super(_io);
-        this._parent = _parent;
-        this._root = _root == null ? this : _root;
-        _read();
-    }
-    private void _read() {
-        this.version = this._io.readBitsIntBe(2);
-        this.hasPadding = this._io.readBitsIntBe(1) != 0;
-        this.hasExtension = this._io.readBitsIntBe(1) != 0;
-        this.csrcCount = this._io.readBitsIntBe(4);
-        this.marker = this._io.readBitsIntBe(1) != 0;
-        this.payloadTypeNum = this._io.readBitsIntBe(7);
-        this.payloadType = PayloadTypeEnum.byId(payloadTypeNum);
-        this._io.alignToByte();
-        this.sequenceNumber = this._io.readU2be();
-        this.timestamp = this._io.readU4be();
-        this.ssrc = this._io.readU4be();
-        if (hasExtension()) {
-            this.headerExtension = new HeaderExtention(this._io, this, _root);
+        PayloadTypeEnum(long id) {
+            this.id = id;
         }
-        this.data = this._io.readBytes(((_io().size() - _io().pos()) - lenPadding()));
-        this.padding = this._io.readBytes(lenPadding());
+
+        public static PayloadTypeEnum byId(long id) {
+            return byId.get(id);
+        }
+
+        public long id() {
+            return id;
+        }
     }
+
     public static class HeaderExtention extends KaitaiStruct {
-        public static HeaderExtention fromFile(String fileName) throws IOException {
-            return new HeaderExtention(new ByteBufferKaitaiStream(fileName));
-        }
+        private int id;
+        private int length;
+        private final RtpPacket _root;
+        private final RtpPacket _parent;
 
         public HeaderExtention(KaitaiStream _io) {
             this(_io, null, null);
@@ -142,87 +260,36 @@ public class RtpPacket extends KaitaiStruct {
         public HeaderExtention(KaitaiStream _io, RtpPacket _parent) {
             this(_io, _parent, null);
         }
-
         public HeaderExtention(KaitaiStream _io, RtpPacket _parent, RtpPacket _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
+
+        public static HeaderExtention fromFile(String fileName) throws IOException {
+            return new HeaderExtention(new ByteBufferKaitaiStream(fileName));
+        }
+
         private void _read() {
             this.id = this._io.readU2be();
             this.length = this._io.readU2be();
         }
-        private int id;
-        private int length;
-        private RtpPacket _root;
-        private RtpPacket _parent;
-        public int id() { return id; }
-        public int length() { return length; }
-        public RtpPacket _root() { return _root; }
-        public RtpPacket _parent() { return _parent; }
-    }
-    private Integer lenPaddingIfExists;
 
-    /**
-     * If padding bit is enabled, last byte of data contains number of
-     * bytes appended to the payload as padding.
-     */
-    public Integer lenPaddingIfExists() {
-        if (this.lenPaddingIfExists != null)
-            return this.lenPaddingIfExists;
-        if (hasPadding()) {
-            long _pos = this._io.pos();
-            this._io.seek((_io().size() - 1));
-            this.lenPaddingIfExists = this._io.readU1();
-            this._io.seek(_pos);
+        public int id() {
+            return id;
         }
-        return this.lenPaddingIfExists;
-    }
-    private Integer lenPadding;
 
-    /**
-     * Always returns number of padding bytes to in the payload.
-     */
-    public Integer lenPadding() {
-        if (this.lenPadding != null)
-            return this.lenPadding;
-        int _tmp = (int) ((hasPadding() ? lenPaddingIfExists() : 0));
-        this.lenPadding = _tmp;
-        return this.lenPadding;
-    }
-    private long version;
-    private boolean hasPadding;
-    private boolean hasExtension;
-    private long csrcCount;
-    private boolean marker;
-    private PayloadTypeEnum payloadType;
-    private long payloadTypeNum;
-    private int sequenceNumber;
-    private long timestamp;
-    private long ssrc;
-    private HeaderExtention headerExtension;
-    private byte[] data;
-    private byte[] padding;
-    private RtpPacket _root;
-    private KaitaiStruct _parent;
-    public long version() { return version; }
-    public boolean hasPadding() { return hasPadding; }
-    public boolean hasExtension() { return hasExtension; }
-    public long csrcCount() { return csrcCount; }
-    public boolean marker() { return marker; }
-    public PayloadTypeEnum payloadType() { return payloadType; }
-    public long getPayloadTypeNum() { return payloadTypeNum; }
-    public int sequenceNumber() { return sequenceNumber; }
-    public long timestamp() { return timestamp; }
-    public long ssrc() { return ssrc; }
-    public HeaderExtention headerExtension() { return headerExtension; }
+        public int length() {
+            return length;
+        }
 
-    /**
-     * Payload without padding.
-     */
-    public byte[] data() { return data; }
-    public byte[] padding() { return padding; }
-    public RtpPacket _root() { return _root; }
-    public KaitaiStruct _parent() { return _parent; }
+        public RtpPacket _root() {
+            return _root;
+        }
+
+        public RtpPacket _parent() {
+            return _parent;
+        }
+    }
 }

@@ -3,7 +3,6 @@ package com.github.kangmoo.utils.practice;
 import java.util.PriorityQueue;
 
 /**
- *
  * @author kangmoo Heo
  */
 public class PriorityQueueTest {
@@ -21,14 +20,14 @@ public class PriorityQueueTest {
 
         System.out.println("================");
 
-        while(true){
+        while (true) {
             Person p = pq.poll();
-            if(p==null) return;
+            if (p == null) return;
             System.out.println(p);
         }
     }
 
-    public static class Person{
+    public static class Person {
         String name;
         int age;
 

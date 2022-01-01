@@ -18,7 +18,7 @@ public class RmqTransport {
     private final String userName;
     private final String password;
     private final String queueName;
-    private RmqCallback callback;
+    private final RmqCallback callback;
     private RmqAlarm level;
     private boolean isBlocked;
 
@@ -150,7 +150,7 @@ public class RmqTransport {
         factory.setNetworkRecoveryInterval(1000);
         factory.setRequestedHeartbeat(5);
         factory.setConnectionTimeout(3000);
-        factory.setSocketConfigurator(socket ->{
+        factory.setSocketConfigurator(socket -> {
             socket.setTcpNoDelay(true);
             socket.setSoTimeout(3000);
         });
@@ -244,10 +244,6 @@ public class RmqTransport {
             callback.onAlarmNotify(level, exception);
             this.level = level;
         }
-        if (this.level == RmqAlarm.NOR) {
-            isBlocked = false;
-        } else {
-            isBlocked = true;
-        }
+        isBlocked = this.level != RmqAlarm.NOR;
     }
 }

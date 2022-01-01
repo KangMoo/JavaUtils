@@ -8,7 +8,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
- *
  * @author kangmoo Heo
  */
 public class CommandExecutor {
@@ -22,7 +21,7 @@ public class CommandExecutor {
     }
 
     public static Future<String> runBashCommand(String... commands) {
-        String[] newCommands = new String[commands.length+2];
+        String[] newCommands = new String[commands.length + 2];
         newCommands[0] = "bash";
         newCommands[1] = "-c";
         System.arraycopy(commands, 0, newCommands, 2, commands.length);
