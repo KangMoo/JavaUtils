@@ -9,7 +9,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import java.util.Properties;
 
 public class ProducerBuilder<K, V> {
-    private Properties properties = new Properties();
+    private final Properties properties = new Properties();
 
     public ProducerBuilder(String bootstrapServers) {
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -18,11 +18,13 @@ public class ProducerBuilder<K, V> {
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
     }
 
-    public void withProperty(Object key, Object value) {
+    public ProducerBuilder<K, V> withProperties(Object key, Object value) {
         properties.put(key, value);
+        return this;
     }
 
     public UKafkaProducer<K, V> build() {
         return new UKafkaProducer<>(properties);
     }
+
 }

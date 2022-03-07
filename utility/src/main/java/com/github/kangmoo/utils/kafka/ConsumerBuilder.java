@@ -9,7 +9,7 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import java.util.Properties;
 
 public class ConsumerBuilder<K, V> {
-    private Properties properties = new Properties();
+    private final Properties properties = new Properties();
 
     public ConsumerBuilder(String bootstrapServers, String groupId) {
         properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -19,8 +19,9 @@ public class ConsumerBuilder<K, V> {
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
     }
 
-    public void withProperty(Object key, Object value) {
+    public ConsumerBuilder<K, V> withProperties(Object key, Object value) {
         properties.put(key, value);
+        return this;
     }
 
     public UKafkaConsumer<K, V> build(){
