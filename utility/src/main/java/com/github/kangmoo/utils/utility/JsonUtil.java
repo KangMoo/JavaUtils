@@ -190,6 +190,6 @@ public class JsonUtil {
     }
 
     public static String toJson(Object object) {
-        return new Gson().toJson(object);
+        return new GsonBuilder().serializeNulls().create().toJson(object);
     }
 }
