@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 /**
  * @author kangmoo Heo
  */
-public abstract class TypeReference<T> {
+public abstract class TypeReference {
     private final Type[] types;
     private volatile Constructor constructor;
 
@@ -37,7 +37,7 @@ public abstract class TypeReference<T> {
     /**
      * Gets the referenced Class of the first generic parameter
      */
-    public Class<T> getGenericParameterClass() {
+    public Class getGenericParameterClass() {
         return getGenericParameterClass(0);
     }
 
@@ -62,7 +62,7 @@ public abstract class TypeReference<T> {
      * Instantiates a new instance of {@code T} using the first generic parameter
      */
     @SuppressWarnings("unchecked")
-    public T newGenericInstance()
+    public Class newGenericInstance()
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         return newGenericInstance(0);
     }
@@ -71,19 +71,19 @@ public abstract class TypeReference<T> {
      * Instantiates a new instance of {@code T} using the n-th generic parameter
      */
     @SuppressWarnings("unchecked")
-    public T newGenericInstance(final int n)
+    public Class newGenericInstance(final int n)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         if (constructor == null) {
             constructor = getGenericParameterClass(n).getConstructor();
         }
-        return (T) constructor.newInstance();
+        return (Class) constructor.newInstance();
     }
 
     /**
      * Instantiates a new instance of {@code T} using the n-th generic parameter
      */
     @SuppressWarnings("unchecked")
-    public T newGenericInstance(final int n, final Object... objects)
+    public Class newGenericInstance(final int n, final Object... objects)
             throws NoSuchMethodException, IllegalAccessException,
             InvocationTargetException, InstantiationException {
 
@@ -96,7 +96,7 @@ public abstract class TypeReference<T> {
         }
 
         constructor = rawType.getConstructor(types);
-        return (T) constructor.newInstance(objects);
+        return (Class) constructor.newInstance(objects);
 
     }
 
