@@ -51,7 +51,6 @@ public abstract class TypeReference {
         Type type = types[n];
 
         Class clazz = (type instanceof Class) ? (Class) type
-
                 : (Class) ((ParameterizedType) type).getRawType();
         if ((clazz.getModifiers() & Modifier.ABSTRACT) != 0)
             throw new IllegalArgumentException("generic parameter must be a concrete class");
