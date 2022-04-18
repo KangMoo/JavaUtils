@@ -2,7 +2,7 @@ package gcp;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
-import com.github.kangmoo.utils.gcp.stt.SttRecognizer;
+import com.github.kangmoo.utils.gcp.stt.SttConverter;
 import com.google.cloud.speech.v1.RecognitionConfig.AudioEncoding;
 import org.slf4j.LoggerFactory;
 
@@ -22,20 +22,31 @@ public class SttTest {
         ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("io.grpc.netty").setLevel(Level.INFO);
         // GOOGLE_APPLICATION_CREDENTIALS 환경변수 설정 필요
         // https://cloud.google.com/docs/authentication/getting-started?hl=ko
-        SttRecognizer sttRecognizer = SttRecognizer.newBuilder()
-                .setEncoding(AudioEncoding.LINEAR16).setSampleRateHertz(8000).setLanguageCode("ko-KR")
+
+        // Streaming STT 인스턴스 생성
+        SttConverter sttConverter = SttConverter.newBuilder()
+                // 코덱 선택
+                .setEncoding(AudioEncoding.LINEAR16)
+                // 샘플링 레이트 설정
+                .setSampleRateHertz(8000)
+                // 언어 선택
+                .setLanguageCode("ko-KR")
+                // 결과 반환 시 동작 설정 (Conumser<String>)
                 .setOnResponse(o -> System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("[mm:ss.SSS]")) + " : " +o))
                 .build();
-        sttRecognizer.start();
 
-        new Thread(() -> mike2gcp(sttRecognizer, 5000)).start();
+        // STT 시작
+        sttConverter.start();
 
+        // 마이크 음성을 SttConverter 로 전달
+        new Thread(() -> mike2gcp(sttConverter, 5000)).start();
         Thread.sleep(5500);
 
-        sttRecognizer.stop();
+        // STT 종료
+        sttConverter.stop();
     }
 
-    public static void mike2gcp(SttRecognizer sttRecognizer, int timeMs) {
+    public static void mike2gcp(SttConverter sttRecognizer, int timeMs) {
         try {
             AudioFormat audioFormat = new AudioFormat(8000, 16, 1, true, false);
             Info targetInfo = new Info(TargetDataLine.class, audioFormat);

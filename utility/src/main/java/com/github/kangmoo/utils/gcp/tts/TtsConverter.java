@@ -10,12 +10,12 @@ import java.io.IOException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class TtsRecognizer {
-    private static final Logger log = getLogger(TtsRecognizer.class);
+public class TtsConverter {
+    private static final Logger log = getLogger(TtsConverter.class);
     private VoiceSelectionParams voice;
     private AudioConfig audioConfig;
 
-    private TtsRecognizer(VoiceSelectionParams voice, AudioConfig audioConfig) {
+    private TtsConverter(VoiceSelectionParams voice, AudioConfig audioConfig) {
         this.voice = voice;
         this.audioConfig = audioConfig;
     }
@@ -258,8 +258,8 @@ public class TtsRecognizer {
             return this;
         }
 
-        public TtsRecognizer build() {
-            return new TtsRecognizer(voiceSelectionParamsBuilder.build(), audioConfigBuilder.build());
+        public TtsConverter build() {
+            return new TtsConverter(voiceSelectionParamsBuilder.build(), audioConfigBuilder.build());
         }
     }
 }

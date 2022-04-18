@@ -27,17 +27,16 @@ import static org.slf4j.LoggerFactory.getLogger;
 /**
  * @author kangmoo Heo
  */
-public class SttRecognizer {
-    private static final Logger log = getLogger(SttRecognizer.class);
+public class SttConverter {
+    private static final Logger log = getLogger(SttConverter.class);
     private static final int STREAMING_LIMIT = 290000; // ~5 minutes
-    public static final RecognitionConfig DEFAULT_CONFIG = RecognitionConfig.newBuilder().setEncoding(AudioEncoding.LINEAR16).setSampleRateHertz(16000).setLanguageCode("ko-KR").build();
-
-    private boolean isRunning = false;
-    private long startTime;
 
     private final ByteArrayOutputStream inputs;
     private final ArrayList<StreamingRecognizeResponse> results = new ArrayList<>();
     private final RecognitionConfig recognitionConfig;
+
+    private boolean isRunning = false;
+    private long startTime;
 
     private Consumer<String> onResponse;
     private SpeechClient client;
@@ -47,7 +46,7 @@ public class SttRecognizer {
     private ScheduledExecutorService executor;
     private ResponseObserver<StreamingRecognizeResponse> responseObserver;
 
-    private SttRecognizer(Consumer<String> onResponse, RecognitionConfig recognitionConfig) {
+    private SttConverter(Consumer<String> onResponse, RecognitionConfig recognitionConfig) {
         this.inputs = new ByteArrayOutputStream();
         this.onResponse = onResponse;
 
@@ -588,8 +587,8 @@ public class SttRecognizer {
             return this;
         }
 
-        public SttRecognizer build() {
-            return new SttRecognizer(onResponse, recognitionConfigBuilder.build());
+        public SttConverter build() {
+            return new SttConverter(onResponse, recognitionConfigBuilder.build());
         }
     }
 }
