@@ -38,36 +38,4 @@ public class XmlUtil {
     public static List<Node> selectNodes(String xml, String xpathExpression) {
         return parse(xml).map(o -> o.selectNodes(xpathExpression)).orElse(null);
     }
-
-    public static String getStrParam(org.w3c.dom.Node node) {
-        return node == null ? null : node.getTextContent();
-    }
-
-    public static Boolean getBoolParam(org.w3c.dom.Node node) {
-        return node == null ? null : node.getTextContent().equalsIgnoreCase("true");
-    }
-
-    public static Integer getIntParam(org.w3c.dom.Node node) {
-        return node == null ? null : Integer.parseInt(node.getTextContent());
-    }
-
-    public static Float getFloatParam(org.w3c.dom.Node node) {
-        return node == null ? null : Float.parseFloat(node.getTextContent());
-    }
-
-    public static String getStrParamWithDefault(org.w3c.dom.Node node, String defaultVal) {
-        return node == null ? defaultVal : node.getTextContent();
-    }
-
-    public static Boolean getBoolParamWithDefault(org.w3c.dom.Node node, boolean defaultVal) {
-        return node == null ? defaultVal : node.getTextContent().equalsIgnoreCase("true");
-    }
-
-    public static Integer getIntParamWithDefault(org.w3c.dom.Node node, int defaultVal) {
-        return node == null ? defaultVal : Integer.parseInt(node.getTextContent());
-    }
-
-    public static Float getFloatParamWithDefault(org.w3c.dom.Node node, float defaultVal) {
-        return node == null ? defaultVal : Float.parseFloat(node.getTextContent());
-    }
 }
