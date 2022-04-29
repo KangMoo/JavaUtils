@@ -1,22 +1,22 @@
-package com.github.kangmoo.utils.wget;
+package com.github.kangmoo.utils.utility;
+
+import org.slf4j.Logger;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
  * @author kangmoo Heo
  */
 public class Wget {
-
-    public static WgetStatus wGet(String saveAsFile, String urlOfFile) {
+    public void downloadAsFile(String saveAsFile, String urlOfFile) throws IOException {
         try (InputStream httpIn = new BufferedInputStream(new URL(urlOfFile).openStream());
              OutputStream fileOutput = new FileOutputStream(saveAsFile);
              OutputStream bufferedOut = new BufferedOutputStream(fileOutput, 1024)) {
 
             byte[] data = new byte[1024];
             boolean fileComplete = false;
-            int count;
+            int count = 0;
             while (!fileComplete) {
                 count = httpIn.read(data, 0, 1024);
                 if (count <= 0) {
@@ -25,12 +25,6 @@ public class Wget {
                     bufferedOut.write(data, 0, count);
                 }
             }
-        } catch (MalformedURLException e) {
-            return WgetStatus.MalformedUrl;
-        } catch (IOException e) {
-            return WgetStatus.IoException;
         }
-        return WgetStatus.Success;
     }
-
 }
