@@ -1,5 +1,6 @@
 package com.github.kangmoo.utils.gcp.stt;
 
+import com.google.api.gax.longrunning.OperationFuture;
 import com.google.api.gax.rpc.ClientStream;
 import com.google.api.gax.rpc.ResponseObserver;
 import com.google.api.gax.rpc.StreamController;
@@ -38,7 +39,7 @@ public class SttConverter {
     private boolean isRunning = false;
     private long startTime;
 
-    private Consumer<String> onResponse;
+    private final Consumer<String> onResponse;
     private SpeechClient client;
     private ClientStream<StreamingRecognizeRequest> clientStream;
     private StreamingRecognizeRequest request;
@@ -53,8 +54,8 @@ public class SttConverter {
         this.recognitionConfig = recognitionConfig;
     }
 
-    public static StreamRecognizerBuilder newBuilder() {
-        return new StreamRecognizerBuilder();
+    public static SttConverter.StreamRecognizerBuilder newBuilder() {
+        return new SttConverter.StreamRecognizerBuilder();
     }
 
     public void start() {
@@ -95,7 +96,7 @@ public class SttConverter {
         }
     }
 
-    private void connect() {
+    public void connect() {
         try {
             this.responseObserver = new ResponseObserver<>() {
                 public void onStart(StreamController controller) {
@@ -105,7 +106,9 @@ public class SttConverter {
                 public void onResponse(StreamingRecognizeResponse response) {
                     synchronized (results) {
                         results.add(response);
-                        onResponse.accept(response.getResultsList().get(0).getAlternativesList().get(0).getTranscript());
+                        if (response.getResultsList().size() > 0 && response.getResultsList().get(0).getAlternativesList().size() > 0) {
+                            onResponse.accept(response.getResultsList().get(0).getAlternativesList().get(0).getTranscript());
+                        }
                     }
                 }
 
@@ -128,16 +131,27 @@ public class SttConverter {
         }
     }
 
-    private void disconnect() {
+    public void disconnect() {
         try {
             this.responseObserver.onComplete();
             this.client.close();
+            this.clientStream.closeSend();
             log.debug("Disconnect Success");
         } catch (Exception e) {
             log.debug("Disconnect Fail", e);
         }
-
     }
+
+    public void reconnect() {
+        synchronized (this) {
+            if (isRunning) {
+                this.responseObserver.onComplete();
+                this.disconnect();
+                this.connect();
+            }
+        }
+    }
+
 
     private void streamRecognize() {
         if (!isRunning) return;
@@ -151,14 +165,23 @@ public class SttConverter {
             request = StreamingRecognizeRequest.newBuilder().setAudioContent(ByteString.copyFrom(data)).build();
             clientStream.send(request);
         } else {
-            this.responseObserver.onComplete();
             log.debug("Restarting Request");
-            synchronized (this) {
-                if (isRunning) {
-                    this.disconnect();
-                    this.connect();
-                }
-            }
+            reconnect();
+        }
+    }
+
+    public List<String> convert(byte[] data) {
+        try (SpeechClient speech = SpeechClient.create()) {
+            RecognitionAudio audio = RecognitionAudio.newBuilder().setContent(ByteString.copyFrom(data)).build();
+            OperationFuture<LongRunningRecognizeResponse, LongRunningRecognizeMetadata> response = speech.longRunningRecognizeAsync(recognitionConfig, audio);
+
+            return response.get().getResultsList().stream()
+                    .map(SpeechRecognitionResult::getAlternativesList)
+                    .map(o -> o.get(0)).map(AbstractMessage::toString)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            log.warn("Err Occurs while converting", e);
+            return null;
         }
     }
 
@@ -177,6 +200,7 @@ public class SttConverter {
     public static final class StreamRecognizerBuilder {
         private Consumer<String> onResponse = o -> {
         };
+
         private final RecognitionConfig.Builder recognitionConfigBuilder = RecognitionConfig.newBuilder().setEncoding(AudioEncoding.LINEAR16).setSampleRateHertz(16000).setLanguageCode("ko-KR");
 
         private StreamRecognizerBuilder() {
