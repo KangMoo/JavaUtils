@@ -1,4 +1,4 @@
-package com.github.kangmoo.utils.codec.g711;
+package com.github.kangmoo.utils.codec.pcm;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
