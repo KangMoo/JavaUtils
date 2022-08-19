@@ -1,25 +1,15 @@
 package com.github.kangmoo.utils.utility;
 
+import com.google.common.base.CaseFormat;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
 public class StringUtil {
-    public static final String STR_OK = "OK";
-    public static final String STR_FAIL = "FAIL";
     private static final Random RANDOM = new Random();
 
     private StringUtil() {
-    }
-
-    /**
-     * boolean을 받아 String형태로 OK, FAIL을 반환
-     *
-     * @param result
-     * @return
-     */
-    public static String getOkFail(boolean result) {
-        return (result ? STR_OK : STR_FAIL);
     }
 
     /**
@@ -234,5 +224,13 @@ public class StringUtil {
 
     public static String random(int count, char... chars) {
         return chars == null ? random(count, 0, 0, false, false, null, RANDOM) : random(count, 0, chars.length, false, false, chars, RANDOM);
+    }
+
+    public static String camelToSnake(String str) {
+        return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, str);
+    }
+
+    public static String snakeToCamel(String str) {
+        return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, str);
     }
 }
