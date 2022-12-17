@@ -1,6 +1,15 @@
 package com.github.kangmoo.utils.utility;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
+import java.util.HashSet;
+import java.util.Set;
+
+import static java.nio.file.attribute.PosixFilePermission.*;
 
 /**
  * 파일을 읽고 String으로 변환해주는 유틸
@@ -10,95 +19,47 @@ public class FileUtil {
     private FileUtil() {
     }
 
-    /**
-     * 파일 경로를 문자열로 받고, 경로에 해당하는 파일 읽은 후 내용을 문자열로 전달
-     *
-     * @param path
-     * @return
-     * @throws IOException
-     */
-    public static String filepathToString(String path) throws IOException {
-        return fileToString(new File(path));
+    public static boolean setPermission(String target, int permissionNumber) throws IOException {
+        return setPermission(Paths.get(target), permissionNumber);
     }
 
     /**
-     * 파일 읽은 후 내용을 문자열로 전달
-     *
-     * @param file
-     * @return
-     * @throws IOException
+     * @param target target file path
+     * @param permissionNumber integer representing a set of permissions. (ex. 766)
+     * @return success or not
      */
-    public static String fileToString(File file) throws IOException {
-        return inputStreamToString(new FileInputStream(file));
+    public static boolean setPermission(Path target, int permissionNumber) throws IOException {
+        Set<PosixFilePermission> permissions = new HashSet<>();
+        int perm = permissionNumber % 10;
+        if ((perm & 1) > 0) permissions.add(OTHERS_EXECUTE);
+        if ((perm & 2) > 0) permissions.add(OTHERS_WRITE);
+        if ((perm & 4) > 0) permissions.add(OTHERS_READ);
+        permissionNumber /= 10;
+        perm = permissionNumber % 10;
+        if ((perm & 1) > 0) permissions.add(GROUP_EXECUTE);
+        if ((perm & 2) > 0) permissions.add(GROUP_WRITE);
+        if ((perm & 4) > 0) permissions.add(GROUP_READ);
+        permissionNumber /= 10;
+        perm = permissionNumber % 10;
+        if ((perm & 1) > 0) permissions.add(OWNER_EXECUTE);
+        if ((perm & 2) > 0) permissions.add(OWNER_WRITE);
+        if ((perm & 4) > 0) permissions.add(OWNER_READ);
+        Files.setPosixFilePermissions(target, permissions);
+        return true;
+    }
+
+    public static boolean setPermission(String target, String permissionStr) throws IOException {
+        return setPermission(Paths.get(target), permissionStr);
     }
 
     /**
-     * Stream -> String변환 함수
-     *
-     * @param is InputStream
-     * @return String으로 캐스팅된 InputStream
-     * @throws IOException
+     * @param target target file path
+     * @param permissionStr string representing a set of permissions. (ex. "rwxr-x---")
+     * @return success or not
      */
-    public static String inputStreamToString(InputStream is) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        String line;
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-        while ((line = br.readLine()) != null) {
-            sb.append(line);
-        }
-        br.close();
-        return sb.toString();
-    }
-
-    public static File createFileWithDirectory(String filePath) throws IOException {
-        File file = new File(filePath);
-        if (file.getParentFile().mkdirs() && file.createNewFile()) return file;
-        return null;
-    }
-
-
-    /**
-     * 파일에 문자열을 덧붙인다.
-     *
-     * @param filePath 파일 경로
-     * @param data     덧붙일 byte
-     * @return
-     */
-    public static void fileWrite(String filePath, byte[] data, boolean append) throws IOException {
-        File f = new File(filePath);
-        // 파일이 없으면 경로 및 파일 생성
-        if (!f.exists()) {
-            FileUtil.createFileWithDirectory(filePath);
-        }
-
-        try (FileOutputStream writer = new FileOutputStream(f, append)) {
-            writer.write(data);
-        }
-    }
-
-
-    public static void copy(File srcFile, File destFile) throws IOException {
-        BufferedInputStream input = new BufferedInputStream(new FileInputStream(srcFile));
-        try {
-            if (!destFile.getParentFile().exists()) {
-                destFile.getParentFile().mkdirs();
-            }
-            BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(destFile));
-            try {
-                int c;
-                while ((c = input.read()) != -1) {
-                    output.write(c);
-                }
-                output.flush();
-            } finally {
-                output.close();
-            }
-        } finally {
-            input.close();
-        }
-    }
-
-    public static void copy(String srcFile, String destFile) throws IOException {
-        copy(new File(srcFile), new File(destFile));
+    public static boolean setPermission(Path target, String permissionStr) throws IOException {
+        Set<PosixFilePermission> permissions = PosixFilePermissions.fromString(permissionStr);
+        Files.setPosixFilePermissions(target, permissions);
+        return true;
     }
 }
