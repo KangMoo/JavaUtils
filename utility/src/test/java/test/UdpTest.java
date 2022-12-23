@@ -28,7 +28,7 @@ public class UdpTest {
 
         try {
             udpClient.connect();
-            udpClient.simpleSend(sendMsg);
+            udpClient.send(sendMsg);
         } catch (Exception e) {
             e.printStackTrace();
         }

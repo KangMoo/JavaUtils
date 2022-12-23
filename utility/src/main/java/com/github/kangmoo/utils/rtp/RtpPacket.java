@@ -30,6 +30,10 @@ public class RtpPacket {
     //Bitstream of the RTP payload
     public byte[] payload;
 
+    public RtpPacket(int pType, int seqNo, int timeStamp, byte[] data, long ssrc) {
+        this(pType, seqNo, timeStamp, data, data.length, ssrc);
+    }
+
     public RtpPacket(int pType, int seqNo, int timeStamp, byte[] data, int dataLength, long ssrc) {
         //fill by default header fields:
         this.version = 2;

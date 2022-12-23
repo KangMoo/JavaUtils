@@ -1,13 +1,14 @@
 package com.github.kangmoo.utils.udp;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.*;
 
 /**
  * @author kangmoo Heo
  */
-public class UdpClient {
-    private final int fromPort;
+public class UdpClient implements Closeable {
+    private final Integer fromPort;
     private final String toIp;
     private final int toPort;
     private InetAddress ia;
@@ -19,22 +20,34 @@ public class UdpClient {
         this.toPort = toPort;
     }
 
+    public UdpClient(String toIp, int toPort) {
+        this.fromPort = null;
+        this.toIp = toIp;
+        this.toPort = toPort;
+    }
+
     public void connect() throws SocketException, UnknownHostException {
-        this.ds = new DatagramSocket(this.fromPort);
+        this.ds = fromPort == null ? new DatagramSocket() : new DatagramSocket(this.fromPort);
         this.ia = InetAddress.getByName(this.toIp);
     }
 
-    public void simpleSend(byte[] data) throws IOException {
+    public void send(byte[] data) throws IOException {
         if (this.ds == null) return;
         DatagramPacket dp = new DatagramPacket(data, data.length, this.ia, this.toPort);
         this.ds.send(dp);
     }
 
-    public void simpleSend(String msg) throws IOException {
-        this.simpleSend(msg.getBytes());
+    public void send(String msg) throws IOException {
+        this.send(msg.getBytes());
     }
 
     public void disconnect() {
         this.ds.close();
+    }
+
+    @Override
+    public void close() throws IOException {
+        if (this.ds != null)
+            this.disconnect();
     }
 }
