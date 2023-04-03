@@ -17,7 +17,7 @@ public class WaveFile {
      */
     private static final int DEFAULT_BUFFER_SIZE = 8192;
 
-    public static byte[] getData(int sampleRate, int channel, int format, int dataSize) {
+    public static byte[] createWavHeader(int sampleRate, int channel, int format, int dataSize) {
         byte[] header = new byte[44];
         long totalDataLen = (long) dataSize + 36;
         long bitrate = (long) sampleRate * channel * format;
@@ -70,13 +70,14 @@ public class WaveFile {
 
     public static void rawToWav(final File rawFile, final File waveFile, int sampleRate, int channel, int format) throws IOException {
         try (FileInputStream fis = new FileInputStream(rawFile); FileOutputStream fos = new FileOutputStream(waveFile)) {
-            fos.write(getData(sampleRate, channel, format, (int) rawFile.length()));
+            fos.write(createWavHeader(sampleRate, channel, format, (int) rawFile.length()));
             transferTo(fis, fos);
         }
     }
 
     private static long transferTo(InputStream in, OutputStream out) throws IOException {
-        Objects.requireNonNull(out, "out");
+        Objects.requireNonNull(in);
+        Objects.requireNonNull(out);
         long transferred = 0;
         byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         int read;

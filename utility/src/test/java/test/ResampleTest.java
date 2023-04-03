@@ -23,8 +23,8 @@ public class ResampleTest {
             byte[] header = new byte[44];
             fi.read(header);
 
-            fo.write(WaveFile.getData(8000, 1, 16, (int) wavSize - 44));
-            fo2.write(WaveFile.getData(16000, 1, 16, (int) wavSize * 2 - 44));
+            fo.write(WaveFile.createWavHeader(8000, 1, 16, (int) wavSize - 44));
+            fo2.write(WaveFile.createWavHeader(16000, 1, 16, (int) wavSize * 2 - 44));
             byte[] datas = new byte[640];
             ResamplingFilter downSampler = new ResamplingFilter(16000,8000);
             ResamplingFilter upSampler = new ResamplingFilter(8000, 16000);
