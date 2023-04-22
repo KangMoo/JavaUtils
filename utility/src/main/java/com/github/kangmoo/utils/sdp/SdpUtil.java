@@ -16,14 +16,14 @@ import gov.nist.core.NameValue;
 import gov.nist.javax.sdp.fields.AttributeField;
 
 import javax.sdp.SdpParseException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class SdpUtil {
+    private static final String RTPMAP = "rtpmap";
+    private static final String FMTP = "fmtp";
 
     private SdpUtil() {
         // nothing
@@ -39,13 +39,20 @@ public class SdpUtil {
         return attributeField;
     }
 
-    @SuppressWarnings("unchecked")
-    public static List<String> getPayloadIds(SdpInfo sdpInfo) {
+    public static List<Integer> getPayloadIds(SdpInfo sdpInfo) {
         try {
-            return new ArrayList<>(sdpInfo.getMd().getMedia().getMediaFormats(false));
+            return ((Stream<String>) sdpInfo.getMd().getMedia().getMediaFormats(false).stream())
+                    .map(Integer::parseInt).collect(Collectors.toList());
         } catch (SdpParseException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static List<Integer> getDtmfPayloadIds(SdpInfo sdpInfo) {
+        return SdpUtil.findAttr(sdpInfo.getCopiedAttributeFields(), o -> o.getValue().contains("telephone-event/"))
+                .stream().map(AttributeField::getAttribute)
+                .map(o -> Integer.parseInt(o.getValue().split("\\s")[0]))
+                .collect(Collectors.toList());
     }
 
     public static int getPtime(SdpInfo sdpInfo){
@@ -84,4 +91,25 @@ public class SdpUtil {
         return attributeField;
     }
 
+    public static List<AttributeField> getFilteredAttributes(List<AttributeField> attributeFields, List<Integer> payloadIds) {
+        return attributeFields.stream()
+                .filter(attributeField -> {
+                    String attrName = attributeField.getAttribute().getName();
+                    if (!RTPMAP.equals(attrName) && !FMTP.equals(attrName)) return true;
+                    int payloadId = Integer.parseInt(attributeField.getAttribute().getValue().split("\\s")[0]);
+                    return payloadIds.contains(payloadId);
+                })
+                .collect(Collectors.toList());
+    }
+
+    public static Optional<Integer> findPayloadIdFromRtpMap(SdpInfo sdpInfo, Predicate<String> filter) {
+        Set<Integer> mdFormats = SdpUtil.getPayloadIds(sdpInfo).stream().collect(Collectors.toSet());
+        return sdpInfo.getCopiedAttributeFields().stream()
+                .map(AttributeField::getAttribute)
+                .filter(o -> o.getName().equals(RTPMAP))
+                .filter(o -> filter.test(o.getValue()))
+                .map(o -> Integer.parseInt(o.getValue().split("\\s")[0]))
+                .filter(mdFormats::contains)
+                .findAny();
+    }
 }
