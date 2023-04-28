@@ -1,4 +1,4 @@
-package com.github.kangmoo.utils.yaml;
+package com.github.kangmoo.utils.config;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

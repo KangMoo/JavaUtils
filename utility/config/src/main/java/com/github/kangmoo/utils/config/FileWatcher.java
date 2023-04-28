@@ -1,5 +1,6 @@
-package com.github.kangmoo.utils.yaml;
+package com.github.kangmoo.utils.config;
 
+import com.github.kangmoo.utils.config.yaml.YamlConfigInjector;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileNotFoundException;
@@ -70,7 +71,7 @@ public class FileWatcher {
         }
     }
 
-    public static void startWatchConfig(Object configClass, String filePath) throws FileNotFoundException, NoSuchFieldException {
+    public static void startWatchConfig(Object configClass, String filePath) throws IOException, NoSuchFieldException {
         YamlConfigInjector.inject(configClass, filePath);
         new FileWatcher(Path.of(filePath)).startWatch(() -> {
             try {

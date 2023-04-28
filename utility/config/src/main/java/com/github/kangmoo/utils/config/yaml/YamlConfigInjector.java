@@ -1,13 +1,15 @@
-package com.github.kangmoo.utils.yaml;
+package com.github.kangmoo.utils.config.yaml;
 
 /**
  * @author kangmoo Heo
  */
 
+import com.github.kangmoo.utils.config.ConfigValue;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -17,13 +19,12 @@ public class YamlConfigInjector {
     private YamlConfigInjector() {
     }
 
-    public static Object inject(Object target, String yamlFilePath) throws NoSuchFieldException, FileNotFoundException {
+    public static void inject(Object target, String yamlFilePath) throws NoSuchFieldException, IOException {
         Map<String, Object> yamlData = readYamlFile(yamlFilePath);
         injectValues(target, yamlData);
-        return target;
     }
 
-    private static Map<String, Object> readYamlFile(String yamlFilePath) throws FileNotFoundException {
+    private static Map<String, Object> readYamlFile(String yamlFilePath) throws IOException {
         Yaml yaml = new Yaml();
         InputStream inputStream = new FileInputStream(yamlFilePath);
         return yaml.load(inputStream);
