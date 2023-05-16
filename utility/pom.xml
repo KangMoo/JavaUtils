@@ -19,6 +19,7 @@
         <module>kafka</module>
         <module>gcp</module>
         <module>serialization</module>
+        <module>common</module>
     </modules>
 
     <dependencies>
