@@ -20,6 +20,7 @@
         <module>gcp</module>
         <module>serialization</module>
         <module>common</module>
+        <module>media</module>
     </modules>
 
     <dependencies>
