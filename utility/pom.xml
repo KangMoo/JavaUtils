@@ -21,6 +21,7 @@
         <module>serialization</module>
         <module>common</module>
         <module>media</module>
+        <module>rmq</module>
     </modules>
 
     <dependencies>
