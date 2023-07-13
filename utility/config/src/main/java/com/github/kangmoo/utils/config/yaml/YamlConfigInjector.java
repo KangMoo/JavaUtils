@@ -5,15 +5,16 @@ package com.github.kangmoo.utils.config.yaml;
  */
 
 import com.github.kangmoo.utils.config.ConfigValue;
+import lombok.extern.slf4j.Slf4j;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.Map;
 
+@Slf4j
 public class YamlConfigInjector {
 
     private YamlConfigInjector() {
@@ -45,12 +46,18 @@ public class YamlConfigInjector {
                         } else {
                             field.set(target, propertyValue);
                         }
+                        try {
+                            log.info("Config injected. [{}.{}] <- [{}]", target.getClass().getSimpleName(), field.getName(), field.get(target));
+                        } catch (Exception e) {
+                            // Do nothing
+                        }
                     } catch (Exception e) {
                         NoSuchFieldException exception = new NoSuchFieldException("Fail to inject value. [Field : " + field.getName() + "], [ConfigValue : " + propertyKey + "]");
                         exception.initCause(e);
                         throw exception;
+                    } finally {
+                        field.setAccessible(false);
                     }
-                    field.setAccessible(false);
                 }
             }
         }

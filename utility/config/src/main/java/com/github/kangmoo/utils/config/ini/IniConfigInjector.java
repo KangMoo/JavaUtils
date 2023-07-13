@@ -5,6 +5,7 @@ package com.github.kangmoo.utils.config.ini;
  */
 
 import com.github.kangmoo.utils.config.ConfigValue;
+import lombok.extern.slf4j.Slf4j;
 import org.ini4j.Ini;
 import org.ini4j.Profile.Section;
 
@@ -13,15 +14,15 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Objects;
 
+@Slf4j
 public class IniConfigInjector {
 
     private IniConfigInjector() {
     }
 
-    public static void inject(Object targetObject, String iniFilePath) throws IOException, NoSuchFieldException {
+    public static void inject(Object target, String iniFilePath) throws IOException, NoSuchFieldException {
         Ini ini = new Ini(new File(iniFilePath));
-        Class<?> targetClass = targetObject.getClass();
-        Field[] fields = targetClass.getDeclaredFields();
+        Field[] fields = target.getClass().getDeclaredFields();
 
         for (Field field : fields) {
             ConfigValue annotation = field.getAnnotation(ConfigValue.class);
@@ -40,19 +41,24 @@ public class IniConfigInjector {
                 try {
                     Class<?> fieldType = field.getType();
                     if (String.class.equals(fieldType)) {
-                        field.set(targetObject, value);
+                        field.set(target, value);
                     } else if (int.class.equals(fieldType) || Integer.class.equals(fieldType)) {
-                        field.set(targetObject, Integer.parseInt(value));
+                        field.set(target, Integer.parseInt(value));
                     } else if (long.class.equals(fieldType) || Long.class.equals(fieldType)) {
-                        field.set(targetObject, Long.parseLong(value));
+                        field.set(target, Long.parseLong(value));
                     } else if (double.class.equals(fieldType) || Double.class.equals(fieldType)) {
-                        field.set(targetObject, Double.parseDouble(value));
+                        field.set(target, Double.parseDouble(value));
                     } else if (float.class.equals(fieldType) || Float.class.equals(fieldType)) {
-                        field.set(targetObject, Float.parseFloat(value));
+                        field.set(target, Float.parseFloat(value));
                     } else if (boolean.class.equals(fieldType) || Boolean.class.equals(fieldType)) {
-                        field.set(targetObject, Boolean.parseBoolean(value));
+                        field.set(target, Boolean.parseBoolean(value));
                     } else {
                         throw new UnsupportedOperationException("Unsupported field type: " + fieldType);
+                    }
+                    try {
+                        log.info("Config injected. [{}.{}] <- [{}]", target.getClass().getSimpleName(), field.getName(), field.get(target));
+                    } catch (Exception e) {
+                        // Do nothing
                     }
                 } catch (Exception e) {
                     NoSuchFieldException exception = new NoSuchFieldException("Fail to inject value. [Field : " + field.getName() + "], [ConfigValue : " + configKey + "]");
