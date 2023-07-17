@@ -1,14 +1,14 @@
 package com.github.kangmoo.rmq;
 
 import com.rabbitmq.client.*;
+import com.rabbitmq.client.impl.DefaultExceptionHandler;
 import lombok.Getter;
 import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 /**
@@ -24,7 +24,9 @@ import java.util.function.Consumer;
  */
 @Slf4j
 @Getter
-public class RmqService implements AutoCloseable{
+public class RmqModule implements AutoCloseable {
+    private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+
     // RabbitMQ 서버와의 연결을 재시도하는 간격(단위:ms)
     private static final int RECOVERY_INTERVAL = 1000;
     // RabbitMQ 서버에게 전송하는 heartbeat 요청의 간격(단위:sec)
@@ -35,68 +37,91 @@ public class RmqService implements AutoCloseable{
     private final String host;
     private final String userName;
     private final String password;
-    private final SSLContext sslContext;
 
     // RabbitMQ 서버와의 연결과 채널을 관리하기 위한 변수
     private Connection connection;
     private Channel channel;
 
     /**
-     * RabbitMQ 서버와의 SSL 연결을 설정하는 생성자
-     *
-     * @param host       RabbitMQ 서버의 호스트
-     * @param userName   RabbitMQ 서버에 연결할 사용자 이름
-     * @param password   해당 사용자의 비밀번호
-     * @param sslContext SSL 연결을 위한 SSLContext (null이면 SSL을 사용하지 않는다)
+     * @param host     RabbitMQ 서버의 호스트
+     * @param userName RabbitMQ 서버에 연결할 사용자 이름
+     * @param password 해당 사용자의 비밀번호
      */
-    public RmqService(String host, String userName, String password, SSLContext sslContext) {
+    public RmqModule(String host, String userName, String password) {
         this.host = host;
         this.userName = userName;
         this.password = password;
-        this.sslContext = sslContext;
     }
 
-    public RmqService(String host, String userName, String password) {
-        this(host, userName, password, null);
-    }
+    /**
+     * RabbitMQ 서버에 연결을 수립하며 통신을 위한 채널을 생성하고, 연결에 대한 예외 처리기를 설정하고, 만약 연결이 복구 가능한 경우, 복구 리스너도 설정한다.
+     * 연결과 채널이 성공적으로 수립되면 제공된 onConnected 콜백을, 연결에 실패하면 onDisconnected 콜백을 호출한다.
+     *
+     * @param onConnected    연결과 채널이 성공적으로 수립되었을 때 호출되는 콜백함수
+     * @param onDisconnected 예기치 않은 연결 드라이버 예외가 발생했을 때 호출되는 콜백
+     * @throws IOException      연결과 채널을 생성하는 동안 I/O 에러가 발생한 경우
+     * @throws TimeoutException 연결과 채널을 생성하는 동안 타임아웃이 발생한 경우
+     */
+    public void connect(Runnable onConnected, Runnable onDisconnected) throws IOException, TimeoutException {
+        try {
+            ConnectionFactory factory = new ConnectionFactory();
 
-    @Synchronized
-    public void connect() throws IOException, TimeoutException {
-        ConnectionFactory factory = new ConnectionFactory();
+            // RabbitMQ 서버 정보 설정
+            factory.setHost(host);
+            factory.setUsername(userName);
+            factory.setPassword(password);
 
-        // RabbitMQ 서버 정보 설정
-        factory.setHost(host);
-        factory.setUsername(userName);
-        factory.setPassword(password);
+            // 자동 복구를 활성화하고, 네트워크 복구 간격, heartbeat 요청 간격, 연결 타임아웃 시간을 설정
+            factory.setAutomaticRecoveryEnabled(true);
+            factory.setNetworkRecoveryInterval(RECOVERY_INTERVAL);
+            factory.setRequestedHeartbeat(REQUESTED_HEARTBEAT);
+            factory.setConnectionTimeout(CONNECTION_TIMEOUT);
 
-        // 자동 복구를 활성화하고, 네트워크 복구 간격, heartbeat 요청 간격, 연결 타임아웃 시간을 설정
-        factory.setAutomaticRecoveryEnabled(true);
-        factory.setNetworkRecoveryInterval(RECOVERY_INTERVAL);
-        factory.setRequestedHeartbeat(REQUESTED_HEARTBEAT);
-        factory.setConnectionTimeout(CONNECTION_TIMEOUT);
+            factory.setExceptionHandler(new DefaultExceptionHandler() {
+                @Override
+                public void handleUnexpectedConnectionDriverException(Connection con, Throwable exception) {
+                    super.handleUnexpectedConnectionDriverException(con, exception);
+                    onDisconnected.run();
+                }
+            });
 
-        // SSL 설정 (있는 경우)
-        if (sslContext != null) {
-            factory.useSslProtocol(sslContext);
+            // 연결과 채널 생성 시도
+            this.connection = factory.newConnection();
+            ((Recoverable) connection).addRecoveryListener(new RecoveryListener() {
+                public void handleRecovery(Recoverable r) {
+                    onConnected.run();
+                }
+
+                public void handleRecoveryStarted(Recoverable r) {
+                    onDisconnected.run();
+                }
+            });
+
+            this.channel = connection.createChannel();
+            onConnected.run();
+        } catch (Exception e) {
+            onDisconnected.run();
+            throw e;
         }
+    }
 
-        // 연결과 채널 생성 시도
-        this.connection = factory.newConnection();
-        this.channel = connection.createChannel();
-
-        // 블로킹 리스너 추가
-        this.connection.addBlockedListener(new BlockedListener() {
-            @Override
-            public void handleBlocked(String reason) {
-                log.error("RabbitMQ connection is now blocked, reason: " + reason);
-            }
-
-            @Override
-            public void handleUnblocked() {
-                log.info("RabbitMQ connection is unblocked");
-            }
-        });
-
+    /**
+     * 비동기적으로 RabbitMQ 서버에 연결을 시도하고, 연결이 실패할 경우 1초 후에 재시도한다.
+     * 연결이 성공하면 onConnected 콜백을 호출하고, 연결 실패 시 onDisconnected 콜백을 호출한다.
+     * 본 메서드는 스레드 안전하게 동작한다.
+     *
+     * @param onConnected    연결과 채널이 성공적으로 수립되었을 때 호출되는 콜백
+     * @param onDisconnected 연결 시도가 실패했을 때 호출되는 콜백
+     */
+    @Synchronized
+    public void connectWithAsyncRetry(Runnable onConnected, Runnable onDisconnected) {
+        try {
+            connect(onConnected, onDisconnected);
+        } catch (Exception e) {
+            log.warn("Err Occurs while RMQ Connection", e);
+            close();
+            scheduler.schedule(() -> connectWithAsyncRetry(onConnected, onDisconnected), 1000, TimeUnit.MILLISECONDS);
+        }
     }
 
     /**
@@ -120,7 +145,6 @@ public class RmqService implements AutoCloseable{
     @Synchronized
     public void sendMessage(String queueName, String message) throws IOException {
         channel.basicPublish("", queueName, MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes());
-        log.info("Sent message: {} to queue: {}", message, queueName);
     }
 
     /**
@@ -133,7 +157,6 @@ public class RmqService implements AutoCloseable{
     @Synchronized
     public void sendMessage(String queueName, byte[] message) throws IOException {
         channel.basicPublish("", queueName, MessageProperties.PERSISTENT_TEXT_PLAIN, message);
-        log.info("Sent message to queue: {}", queueName);
     }
 
 
@@ -174,22 +197,25 @@ public class RmqService implements AutoCloseable{
         registerConsumer(queueName, (s, delivery) -> msgCallback.accept(delivery.getBody()));
     }
 
+    public boolean isConnected() {
+        return this.channel != null && this.channel.isOpen() &&
+                this.connection != null && this.connection.isOpen();
+    }
+
 
     /**
      * RabbitMQ 서버와의 연결 및 채널을 종료한다.
-     * 연결이나 채널 종료 과정에서 오류가 발생하면 로그에 출력하고 해당 예외를 던진다.
+     * 연결이나 채널 종료 과정에서 오류가 발생하면 로그에 출력한다.
      */
     @Override
+    @Synchronized
     public void close() {
-        Exception exception = null;
-
         try {
             if (this.channel != null && this.channel.isOpen()) {
                 this.channel.close();
             }
         } catch (Exception e) {
-            log.error("Error while closing the channel: ", e);
-            exception = e;
+            log.warn("Error while closing the channel: ", e);
         }
 
         try {
@@ -197,16 +223,7 @@ public class RmqService implements AutoCloseable{
                 this.connection.close();
             }
         } catch (Exception e) {
-            log.error("Error while closing the connection: ", e);
-            if (exception == null) {
-                exception = e;
-            } else {
-                exception.addSuppressed(e);
-            }
-        }
-
-        if (exception != null) {
-            throw new RuntimeException(exception);
+            log.warn("Error while closing the connection: ", e);
         }
     }
 }
