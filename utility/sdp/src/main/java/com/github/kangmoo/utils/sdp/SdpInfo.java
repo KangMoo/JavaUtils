@@ -37,7 +37,7 @@ public class SdpInfo {
         this.sdp = new SDPAnnounceParser(sdpMsg).parse();
         this.md = ((MediaDescription) sdp.getMediaDescriptions(false).get(0));
 
-        this.ip = sdp.getConnection().getAddress();
+        this.ip = Optional.ofNullable(md.getConnection()).orElse(sdp.getConnection()).getAddress();
         this.port = md.getMedia().getMediaPort();
     }
 
