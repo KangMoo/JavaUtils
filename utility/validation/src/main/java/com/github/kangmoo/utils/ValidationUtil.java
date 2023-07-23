@@ -17,6 +17,9 @@ public class ValidationUtil {
         }
     }
 
+    private ValidationUtil() {
+    }
+
     public static void validCheck(Object obj) {
         Set<ConstraintViolation<Object>> violations = validator.validate(obj);
         if (!violations.isEmpty()) {
