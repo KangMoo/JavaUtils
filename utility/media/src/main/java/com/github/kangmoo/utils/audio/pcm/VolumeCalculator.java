@@ -35,7 +35,7 @@ public class VolumeCalculator {
 
         double rms = Math.sqrt(totalSquared / (bytes.length / (double) bytesPerSample));
 
-        double maxRms = Math.pow(2, bitsPerSample - 1);
+        double maxRms = Math.pow(2, bitsPerSample - 1.0);
         return (int) (rms / maxRms * 100);
     }
 

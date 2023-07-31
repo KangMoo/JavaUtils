@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 @Slf4j
 @Getter
 public class RmqModule implements AutoCloseable {
-    private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     // RabbitMQ 서버와의 연결을 재시도하는 간격(단위:ms)
     private static final int RECOVERY_INTERVAL = 1000;
