@@ -39,4 +39,31 @@ public class DateUtil {
             return Optional.empty();
         }
     }
+
+    public static Optional<Instant> parseIso8601ToInstant(String dateTimeStr) {
+        if (dateTimeStr == null) return Optional.empty();
+        try {
+            try {
+                return Optional.of(LocalDateTime.parse(dateTimeStr).atZone(ZoneId.systemDefault()).toInstant());
+            } catch (DateTimeParseException e1) {
+                try {
+                    return Optional.of(OffsetDateTime.parse(dateTimeStr).toInstant());
+                } catch (DateTimeParseException e2) {
+                    try {
+                        return Optional.of(ZonedDateTime.parse(dateTimeStr).toInstant());
+                    } catch (DateTimeParseException e3) {
+                        try {
+                            return Optional.of(LocalDate.parse(dateTimeStr).atStartOfDay(ZoneId.systemDefault()).toInstant());
+                        } catch (DateTimeParseException e4) {
+                            return Optional.of(LocalTime.parse(dateTimeStr).atDate(LocalDate.now()).atZone(ZoneId.systemDefault()).toInstant());
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.warn("Invalid date/time format. [{}]", dateTimeStr, e);
+            return Optional.empty();
+        }
+    }
+
 }
