@@ -11,6 +11,7 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.nio.file.attribute.PosixFilePermission.*;
 
@@ -37,10 +38,40 @@ public class FileUtil {
             Files.delete(file.toPath());
             log.debug("Success to remove. (file={})", file.getAbsolutePath());
         } catch (NoSuchFileException e) {
-            log.info("File not exist (file={})", file.getAbsolutePath());
+            log.info("File not exist (file={})", file.getAbsolutePath(), e);
         } catch (Exception e) {
-            log.error("Fail to remove file. (file={})", file.getAbsolutePath());
+            log.warn("Fail to remove file. (file={})", file.getAbsolutePath(), e);
         }
+    }
+
+    public static int removeDirWithLog(Path path) {
+        AtomicInteger count = new AtomicInteger();
+        try {
+            Files.walkFileTree(path, new SimpleFileVisitor<>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                    count.incrementAndGet();
+                    removeFileWithLog(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException exc) {
+                    log.warn("Fail to visit file. [{}]", file, exc);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
+                    count.incrementAndGet();
+                    removeFileWithLog(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            log.warn("Fail to remove file. [{}]", path, e);
+        }
+        return count.get();
     }
 
     public static void copyFileWithDirectories(String sourceFilePath, String destinationFilePath) throws IOException {
