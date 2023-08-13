@@ -15,6 +15,7 @@ package com.github.kangmoo.utils.sdp;
 import gov.nist.javax.sdp.SessionDescriptionImpl;
 import gov.nist.javax.sdp.fields.AttributeField;
 import gov.nist.javax.sdp.parser.SDPAnnounceParser;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.sdp.MediaDescription;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Getter
 @Slf4j
 public class SdpInfo {
 
@@ -41,26 +43,14 @@ public class SdpInfo {
         this.port = md.getMedia().getMediaPort();
     }
 
-    public SessionDescriptionImpl getSdp() {
-        return sdp;
-    }
-
     public SdpInfo setSdp(SessionDescriptionImpl sdp) {
         this.sdp = sdp;
         return this;
     }
 
-    public MediaDescription getMd() {
-        return md;
-    }
-
     public SdpInfo setMd(MediaDescription md) {
         this.md = md;
         return this;
-    }
-
-    public String getIp() {
-        return ip;
     }
 
     public SdpInfo setIp(String ip) {
@@ -72,10 +62,6 @@ public class SdpInfo {
             throw new IllegalStateException(e);
         }
         return this;
-    }
-
-    public int getPort() {
-        return port;
     }
 
     public SdpInfo setPort(int port) {
