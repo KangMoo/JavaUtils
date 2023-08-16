@@ -136,9 +136,9 @@ public class RmqModule implements AutoCloseable {
     }
 
     /**
-     * 지정된 큐에 문자열 형태의 메시지를 처리할 소비자를 등록한다.
+     * 지정된 이름의 큐에 메시지를 전송한다.
      *
-     * @param queueName 메시지를 전송할 큐의 이름
+     * @param queueName 전송할 큐의 이름
      * @param message   전송할 메시지
      * @throws IOException 메시지 전송에 실패한 경우
      */
@@ -148,16 +148,46 @@ public class RmqModule implements AutoCloseable {
     }
 
     /**
-     * 지정된 큐에 바이트 배열 형태의 메시지를 처리할 소비자를 등록한다.
+     * 지정된 이름의 큐에 만료 시간과 함께 메시지를 전송한다.
      *
-     * @param queueName 메시지를 전송할 큐의 이름
-     * @param message   전송할 메시지 (바이트 배열)
+     * @param queueName  전송할 큐의 이름
+     * @param message    전송할 메시지
+     * @param expiration 메시지의 만료 시간
+     * @throws IOException 메시지 전송에 실패한 경우
+     */
+    @Synchronized
+    public void sendMessage(String queueName, String message, int expiration) throws IOException {
+        AMQP.BasicProperties properties = new AMQP.BasicProperties.Builder().expiration(Integer.toString(expiration)).build();
+        channel.basicPublish("", queueName, properties, message.getBytes());
+    }
+
+
+    /**
+     * 지정된 이름의 큐에 바이트 배열 형태의 메시지를 전송한다.
+     *
+     * @param queueName 전송할 큐의 이름
+     * @param message   전송할 메시지의 바이트 배열
      * @throws IOException 메시지 전송에 실패한 경우
      */
     @Synchronized
     public void sendMessage(String queueName, byte[] message) throws IOException {
         channel.basicPublish("", queueName, MessageProperties.PERSISTENT_TEXT_PLAIN, message);
     }
+
+    /**
+     * 지정된 이름의 큐에 만료 시간과 함께 바이트 배열 형태의 메시지를 전송한다.
+     *
+     * @param queueName  전송할 큐의 이름
+     * @param message    전송할 메시지의 바이트 배열
+     * @param expiration 메시지의 만료 시간
+     * @throws IOException 메시지 전송에 실패한 경우
+     */
+    @Synchronized
+    public void sendMessage(String queueName, byte[] message, int expiration) throws IOException {
+        AMQP.BasicProperties properties = new AMQP.BasicProperties.Builder().expiration(Integer.toString(expiration)).build();
+        channel.basicPublish("", queueName, properties, message);
+    }
+
 
 
     /**
