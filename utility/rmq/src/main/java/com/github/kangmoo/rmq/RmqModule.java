@@ -8,8 +8,13 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.*;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
+
 
 /**
  * RabbitMQ와의 연결을 관리하며, 다양한 RabbitMQ 관련 작업을 제공하는 클래스.
@@ -24,23 +29,24 @@ import java.util.function.Consumer;
  */
 @Slf4j
 @Getter
-public class RmqModule implements AutoCloseable {
-    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+public class RmqModule {
+    private ScheduledExecutorService scheduler;
 
     // RabbitMQ 서버와의 연결을 재시도하는 간격(단위:ms)
-    private static final int RECOVERY_INTERVAL = 1000;
+    public static final int RECOVERY_INTERVAL = 1000;
     // RabbitMQ 서버에게 전송하는 heartbeat 요청의 간격(단위:sec)
-    private static final int REQUESTED_HEARTBEAT = 5;
+    public static final int REQUESTED_HEARTBEAT = 5;
     // RabbitMQ 서버와 연결을 시도하는 최대 시간(단위:ms)
-    private static final int CONNECTION_TIMEOUT = 2000;
+    public static final int CONNECTION_TIMEOUT = 2000;
 
-    private final String host;
-    private final String userName;
-    private final String password;
+    protected final String host;
+    protected final String userName;
+    protected final String password;
+    protected final Integer port;
 
     // RabbitMQ 서버와의 연결과 채널을 관리하기 위한 변수
-    private Connection connection;
-    private Channel channel;
+    protected Connection connection;
+    protected Channel channel;
 
     /**
      * @param host     RabbitMQ 서버의 호스트
@@ -51,6 +57,14 @@ public class RmqModule implements AutoCloseable {
         this.host = host;
         this.userName = userName;
         this.password = password;
+        this.port = null;
+    }
+
+    public RmqModule(String host, String userName, String password, int port) {
+        this.host = host;
+        this.userName = userName;
+        this.password = password;
+        this.port = port;
     }
 
     /**
@@ -63,6 +77,11 @@ public class RmqModule implements AutoCloseable {
      * @throws TimeoutException 연결과 채널을 생성하는 동안 타임아웃이 발생한 경우
      */
     public void connect(Runnable onConnected, Runnable onDisconnected) throws IOException, TimeoutException {
+        if (isConnected()) {
+            log.warn("RMQ Already Connected");
+            return;
+        }
+
         try {
             ConnectionFactory factory = new ConnectionFactory();
 
@@ -70,6 +89,9 @@ public class RmqModule implements AutoCloseable {
             factory.setHost(host);
             factory.setUsername(userName);
             factory.setPassword(password);
+            if (this.port != null) {
+                factory.setPort(this.port);
+            }
 
             // 자동 복구를 활성화하고, 네트워크 복구 간격, heartbeat 요청 간격, 연결 타임아웃 시간을 설정
             factory.setAutomaticRecoveryEnabled(true);
@@ -116,7 +138,11 @@ public class RmqModule implements AutoCloseable {
     @Synchronized
     public void connectWithAsyncRetry(Runnable onConnected, Runnable onDisconnected) {
         try {
+            if (this.scheduler == null || this.scheduler.isShutdown()) {
+                this.scheduler = Executors.newSingleThreadScheduledExecutor();
+            }
             connect(onConnected, onDisconnected);
+            this.scheduler.shutdown();
         } catch (Exception e) {
             log.warn("Err Occurs while RMQ Connection", e);
             close();
@@ -130,9 +156,13 @@ public class RmqModule implements AutoCloseable {
      * @param queueName 생성할 큐의 이름
      * @throws IOException 큐 생성에 실패한 경우
      */
-    @Synchronized
     public void queueDeclare(String queueName) throws IOException {
-        channel.queueDeclare(queueName, false, false, false, null);
+        this.queueDeclare(queueName, null);
+    }
+
+    @Synchronized
+    public void queueDeclare(String queueName, Map<String, Object> arguments) throws IOException {
+        channel.queueDeclare(queueName, true, false, false, arguments);
     }
 
     /**
@@ -188,8 +218,6 @@ public class RmqModule implements AutoCloseable {
         channel.basicPublish("", queueName, properties, message);
     }
 
-
-
     /**
      * 지정된 큐에 소비자를 등록한다.
      *
@@ -198,8 +226,8 @@ public class RmqModule implements AutoCloseable {
      * @throws IOException 소비자 등록에 실패한 경우
      */
     @Synchronized
-    public void registerConsumer(String queueName, DeliverCallback deliverCallback) throws IOException {
-        channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {
+    public void registerConsumer(String queueName, DeliverCallback deliverCallback, Map<String, Object> arguments) throws IOException {
+        channel.basicConsume(queueName, true, arguments, deliverCallback, consumerTag -> {
         });
     }
 
@@ -212,7 +240,7 @@ public class RmqModule implements AutoCloseable {
      * @throws IOException 소비자 등록에 실패한 경우
      */
     public void registerStringConsumer(String queueName, Consumer<String> msgCallback) throws IOException {
-        registerConsumer(queueName, (s, delivery) -> msgCallback.accept(new String(delivery.getBody(), StandardCharsets.UTF_8)));
+        registerConsumer(queueName, (s, delivery) -> msgCallback.accept(new String(delivery.getBody(), StandardCharsets.UTF_8)), null);
     }
 
     /**
@@ -224,7 +252,7 @@ public class RmqModule implements AutoCloseable {
      * @throws IOException 소비자 등록에 실패한 경우
      */
     public void registerByteConsumer(String queueName, Consumer<byte[]> msgCallback) throws IOException {
-        registerConsumer(queueName, (s, delivery) -> msgCallback.accept(delivery.getBody()));
+        registerConsumer(queueName, (s, delivery) -> msgCallback.accept(delivery.getBody()), null);
     }
 
     public boolean isConnected() {
@@ -237,7 +265,6 @@ public class RmqModule implements AutoCloseable {
      * RabbitMQ 서버와의 연결 및 채널을 종료한다.
      * 연결이나 채널 종료 과정에서 오류가 발생하면 로그에 출력한다.
      */
-    @Override
     @Synchronized
     public void close() {
         try {
