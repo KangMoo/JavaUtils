@@ -21,11 +21,11 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class SdpUtil {
+public class AudioSdpUtil {
     private static final String RTPMAP = "rtpmap";
     private static final String FMTP = "fmtp";
 
-    private SdpUtil() {
+    private AudioSdpUtil() {
         // nothing
     }
 
@@ -39,24 +39,24 @@ public class SdpUtil {
         return attributeField;
     }
 
-    public static List<Integer> getPayloadIds(SdpInfo sdpInfo) {
+    public static List<Integer> getPayloadIds(AudioSdpInfo audioSdpInfo) {
         try {
-            return ((Stream<String>) sdpInfo.getMd().getMedia().getMediaFormats(false).stream())
+            return ((Stream<String>) audioSdpInfo.getMd().getMedia().getMediaFormats(false).stream())
                     .map(Integer::parseInt).collect(Collectors.toList());
         } catch (SdpParseException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static List<Integer> getDtmfPayloadIds(SdpInfo sdpInfo) {
-        return SdpUtil.findAttr(sdpInfo.getCopiedAttributeFields(), o -> o.getValue().contains("telephone-event/"))
+    public static List<Integer> getDtmfPayloadIds(AudioSdpInfo audioSdpInfo) {
+        return AudioSdpUtil.findAttr(audioSdpInfo.getCopiedAttributeFields(), o -> o.getValue().contains("telephone-event/"))
                 .stream().map(AttributeField::getAttribute)
                 .map(o -> Integer.parseInt(o.getValue().split("\\s")[0]))
                 .collect(Collectors.toList());
     }
 
-    public static int getPtime(SdpInfo sdpInfo){
-        return sdpInfo.getAttributeFields().stream().map(AttributeField::getAttribute)
+    public static int getPtime(AudioSdpInfo audioSdpInfo){
+        return audioSdpInfo.getAttributeFields().stream().map(AttributeField::getAttribute)
                 .filter(o -> o.getName().equals("ptime"))
                 .findAny().map(o -> Integer.parseInt(o.getValue())).orElse(20);
     }
@@ -102,9 +102,9 @@ public class SdpUtil {
                 .collect(Collectors.toList());
     }
 
-    public static Optional<Integer> findPayloadIdFromRtpMap(SdpInfo sdpInfo, Predicate<String> filter) {
-        Set<Integer> mdFormats = SdpUtil.getPayloadIds(sdpInfo).stream().collect(Collectors.toSet());
-        return sdpInfo.getCopiedAttributeFields().stream()
+    public static Optional<Integer> findPayloadIdFromRtpMap(AudioSdpInfo audioSdpInfo, Predicate<String> filter) {
+        Set<Integer> mdFormats = AudioSdpUtil.getPayloadIds(audioSdpInfo).stream().collect(Collectors.toSet());
+        return audioSdpInfo.getCopiedAttributeFields().stream()
                 .map(AttributeField::getAttribute)
                 .filter(o -> o.getName().equals(RTPMAP))
                 .filter(o -> filter.test(o.getValue()))

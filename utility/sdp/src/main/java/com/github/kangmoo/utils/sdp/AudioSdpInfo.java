@@ -27,33 +27,42 @@ import java.util.Optional;
 
 @Getter
 @Slf4j
-public class SdpInfo {
+public class AudioSdpInfo {
 
     private SessionDescriptionImpl sdp;
     private MediaDescription md;
     private String ip;
     private int port;
 
-    public SdpInfo(String sdpMsg) throws ParseException, SdpException {
+    @SuppressWarnings("unchecked")
+    public AudioSdpInfo(String sdpMsg) throws ParseException, SdpException {
         if (sdpMsg == null || sdpMsg.isEmpty()) throw new NullPointerException("SDP Message is blank");
         this.sdp = new SDPAnnounceParser(sdpMsg).parse();
-        this.md = ((MediaDescription) sdp.getMediaDescriptions(false).get(0));
+        for (MediaDescription mediaDescription : ((List<MediaDescription>) sdp.getMediaDescriptions(false))) {
+            if (mediaDescription.getMedia().getMediaType().equals("audio")) {
+                this.md = mediaDescription;
+                break;
+            }
+        }
+        if (this.md == null) {
+            throw new SdpException("Wrong Sdp");
+        }
 
         this.ip = Optional.ofNullable(md.getConnection()).orElse(sdp.getConnection()).getAddress();
         this.port = md.getMedia().getMediaPort();
     }
 
-    public SdpInfo setSdp(SessionDescriptionImpl sdp) {
+    public AudioSdpInfo setSdp(SessionDescriptionImpl sdp) {
         this.sdp = sdp;
         return this;
     }
 
-    public SdpInfo setMd(MediaDescription md) {
+    public AudioSdpInfo setMd(MediaDescription md) {
         this.md = md;
         return this;
     }
 
-    public SdpInfo setIp(String ip) {
+    public AudioSdpInfo setIp(String ip) {
         this.ip = ip;
         try {
             sdp.getOrigin().setAddress(ip);
@@ -64,7 +73,7 @@ public class SdpInfo {
         return this;
     }
 
-    public SdpInfo setPort(int port) {
+    public AudioSdpInfo setPort(int port) {
         this.port = port;
         try {
             this.md.getMedia().setMediaPort(port);
@@ -78,6 +87,7 @@ public class SdpInfo {
     public List<AttributeField> getAttributeFields() {
         return md.getAttributes(true);
     }
+
     @SuppressWarnings({"rawtypes", "unchecked"})
     public List<AttributeField> getCopiedAttributeFields() {
         return new ArrayList<>(md.getAttributes(true));
