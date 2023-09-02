@@ -1,6 +1,5 @@
 package com.github.kangmoo.utils;
 
-import lombok.SneakyThrows;
 import org.slf4j.Logger;
 
 import java.util.HashSet;
@@ -11,10 +10,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import static org.slf4j.LoggerFactory.getLogger;
+
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 /**
  * @author kangmoo Heo
@@ -23,10 +23,9 @@ public class PromiseManager {
     private static final Logger log = getLogger(PromiseManager.class);
     private static final PromiseManager INSTANCE = new PromiseManager();
     private static final Map<String, PromiseInfo> promiseInfos = new ConcurrentHashMap<>();
-    private static ScheduledExecutorService executors;
+    private static ScheduledExecutorService executors = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors(), new BasicThreadFactory.Builder().namingPattern("Promise_Executor-%d").build());
 
     private PromiseManager() {
-        setThreadCount(10);
     }
 
     public static PromiseManager getInstance() {
@@ -37,13 +36,7 @@ public class PromiseManager {
         if (executors != null) {
             executors.shutdown();
         }
-
-        AtomicInteger threadNumber = new AtomicInteger(1);
-        executors = Executors.newScheduledThreadPool(threadCount, r -> {
-            Thread thread = new Thread(r);
-            thread.setName("CustomThreadName-" + threadNumber.getAndIncrement());
-            return thread;
-        });
+        executors = Executors.newScheduledThreadPool(threadCount, new BasicThreadFactory.Builder().namingPattern("Promise_Executor-%d").build());
     }
 
     public PromiseInfo createPromiseInfo(String key, Runnable onSuccess, Runnable onFail, Runnable onTimeout, long timeoutMs) {
@@ -71,7 +64,6 @@ public class PromiseManager {
      * @param key
      * @return
      */
-    @SneakyThrows
     public Optional<PromiseInfo> findPromiseInfo(String key) {
         if (key == null) return Optional.empty();
         PromiseInfo promiseInfo = promiseInfos.get(key);
@@ -79,7 +71,11 @@ public class PromiseManager {
             for (int i = 0; i < 10; i++) {
                 promiseInfo = promiseInfos.get(key);
                 if (promiseInfo != null) break;
-                Thread.sleep(10);
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
         return Optional.ofNullable(promiseInfo);
@@ -133,7 +129,7 @@ public class PromiseManager {
             throw new IllegalArgumentException("Already exist PromiseInfo [" + key + "]");
 
         executors.schedule(() -> {
-            findPromiseInfo(key).ifPresent(PromiseInfo::procTimeout);
+            Optional.of(promiseInfos.get(key)).ifPresent(PromiseInfo::procTimeout);
             removePromiseInfo(key);
         }, promiseInfo.getTimeoutMs(), TimeUnit.MILLISECONDS);
         log.debug("Success to add PromiseInfo [{}]", key);
