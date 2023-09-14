@@ -3,7 +3,7 @@ package com.github.kangmoo.utils.audio.pcm;
 /**
  * @author kangmoo Heo
  */
-public class LpcmResampler {
+public class Pcm8k16kResampler {
     /**
      * Resample from 8k to 16k
      *
