@@ -1,45 +1,29 @@
-package com.github.kangmoo.utils.pcap;
-
-/**
- * @author kangmoo Heo
- */
+package com.github.kangmoo.utils.pcap;// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 import io.kaitai.struct.ByteBufferKaitaiStream;
-import io.kaitai.struct.KaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
-
+import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 
 public class Ipv6Packet extends KaitaiStruct {
-    private long version;
-    private long trafficClass;
-    private long flowLabel;
-    private int payloadLength;
-    private int nextHeaderType;
-    private int hopLimit;
-    private byte[] srcIpv6Addr;
-    private byte[] dstIpv6Addr;
-    private ProtocolBody nextHeader;
-    private byte[] rest;
-    private final Ipv6Packet _root;
-    private final KaitaiStruct _parent;
+    public static Ipv6Packet fromFile(String fileName) throws IOException {
+        return new Ipv6Packet(new ByteBufferKaitaiStream(fileName));
+    }
+
     public Ipv6Packet(KaitaiStream _io) {
         this(_io, null, null);
     }
+
     public Ipv6Packet(KaitaiStream _io, KaitaiStruct _parent) {
         this(_io, _parent, null);
     }
+
     public Ipv6Packet(KaitaiStream _io, KaitaiStruct _parent, Ipv6Packet _root) {
         super(_io);
         this._parent = _parent;
         this._root = _root == null ? this : _root;
         _read();
     }
-
-    public static Ipv6Packet fromFile(String fileName) throws IOException {
-        return new Ipv6Packet(new ByteBufferKaitaiStream(fileName));
-    }
-
     private void _read() {
         this.version = this._io.readBitsIntBe(4);
         this.trafficClass = this._io.readBitsIntBe(8);
@@ -53,52 +37,28 @@ public class Ipv6Packet extends KaitaiStruct {
         this.nextHeader = new ProtocolBody(this._io, nextHeaderType());
         this.rest = this._io.readBytesFull();
     }
-
-    public long version() {
-        return version;
-    }
-
-    public long trafficClass() {
-        return trafficClass;
-    }
-
-    public long flowLabel() {
-        return flowLabel;
-    }
-
-    public int payloadLength() {
-        return payloadLength;
-    }
-
-    public int nextHeaderType() {
-        return nextHeaderType;
-    }
-
-    public int hopLimit() {
-        return hopLimit;
-    }
-
-    public byte[] srcIpv6Addr() {
-        return srcIpv6Addr;
-    }
-
-    public byte[] dstIpv6Addr() {
-        return dstIpv6Addr;
-    }
-
-    public ProtocolBody nextHeader() {
-        return nextHeader;
-    }
-
-    public byte[] rest() {
-        return rest;
-    }
-
-    public Ipv6Packet _root() {
-        return _root;
-    }
-
-    public KaitaiStruct _parent() {
-        return _parent;
-    }
+    private long version;
+    private long trafficClass;
+    private long flowLabel;
+    private int payloadLength;
+    private int nextHeaderType;
+    private int hopLimit;
+    private byte[] srcIpv6Addr;
+    private byte[] dstIpv6Addr;
+    private ProtocolBody nextHeader;
+    private byte[] rest;
+    private Ipv6Packet _root;
+    private KaitaiStruct _parent;
+    public long version() { return version; }
+    public long trafficClass() { return trafficClass; }
+    public long flowLabel() { return flowLabel; }
+    public int payloadLength() { return payloadLength; }
+    public int nextHeaderType() { return nextHeaderType; }
+    public int hopLimit() { return hopLimit; }
+    public byte[] srcIpv6Addr() { return srcIpv6Addr; }
+    public byte[] dstIpv6Addr() { return dstIpv6Addr; }
+    public ProtocolBody nextHeader() { return nextHeader; }
+    public byte[] rest() { return rest; }
+    public Ipv6Packet _root() { return _root; }
+    public KaitaiStruct _parent() { return _parent; }
 }
