@@ -4,7 +4,13 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Mix Linear PCM Data
+ * Mix PCM Data
+ *
+ * @author kangmoo Heo
+ */
+
+/**
+ * Mix PCM Data
  *
  * @author kangmoo Heo
  */
@@ -12,10 +18,6 @@ public class AudioMixer {
 
     /**
      * Mix 16bit, mono pcm
-     *
-     * @param is1
-     * @param is2
-     * @return
      */
     public static byte[] mix16bitMonoLpcm(byte[] is1, byte[] is2) {
         int bufferLength = Math.min(is1.length, is2.length);
@@ -39,10 +41,6 @@ public class AudioMixer {
 
     /**
      * Mix 32bit, mono pcm
-     *
-     * @param is1
-     * @param is2
-     * @return
      */
     public static byte[] mix32bitMonoLpcm(byte[] is1, byte[] is2) {
         int bufferLength = Math.min(is1.length, is2.length);
@@ -65,20 +63,4 @@ public class AudioMixer {
         return average;
     }
 
-    public enum BitType {
-        SIGNED_8_BIT(1),
-        SIGNED_16_BIT(2),
-        SIGNED_24_BIT(3),
-        SIGNED_32_BIT(4);
-
-        private final int value;
-
-        BitType(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
 }
