@@ -12,5 +12,12 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface Span {
     int offset() default 0;
+
     int size() default 0;
+
+    SpanByteOrder order() default SpanByteOrder.BIG_ENDIAN;
+
+    enum SpanByteOrder {
+        BIG_ENDIAN, LITTLE_ENDIAN
+    }
 }
