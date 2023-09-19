@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Span {
-    int offset() default 0;
+    int offset();
 
     int size() default 0;
 

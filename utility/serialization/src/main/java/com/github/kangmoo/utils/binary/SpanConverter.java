@@ -47,6 +47,8 @@ public class SpanConverter {
                         setField(target, field, ByteDataConverter.getAsFloat(data, offset, size, byteOrder));
                     } else if (fieldType == double.class || fieldType == Double.class) {
                         setField(target, field, ByteDataConverter.getAsDouble(data, offset, size, byteOrder));
+                    } else if (fieldType == boolean.class || fieldType == Boolean.class) {
+                        setField(target, field, ByteDataConverter.getAsBoolean(data, offset));
                     } else if (fieldType == String.class) {
                         setField(target, field, ByteDataConverter.getAsString(data, offset, size));
                     } else {
@@ -121,6 +123,8 @@ public class SpanConverter {
                 datas.put(offset, getAsByte((Float) value, size, byteOrder));
             } else if (fieldType == double.class || fieldType == Double.class) {
                 datas.put(offset, getAsByte((Double) value, size, byteOrder));
+            } else if (fieldType == boolean.class || fieldType == Boolean.class) {
+                datas.put(offset, getAsByte((Boolean) value));
             } else if (fieldType == String.class) {
                 datas.put(offset, getAsByte((String) value, size));
             } else {
