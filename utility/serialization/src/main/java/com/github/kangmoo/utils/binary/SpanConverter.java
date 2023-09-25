@@ -7,10 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.github.kangmoo.utils.binary.ByteDataConverter.getAsByte;
 
@@ -35,7 +32,9 @@ public class SpanConverter {
                     ByteOrder byteOrder = order == Span.SpanByteOrder.BIG_ENDIAN ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN;
                     Class<?> fieldType = field.getType();
 
-                    if (fieldType == char.class || fieldType == Character.class) {
+                    if (fieldType == byte.class || fieldType == Byte.class) {
+                        setField(target, field, data[offset]);
+                    } else if (fieldType == char.class || fieldType == Character.class) {
                         setField(target, field, ByteDataConverter.getAsChar(data, offset, size, byteOrder));
                     } else if (fieldType == short.class || fieldType == Short.class) {
                         setField(target, field, ByteDataConverter.getAsShort(data, offset, size, byteOrder));
@@ -51,6 +50,8 @@ public class SpanConverter {
                         setField(target, field, ByteDataConverter.getAsBoolean(data, offset));
                     } else if (fieldType == String.class) {
                         setField(target, field, ByteDataConverter.getAsString(data, offset, size));
+                    } else if (fieldType == byte[].class || fieldType == Byte[].class) {
+                        setField(target, field, Arrays.copyOfRange(data, offset, size));
                     } else {
                         Object value = getField(target, field);
                         if (value == null) {
@@ -111,7 +112,9 @@ public class SpanConverter {
             Class<?> fieldType = field.getType();
 
             Object value = getField(target, field);
-            if (fieldType == char.class || fieldType == Character.class) {
+            if (fieldType == byte.class || fieldType == Byte.class) {
+                datas.put(offset, new byte[]{(Byte) value});
+            } else if (fieldType == char.class || fieldType == Character.class) {
                 datas.put(offset, getAsByte((Character) value, size, byteOrder));
             } else if (fieldType == short.class || fieldType == Short.class) {
                 datas.put(offset, getAsByte((Short) value, size, byteOrder));
@@ -125,6 +128,8 @@ public class SpanConverter {
                 datas.put(offset, getAsByte((Double) value, size, byteOrder));
             } else if (fieldType == boolean.class || fieldType == Boolean.class) {
                 datas.put(offset, getAsByte((Boolean) value));
+            } else if (fieldType == byte[].class || fieldType == Byte[].class) {
+                datas.put(offset, Arrays.copyOfRange((byte[]) value, offset, offset + size));
             } else if (fieldType == String.class) {
                 datas.put(offset, getAsByte((String) value, size));
             } else {

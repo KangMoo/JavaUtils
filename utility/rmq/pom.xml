@@ -20,7 +20,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.rabbitmq</groupId>
+            <groupId>com.rabbitmq</groupId>z
             <artifactId>amqp-client</artifactId>
             <version>5.17.0</version>
         </dependency>
