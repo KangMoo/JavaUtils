@@ -129,7 +129,7 @@ public class SpanConverter {
             } else if (fieldType == boolean.class || fieldType == Boolean.class) {
                 datas.put(offset, getAsByte((Boolean) value));
             } else if (fieldType == byte[].class || fieldType == Byte[].class) {
-                datas.put(offset, Arrays.copyOfRange((byte[]) value, offset, offset + size));
+                datas.put(offset, Arrays.copyOf((byte[]) value, size == 0 ? ((byte[]) value).length : size));
             } else if (fieldType == String.class) {
                 datas.put(offset, getAsByte((String) value, size));
             } else {
