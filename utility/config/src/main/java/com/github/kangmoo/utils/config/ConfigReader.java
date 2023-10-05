@@ -20,18 +20,22 @@ public abstract class ConfigReader {
      * Config 파일 설정 및 필드값 세팅
      */
     public ConfigReader init(String filePath) throws IOException, NoSuchFieldException {
+        init(Path.of(filePath));
+        return this;
+    }
+
+    public ConfigReader init(Path filePath) throws IOException, NoSuchFieldException {
         if (this.filePath != null) {
             log.warn("Config Already initiated");
             return this;
         }
 
-        this.filePath = Path.of(filePath);
+        this.filePath = filePath;
         fieldSetting();
         afterFieldSetting();
         log.info("Config init done");
         return this;
     }
-
 
     protected abstract void fieldSetting() throws IOException, NoSuchFieldException;
 
