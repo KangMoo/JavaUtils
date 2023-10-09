@@ -22,6 +22,7 @@
         <module>common</module>
         <module>media</module>
         <module>rmq</module>
+        <module>ssh</module>
     </modules>
 
     <dependencies>
