@@ -181,6 +181,10 @@ public class RmqModule {
         channel.queueDeclare(queueName, true, false, false, arguments);
     }
 
+    public void queueDeclare(String queue, boolean durable, boolean exclusive, boolean autoDelete, Map<String, Object> arguments) throws IOException {
+        channel.queueDeclare(queue, durable, exclusive, autoDelete, arguments);
+    }
+
     /**
      * 지정된 이름의 큐에 메시지를 전송한다.
      *
