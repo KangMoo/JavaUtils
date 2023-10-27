@@ -42,7 +42,7 @@ public class RmqModule {
     protected final String password;
     protected final Integer port;
     protected final ArrayBlockingQueue<Runnable> queue;
-    protected final ScheduledExecutorService rmqSender;
+    private ScheduledExecutorService rmqSender;
 
     // RabbitMQ 서버와의 연결과 채널을 관리하기 위한 변수
     protected Connection connection;
@@ -62,20 +62,6 @@ public class RmqModule {
         this.password = password;
         this.port = port;
         this.queue = new ArrayBlockingQueue<>(bufferCount);
-        this.rmqSender = Executors.newSingleThreadScheduledExecutor(new BasicThreadFactory.Builder().daemon(true).build());
-        this.rmqSender.scheduleWithFixedDelay(() -> {
-            while (true) {
-                try {
-                    Runnable runnable = queue.poll();
-                    if (runnable == null) {
-                        return;
-                    }
-                    runnable.run();
-                } catch (Exception e) {
-                    log.warn("Error Occurs", e);
-                }
-            }
-        }, 0, 10, TimeUnit.MILLISECONDS);
     }
 
     public RmqModule(String host, String userName, String password, int bufferCount) {
@@ -136,6 +122,27 @@ public class RmqModule {
             });
 
             this.channel = connection.createChannel();
+            try {
+                if (this.rmqSender != null && !this.rmqSender.isShutdown()) {
+                    this.rmqSender.shutdown();
+                }
+            } catch (Exception e) {
+                log.warn("Error while shutdown Scheduler.", e);
+            }
+            this.rmqSender = Executors.newSingleThreadScheduledExecutor(new BasicThreadFactory.Builder().namingPattern("RMQ_SENDER_%d").daemon(true).build());
+            this.rmqSender.scheduleWithFixedDelay(() -> {
+                while (true) {
+                    try {
+                        Runnable runnable = queue.poll();
+                        if (runnable == null) {
+                            return;
+                        }
+                        runnable.run();
+                    } catch (Exception e) {
+                        log.warn("Error Occurs", e);
+                    }
+                }
+            }, 0, 10, TimeUnit.MILLISECONDS);
             onConnected.run();
         } catch (Exception e) {
             onDisconnected.run();
@@ -155,7 +162,7 @@ public class RmqModule {
     public void connectWithAsyncRetry(Runnable onConnected, Runnable onDisconnected) {
         try {
             if (this.connectRetryThread == null || this.connectRetryThread.isShutdown()) {
-                this.connectRetryThread = Executors.newSingleThreadScheduledExecutor();
+                this.connectRetryThread = Executors.newSingleThreadScheduledExecutor(new BasicThreadFactory.Builder().namingPattern("RMQ_CONNECT_THREAD_%d").daemon(true).build());
             }
             connect(onConnected, onDisconnected);
             this.connectRetryThread.shutdown();
@@ -332,5 +339,6 @@ public class RmqModule {
         } catch (Exception e) {
             log.warn("Error while shutdown Scheduler.", e);
         }
+        log.info("RMQ Module Closed");
     }
 }
