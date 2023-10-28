@@ -20,8 +20,7 @@ public abstract class ConfigReader {
      * Config 파일 설정 및 필드값 세팅
      */
     public ConfigReader init(String filePath) throws IOException, NoSuchFieldException {
-        init(Path.of(filePath));
-        return this;
+        return init(Path.of(filePath));
     }
 
     public ConfigReader init(Path filePath) throws IOException, NoSuchFieldException {
