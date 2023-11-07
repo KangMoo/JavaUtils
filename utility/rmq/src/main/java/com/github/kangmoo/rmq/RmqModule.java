@@ -30,17 +30,17 @@ import java.util.function.Consumer;
 public class RmqModule {
     private ScheduledExecutorService connectRetryThread;
 
-    // RabbitMQ 서버와의 연결을 재시도하는 간격(단위:ms)
-    public static final int RECOVERY_INTERVAL = 1000;
-    // RabbitMQ 서버에게 전송하는 heartbeat 요청의 간격(단위:sec)
-    public static final int REQUESTED_HEARTBEAT = 5;
-    // RabbitMQ 서버와 연결을 시도하는 최대 시간(단위:ms)
-    public static final int CONNECTION_TIMEOUT = 2000;
+    private final String host;
+    private final String userName;
+    private final String password;
+    private final int port;
+    private final int bufferCount;
+    private final int recoveryInterval; // RabbitMQ 서버와의 연결을 재시도하는 간격(단위:ms)
+    private final int requestedHeartbeat; // RabbitMQ 서버에게 전송하는 heartbeat 요청의 간격(단위:sec)
+    private final int connectionTimeout; // RabbitMQ 서버와 연결을 시도하는 최대 시간(단위:ms)
+    private final Runnable onConnected;
+    private final Runnable onDisconnected;
 
-    protected final String host;
-    protected final String userName;
-    protected final String password;
-    protected final Integer port;
     protected final ArrayBlockingQueue<Runnable> queue;
     private ScheduledExecutorService rmqSender;
 
@@ -48,37 +48,32 @@ public class RmqModule {
     protected Connection connection;
     protected Channel channel;
 
-
-    /**
-     * @param host        RabbitMQ 서버의 호스트
-     * @param userName    RabbitMQ 서버에 연결할 사용자 이름
-     * @param password    해당 사용자의 비밀번호
-     * @param port        RabbitMQ 서버 포트
-     * @param bufferCount RMQ Send Buffer 크기
-     */
-    public RmqModule(String host, String userName, String password, Integer port, int bufferCount) {
+    RmqModule(String host, String userName, String password, int port, int bufferCount, int recoveryInterval, int requestedHeartbeat, int connectionTimeout, Runnable onConnected, Runnable onDisconnected) {
         this.host = host;
         this.userName = userName;
         this.password = password;
         this.port = port;
-        this.queue = new ArrayBlockingQueue<>(bufferCount);
+        this.bufferCount = bufferCount;
+        this.queue = new ArrayBlockingQueue<>(this.bufferCount);
+        this.recoveryInterval = recoveryInterval;
+        this.requestedHeartbeat = requestedHeartbeat;
+        this.connectionTimeout = connectionTimeout;
+        this.onConnected = onConnected;
+        this.onDisconnected = onDisconnected;
     }
 
-    public RmqModule(String host, String userName, String password, int bufferCount) {
-        this(host, userName, password, null, bufferCount);
+    public static RmqModuleBuilder builder(String host, String userName, String password) {
+        return new RmqModuleBuilder(host, userName, password);
     }
-
 
     /**
      * RabbitMQ 서버에 연결을 수립하며 통신을 위한 채널을 생성하고, 연결에 대한 예외 처리기를 설정하고, 만약 연결이 복구 가능한 경우, 복구 리스너도 설정한다.
      * 연결과 채널이 성공적으로 수립되면 제공된 onConnected 콜백을, 연결에 실패하면 onDisconnected 콜백을 호출한다.
      *
-     * @param onConnected    연결과 채널이 성공적으로 수립되었을 때 호출되는 콜백함수
-     * @param onDisconnected 예기치 않은 연결 드라이버 예외가 발생했을 때 호출되는 콜백
      * @throws IOException      연결과 채널을 생성하는 동안 I/O 에러가 발생한 경우
      * @throws TimeoutException 연결과 채널을 생성하는 동안 타임아웃이 발생한 경우
      */
-    public void connect(Runnable onConnected, Runnable onDisconnected) throws IOException, TimeoutException {
+    public void connect() throws IOException, TimeoutException {
         if (isConnected()) {
             log.warn("RMQ Already Connected");
             return;
@@ -91,15 +86,13 @@ public class RmqModule {
             factory.setHost(host);
             factory.setUsername(userName);
             factory.setPassword(password);
-            if (this.port != null) {
-                factory.setPort(this.port);
-            }
+            factory.setPort(port);
 
             // 자동 복구를 활성화하고, 네트워크 복구 간격, heartbeat 요청 간격, 연결 타임아웃 시간을 설정
             factory.setAutomaticRecoveryEnabled(true);
-            factory.setNetworkRecoveryInterval(RECOVERY_INTERVAL);
-            factory.setRequestedHeartbeat(REQUESTED_HEARTBEAT);
-            factory.setConnectionTimeout(CONNECTION_TIMEOUT);
+            factory.setNetworkRecoveryInterval(recoveryInterval);
+            factory.setRequestedHeartbeat(requestedHeartbeat);
+            factory.setConnectionTimeout(connectionTimeout);
 
             factory.setExceptionHandler(new DefaultExceptionHandler() {
                 @Override
@@ -154,25 +147,21 @@ public class RmqModule {
      * 비동기적으로 RabbitMQ 서버에 연결을 시도하고, 연결이 실패할 경우 1초 후에 재시도한다.
      * 연결이 성공하면 onConnected 콜백을 호출하고, 연결 실패 시 onDisconnected 콜백을 호출한다.
      * 본 메서드는 스레드 안전하게 동작한다.
-     *
-     * @param onConnected    연결과 채널이 성공적으로 수립되었을 때 호출되는 콜백
-     * @param onDisconnected 연결 시도가 실패했을 때 호출되는 콜백
      */
     @Synchronized
-    public void connectWithAsyncRetry(Runnable onConnected, Runnable onDisconnected) {
+    public void connectWithAsyncRetry() {
         try {
             if (this.connectRetryThread == null || this.connectRetryThread.isShutdown()) {
                 this.connectRetryThread = Executors.newSingleThreadScheduledExecutor(new BasicThreadFactory.Builder().namingPattern("RMQ_CONNECT_THREAD_%d").daemon(true).build());
             }
-            connect(onConnected, onDisconnected);
+            connect();
             this.connectRetryThread.shutdown();
         } catch (Exception e) {
             log.warn("Err Occurs while RMQ Connection", e);
             close();
-            this.connectRetryThread.schedule(() -> connectWithAsyncRetry(onConnected, onDisconnected), 1000, TimeUnit.MILLISECONDS);
+            this.connectRetryThread.schedule(this::connectWithAsyncRetry, 1000, TimeUnit.MILLISECONDS);
         }
     }
-
 
     /**
      * 지정된 이름의 메시지 큐를 생성한다.
