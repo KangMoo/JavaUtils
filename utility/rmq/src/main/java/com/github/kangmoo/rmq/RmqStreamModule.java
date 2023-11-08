@@ -8,6 +8,7 @@ import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -176,9 +177,15 @@ public class RmqStreamModule {
         this.registerConsumer(queueName, deliverCallback, Map.of(STREAM_OFFSET, streamOffset));
     }
 
-    public void registerByteConsumer(String queueName, Consumer<byte[]> msgCallback) throws IOException {
-        rmqModule.registerByteConsumer(queueName, msgCallback);
+    public void registerStringConsumer(String queueName, Consumer<String> msgCallback) throws IOException {
+        this.registerConsumer(queueName, (s, delivery) -> msgCallback.accept(new String(delivery.getBody(), StandardCharsets.UTF_8)), (Map) null);
     }
+
+    public void registerByteConsumer(String queueName, Consumer<byte[]> msgCallback) throws IOException {
+        this.registerConsumer(queueName, (s, delivery) -> msgCallback.accept(delivery.getBody()), (Map) null);
+    }
+
+
 
     public boolean isConnected() {
         return rmqModule.isConnected();
