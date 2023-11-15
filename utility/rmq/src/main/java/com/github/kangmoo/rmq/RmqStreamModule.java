@@ -121,10 +121,6 @@ public class RmqStreamModule {
                 "x-max-age", maxAge));
     }
 
-    public void queueDeclare(String queueName, Map<String, Object> arguments) throws IOException {
-        rmqModule.queueDeclare(queueName, arguments);
-    }
-
     public void queueDeclare(String queue, boolean durable, boolean exclusive, boolean autoDelete, Map<String, Object> arguments) throws IOException {
         rmqModule.queueDeclare(queue, durable, exclusive, autoDelete, arguments);
     }
@@ -184,8 +180,6 @@ public class RmqStreamModule {
     public void registerByteConsumer(String queueName, Consumer<byte[]> msgCallback) throws IOException {
         this.registerConsumer(queueName, (s, delivery) -> msgCallback.accept(delivery.getBody()), (Map) null);
     }
-
-
 
     public boolean isConnected() {
         return rmqModule.isConnected();
