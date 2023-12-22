@@ -6,14 +6,15 @@ import static com.rabbitmq.client.ConnectionFactory.USE_DEFAULT_PORT;
  * @author kangmoo Heo
  */
 public final class RmqModuleBuilder {
-    private final String host;
-    private final String userName;
-    private final String password;
+    String host;
+    String userName;
+    String password;
     int port = USE_DEFAULT_PORT;
     int bufferCount = 1024;
     int recoveryInterval = 1000; // RabbitMQ 서버와의 연결을 재시도하는 간격(단위:ms)
     int requestedHeartbeat = 5; // RabbitMQ 서버에게 전송하는 heartbeat 요청의 간격(단위:sec)
     int connectionTimeout = 2000; // RabbitMQ 서버와 연결을 시도하는 최대 시간(단위:ms)
+    int qos = 100;
     Runnable onConnected = () -> {};
     Runnable onDisconnected = () -> {};
 
@@ -21,6 +22,21 @@ public final class RmqModuleBuilder {
         this.host = host;
         this.userName = userName;
         this.password = password;
+    }
+
+    public RmqModuleBuilder setHost(String host) {
+        this.host = host;
+        return this;
+    }
+
+    public RmqModuleBuilder setUserName(String userName) {
+        this.userName = userName;
+        return this;
+    }
+
+    public RmqModuleBuilder setPassword(String password) {
+        this.password = password;
+        return this;
     }
 
     public RmqModuleBuilder setPort(int port) {
@@ -48,6 +64,11 @@ public final class RmqModuleBuilder {
         return this;
     }
 
+    public RmqModuleBuilder setQos(int qos) {
+        this.qos = qos;
+        return this;
+    }
+
     public RmqModuleBuilder setOnConnected(Runnable onConnected) {
         this.onConnected = onConnected;
         return this;
@@ -59,6 +80,6 @@ public final class RmqModuleBuilder {
     }
 
     public RmqModule build() {
-        return new RmqModule(host, userName, password, port, bufferCount, recoveryInterval, requestedHeartbeat, connectionTimeout, onConnected, onDisconnected);
+        return new RmqModule(host, userName, password, port, bufferCount, recoveryInterval, requestedHeartbeat, connectionTimeout, onConnected, onDisconnected, qos);
     }
 }

@@ -3,12 +3,15 @@ package com.github.kangmoo.rmq;
 import com.rabbitmq.client.*;
 import com.rabbitmq.client.impl.DefaultExceptionHandler;
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
@@ -38,8 +41,11 @@ public class RmqModule {
     private final int recoveryInterval; // RabbitMQ 서버와의 연결을 재시도하는 간격(단위:ms)
     private final int requestedHeartbeat; // RabbitMQ 서버에게 전송하는 heartbeat 요청의 간격(단위:sec)
     private final int connectionTimeout; // RabbitMQ 서버와 연결을 시도하는 최대 시간(단위:ms)
-    private final Runnable onConnected;
-    private final Runnable onDisconnected;
+    private final int qos;
+    @Setter
+    private Runnable onConnected;
+    @Setter
+    private Runnable onDisconnected;
 
     protected final ArrayBlockingQueue<Runnable> queue;
     private ScheduledExecutorService rmqSender;
@@ -48,7 +54,7 @@ public class RmqModule {
     protected Connection connection;
     protected Channel channel;
 
-    RmqModule(String host, String userName, String password, int port, int bufferCount, int recoveryInterval, int requestedHeartbeat, int connectionTimeout, Runnable onConnected, Runnable onDisconnected) {
+    RmqModule(String host, String userName, String password, int port, int bufferCount, int recoveryInterval, int requestedHeartbeat, int connectionTimeout, Runnable onConnected, Runnable onDisconnected, int qos) {
         this.host = host;
         this.userName = userName;
         this.password = password;
@@ -60,6 +66,7 @@ public class RmqModule {
         this.connectionTimeout = connectionTimeout;
         this.onConnected = onConnected;
         this.onDisconnected = onDisconnected;
+        this.qos = qos;
     }
 
     public static RmqModuleBuilder builder(String host, String userName, String password) {
@@ -98,7 +105,7 @@ public class RmqModule {
                 @Override
                 public void handleUnexpectedConnectionDriverException(Connection con, Throwable exception) {
                     super.handleUnexpectedConnectionDriverException(con, exception);
-                    onDisconnected.run();
+                    onDisconnected();
                 }
             });
 
@@ -106,11 +113,11 @@ public class RmqModule {
             this.connection = factory.newConnection();
             ((Recoverable) connection).addRecoveryListener(new RecoveryListener() {
                 public void handleRecovery(Recoverable r) {
-                    onConnected.run();
+                    onConnected();
                 }
 
                 public void handleRecoveryStarted(Recoverable r) {
-                    onDisconnected.run();
+                    onDisconnected();
                 }
             });
 
@@ -136,9 +143,10 @@ public class RmqModule {
                     }
                 }
             }, 0, 10, TimeUnit.MILLISECONDS);
-            onConnected.run();
+            channel.basicQos(qos);
+            onConnected();
         } catch (Exception e) {
-            onDisconnected.run();
+            onDisconnected();
             throw e;
         }
     }
@@ -179,6 +187,18 @@ public class RmqModule {
 
     public void queueDeclare(String queue, boolean durable, boolean exclusive, boolean autoDelete, Map<String, Object> arguments) throws IOException {
         channel.queueDeclare(queue, durable, exclusive, autoDelete, arguments);
+    }
+
+    public AMQP.Queue.DeleteOk queueDelete(String queue) throws IOException {
+        return this.channel.queueDelete(queue);
+    }
+
+    public AMQP.Queue.DeleteOk queueDelete(String queue, boolean ifUnused, boolean ifEmpty) throws IOException {
+        return this.channel.queueDelete(queue, ifUnused, ifEmpty);
+    }
+
+    public void queueDeleteNoWait(String queue, boolean ifUnused, boolean ifEmpty) throws IOException {
+        this.channel.queueDeleteNoWait(queue, ifUnused, ifEmpty);
     }
 
     /**
@@ -329,5 +349,78 @@ public class RmqModule {
             log.warn("Error while shutdown Scheduler.", e);
         }
         log.info("RMQ Module Closed");
+    }
+
+    private void onConnected() {
+        try {
+            if (onConnected != null) {
+                onConnected.run();
+            }
+        } catch (Exception e) {
+            log.warn("Err Occurs", e);
+        }
+    }
+
+    private void onDisconnected() {
+        try {
+            if (onDisconnected != null) {
+                onDisconnected.run();
+            }
+        } catch (Exception e) {
+            log.warn("Err Occurs", e);
+        }
+    }
+
+    //////////////////////////////////
+    // !! RMQ Stream 전용 메서드 !! //
+    //////////////////////////////////
+
+    /**
+     * 지정된 이름의 메시지 스트림 큐를 생성한다.
+     *
+     * @param queueName      생성할 큐의 이름
+     * @param maxLengthBytes 큐의 최대 총 크기(바이트)
+     * @param maxAge         메시지 수명. 가능한 단위: Y, M, D, h, m, s. (e.g. 7D = 일주일)
+     * @throws IOException 큐 생성에 실패한 경우
+     */
+    public void queueDeclareAsStream(String queueName, String maxAge, Long maxLengthBytes, Long streamMaxSegmentSizeBytes) throws IOException {
+        Map<String, Object> arguments = new HashMap<>();
+        arguments.put("x-queue-type", "stream");
+        if (maxAge != null) {
+            arguments.put("x-max-age", maxAge);
+        }
+        if (maxLengthBytes != null) {
+            arguments.put("x-max-length-bytes", maxLengthBytes);
+        }
+        if (streamMaxSegmentSizeBytes != null) {
+            arguments.put("x-stream-max-segment-size-bytes", streamMaxSegmentSizeBytes);
+        }
+        this.queueDeclare(queueName, arguments);
+    }
+
+    public void queueDeclareAsStream(String queueName) throws IOException {
+        queueDeclareAsStream(queueName, null, null, null);
+    }
+
+    /**
+     * @param streamOffset "first" - 먼저 스트림에서 사용 가능한 첫 번째 메시지부터 소비를 시작
+     *                     "last" - 마지막으로 작성된 메시지 덩어리에서 소비를 시작
+     *                     "next" - 스트림 끝부터 소비를 시작
+     *                     Integer - 특정 오프셋에서 시작
+     *                     Date - 주어진 시간부터 시작
+     *                     null - "next"와 동일
+     */
+    @Synchronized
+    public void registerConsumerAsStream(String queueName, DeliverCallback deliverCallback, @NonNull Object streamOffset) throws IOException {
+        channel.basicConsume(queueName, false, Map.of("x-stream-offset", streamOffset), deliverCallback, consumerTag -> {
+        });
+    }
+
+    public void registerStringConsumerAsStream(String queueName, Consumer<String> msgCallback) throws IOException {
+        registerConsumerAsStream(queueName, (s, delivery) -> msgCallback.accept(new String(delivery.getBody(), StandardCharsets.UTF_8)), "next");
+    }
+
+    public void registerByteConsumerAsStream(String queueName, Consumer<byte[]> msgCallback) throws IOException {
+        registerConsumerAsStream(queueName, (s, delivery) -> msgCallback.accept(delivery.getBody()), "next");
     }
 }

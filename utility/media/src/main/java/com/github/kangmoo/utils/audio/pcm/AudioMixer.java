@@ -8,12 +8,6 @@ import java.nio.ByteOrder;
  *
  * @author kangmoo Heo
  */
-
-/**
- * Mix PCM Data
- *
- * @author kangmoo Heo
- */
 public class AudioMixer {
 
     /**
