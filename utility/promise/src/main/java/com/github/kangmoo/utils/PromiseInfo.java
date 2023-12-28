@@ -1,5 +1,6 @@
 package com.github.kangmoo.utils;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
@@ -14,10 +15,12 @@ import java.util.function.Consumer;
 @Slf4j
 public class PromiseInfo {
     private static final PromiseManager promiseManager = PromiseManager.getInstance();
+    @Getter
     private final String key;
     private final Runnable onSuccess;
     private final Runnable onFail;
     private final Runnable onTimeout;
+    @Getter
     private final long timeoutMs;
     private final Consumer<Throwable> onError;
     private final Map<String, Object> memRepo = new ConcurrentHashMap<>();
@@ -66,14 +69,6 @@ public class PromiseInfo {
         } finally {
             promiseManager.removePromiseInfo(key);
         }
-    }
-
-    long getTimeoutMs() {
-        return timeoutMs;
-    }
-
-    public String getKey() {
-        return key;
     }
 
     public void putObject(String key, Object value) {
