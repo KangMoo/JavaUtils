@@ -21,15 +21,18 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
  */
 public class PromiseManager {
     private static final Logger log = getLogger(PromiseManager.class);
-    private static final PromiseManager INSTANCE = new PromiseManager();
     private static final Map<String, PromiseInfo> promiseInfos = new ConcurrentHashMap<>();
     private static ScheduledExecutorService executors = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors(), new BasicThreadFactory.Builder().namingPattern("Promise_Executor-%d").build());
 
     private PromiseManager() {
     }
 
+    private static class SingletonInstance {
+        private static final PromiseManager INSTANCE = new PromiseManager();
+    }
+
     public static PromiseManager getInstance() {
-        return INSTANCE;
+        return SingletonInstance.INSTANCE;
     }
 
     public static void setThreadCount(int threadCount) {
@@ -74,7 +77,7 @@ public class PromiseManager {
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                    Thread.currentThread().interrupt();
                 }
             }
         }
