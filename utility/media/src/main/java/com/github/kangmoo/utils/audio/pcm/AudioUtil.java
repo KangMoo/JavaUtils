@@ -4,6 +4,7 @@ import javax.sound.sampled.*;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Arrays;
 
 import static javax.sound.sampled.AudioFormat.Encoding;
 
@@ -12,10 +13,6 @@ import static javax.sound.sampled.AudioFormat.Encoding;
  */
 public class AudioUtil {
     private AudioUtil() {
-    }
-
-    public static byte[] getWavHeaderByte(Encoding encoding, float sampleRate, int sampleSizeInBits, int channels, int frameSize, float frameRate, boolean bigEndian, int audioDataLength) {
-        return getWavHeaderByte(new AudioFormat(encoding, sampleRate, sampleSizeInBits, channels, frameSize, frameRate, bigEndian), audioDataLength);
     }
 
     public static byte[] getWavHeaderByte(AudioFormat format, int audioDataLength) {
@@ -40,6 +37,14 @@ public class AudioUtil {
         buffer.putInt(audioDataLength); // Subchunk2Size
 
         return buffer.array();
+    }
+
+    public static byte[] getWavHeaderByte(float sampleRate, int sampleSizeInBits, int channels, boolean signed, boolean bigEndian, int audioDataLength){
+        return getWavHeaderByte(new AudioFormat(sampleRate, sampleSizeInBits, channels, signed, bigEndian), audioDataLength);
+    }
+
+    public static byte[] getWavHeaderByte(Encoding encoding, float sampleRate, int sampleSizeInBits, int channels, int frameSize, float frameRate, boolean bigEndian, int audioDataLength) {
+        return getWavHeaderByte(new AudioFormat(encoding, sampleRate, sampleSizeInBits, channels, frameSize, frameRate, bigEndian), audioDataLength);
     }
 
     public static void resample(File audioFile, File outputFile, int sampleRate) throws UnsupportedAudioFileException, IOException {
@@ -97,42 +102,30 @@ public class AudioUtil {
         AudioSystem.write(mixedStream, AudioFileFormat.Type.WAVE, mixedFile);
     }
 
-    private static class MixingInputStream extends InputStream {
-        private final AudioInputStream stream1;
-        private final AudioInputStream stream2;
-
-        public MixingInputStream(AudioInputStream stream1, AudioInputStream stream2) {
-            this.stream1 = stream1;
-            this.stream2 = stream2;
+    public static byte[] convert16bitTo8bit(byte[] pcm16bit) {
+        if (pcm16bit == null) {
+            throw new NullPointerException("pcm16bit is null");
         }
 
-        @Override
-        public int read() throws IOException {
-            int byte1 = stream1.read();
-            int byte2 = stream2.read();
-
-            if (byte1 == -1 || byte2 == -1) return -1;
-
-            return (byte1 + byte2) / 2;
+        if (pcm16bit.length <= 1) {
+            return new byte[0];
+        } else if (pcm16bit.length % 2 != 0) {
+            pcm16bit = Arrays.copyOf(pcm16bit, pcm16bit.length - 1);
         }
 
-        @Override
-        public int read(byte[] b, int off, int len) throws IOException {
-            byte[] tempBuffer1 = new byte[len];
-            byte[] tempBuffer2 = new byte[len];
+        byte[] pcm8bit = new byte[pcm16bit.length / 2];
 
-            int read1 = stream1.read(tempBuffer1, 0, len);
-            int read2 = stream2.read(tempBuffer2, 0, len);
+        for (int i = 0; i < pcm8bit.length; i++) {
+            int high = pcm16bit[2 * i + 1];
+            int low = pcm16bit[2 * i];
+            int sample16bit = (high << 8) | (low & 0xFF);
 
-            if (read1 == -1 || read2 == -1) return -1;
+            // 16비트 샘플 값을 -32768 ~ 32767 범위에서 0 ~ 255 범위로 스케일링
+            int sample8bit = (sample16bit + 32768) / 256;
 
-            for (int i = 0; i < len; i++) {
-                int byte1 = tempBuffer1[i];
-                int byte2 = tempBuffer2[i];
-                b[i] = (byte) ((byte1 + byte2) / 2);
-            }
-
-            return len;
+            pcm8bit[i] = (byte) sample8bit;
         }
+
+        return pcm8bit;
     }
 }
