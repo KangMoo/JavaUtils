@@ -1,12 +1,12 @@
 package com.github.kangmoo.utils.audio.pcm;
 
-import javax.sound.sampled.*;
-import java.io.*;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.Arrays;
-
-import static javax.sound.sampled.AudioFormat.Encoding;
 
 /**
  * @author kangmoo Heo
@@ -27,7 +27,7 @@ public class AudioUtil {
         buffer.put("WAVE".getBytes());
         buffer.put("fmt ".getBytes());
         buffer.putInt(16); // Subchunk1Size for PCM
-        buffer.putShort((short) (format.getEncoding() == Encoding.PCM_SIGNED ? 1 : 3)); // AudioFormat
+        buffer.putShort((short) (format.getEncoding() == AudioFormat.Encoding.PCM_SIGNED ? 1 : 3)); // AudioFormat
         buffer.putShort((short) format.getChannels());
         buffer.putInt((int) format.getSampleRate());
         buffer.putInt(byteRate);
@@ -39,93 +39,123 @@ public class AudioUtil {
         return buffer.array();
     }
 
-    public static byte[] getWavHeaderByte(float sampleRate, int sampleSizeInBits, int channels, boolean signed, boolean bigEndian, int audioDataLength){
+    public static byte[] getWavHeaderByte(float sampleRate, int sampleSizeInBits, int channels, boolean signed, boolean bigEndian, int audioDataLength) {
         return getWavHeaderByte(new AudioFormat(sampleRate, sampleSizeInBits, channels, signed, bigEndian), audioDataLength);
     }
 
-    public static byte[] getWavHeaderByte(Encoding encoding, float sampleRate, int sampleSizeInBits, int channels, int frameSize, float frameRate, boolean bigEndian, int audioDataLength) {
+    public static byte[] getWavHeaderByte(AudioFormat.Encoding encoding, float sampleRate, int sampleSizeInBits, int channels, int frameSize, float frameRate, boolean bigEndian, int audioDataLength) {
         return getWavHeaderByte(new AudioFormat(encoding, sampleRate, sampleSizeInBits, channels, frameSize, frameRate, bigEndian), audioDataLength);
     }
 
-    public static void resample(File audioFile, File outputFile, int sampleRate) throws UnsupportedAudioFileException, IOException {
-        AudioInputStream stream = AudioSystem.getAudioInputStream(audioFile);
-        AudioFormat format = stream.getFormat();
-        AudioFormat newFormat = new AudioFormat(format.getEncoding(), sampleRate, format.getSampleSizeInBits(), format.getChannels(), format.getFrameSize(), sampleRate, format.isBigEndian());
-        AudioInputStream newStream = AudioSystem.getAudioInputStream(newFormat, stream);
-        AudioSystem.write(newStream, AudioFileFormat.Type.WAVE, outputFile);
+    public static AudioFormat getAudioFormatFromWavHeader(byte[] wavHeader) {
+        ByteBuffer buffer = ByteBuffer.wrap(wavHeader);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
+
+        buffer.position(20);
+        short audioFormat = buffer.getShort();
+        short channels = buffer.getShort();
+        int sampleRate = buffer.getInt();
+        buffer.getInt(); // byte rate
+        short blockAlign = buffer.getShort();
+        short sampleSizeInBits = buffer.getShort();
+
+        boolean bigEndian = false;
+        AudioFormat.Encoding encoding = (audioFormat == 1) ? AudioFormat.Encoding.PCM_SIGNED : AudioFormat.Encoding.PCM_UNSIGNED;
+
+        return new AudioFormat(encoding, sampleRate, sampleSizeInBits, channels, blockAlign, sampleRate, bigEndian);
     }
 
-    public static void joinAudioFile(File wavFile1, File wavFile2, File mixedFile) throws UnsupportedAudioFileException, IOException {
-        AudioInputStream stream1 = AudioSystem.getAudioInputStream(wavFile1);
-        AudioInputStream stream2 = AudioSystem.getAudioInputStream(wavFile2);
-
-        AudioInputStream mixedStream = new AudioInputStream(
-                new SequenceInputStream(stream1, stream2),
-                stream1.getFormat(),
-                stream1.getFrameLength() + stream2.getFrameLength());
-
-        AudioSystem.write(mixedStream, AudioFileFormat.Type.WAVE, mixedFile); // 혼합된 파일 저장
-    }
-
-    public static void mixAudioFile(File wavFile1, File wavFile2, File mixedFile) throws UnsupportedAudioFileException, IOException {
-        AudioInputStream stream1 = AudioSystem.getAudioInputStream(wavFile1);
-        AudioInputStream stream2 = AudioSystem.getAudioInputStream(wavFile2);
-
-        AudioFormat format = stream1.getFormat();
-        if (!format.equals(stream2.getFormat())) {
-            throw new IllegalArgumentException("Audio Formats must be same");
+    public static byte[] convertFormat(byte[] bytes, AudioFormat from, AudioFormat to) throws IOException {
+        if (from.equals(to)) return bytes;
+        try (AudioInputStream fromStream = new AudioInputStream(new ByteArrayInputStream(bytes), from, bytes.length); AudioInputStream toStream = AudioSystem.getAudioInputStream(to, fromStream)) {
+            return toStream.readAllBytes();
         }
+    }
 
-        byte[] buffer1 = new byte[1024];
-        byte[] buffer2 = new byte[1024];
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    public static byte[] mixAudio(byte[] bytes1, byte[] bytes2, int bitDepth) {
+        ByteBuffer buffer1 = ByteBuffer.wrap(bytes1).order(ByteOrder.LITTLE_ENDIAN);
+        ByteBuffer buffer2 = ByteBuffer.wrap(bytes2).order(ByteOrder.LITTLE_ENDIAN);
+        int bufferLength = Math.max(buffer1.remaining(), buffer2.remaining());
+        ByteBuffer resultBuffer = ByteBuffer.allocate(bufferLength).order(ByteOrder.LITTLE_ENDIAN);
 
-        while (true) {
-            int read1 = stream1.read(buffer1, 0, buffer1.length);
-            int read2 = stream2.read(buffer2, 0, buffer2.length);
-
-            if (read1 == -1 || read2 == -1) {
+        int bytesPerSample = bitDepth / 8;
+        for (int i = 0; i < bufferLength; i += bytesPerSample) {
+            try {
+                long sample1 = buffer1.remaining() > i + bytesPerSample ? getSample(buffer1, i, bytesPerSample) : 0;
+                long sample2 = buffer2.remaining() > i + bytesPerSample ? getSample(buffer2, i, bytesPerSample) : 0;
+                long mixedSample = mixSamples(sample1, sample2, bytesPerSample);
+                putSample(resultBuffer, i, mixedSample, bytesPerSample);
+            } catch (Exception e) {
                 break;
             }
-
-            for (int i = 0; i < Math.min(read1, read2); i++) {
-                buffer1[i] = (byte) ((buffer1[i] + buffer2[i]) / 2);
-            }
-
-            outputStream.write(buffer1, 0, Math.min(read1, read2));
         }
 
-        byte[] mixedBytes = outputStream.toByteArray();
-        ByteArrayInputStream mixedInput = new ByteArrayInputStream(mixedBytes);
-        AudioInputStream mixedStream = new AudioInputStream(mixedInput, format, mixedBytes.length / format.getFrameSize());
-
-        AudioSystem.write(mixedStream, AudioFileFormat.Type.WAVE, mixedFile);
+        return resultBuffer.array();
     }
 
-    public static byte[] convert16bitTo8bit(byte[] pcm16bit) {
-        if (pcm16bit == null) {
-            throw new NullPointerException("pcm16bit is null");
+    public static AudioInputStream mixAudio(AudioInputStream stream1, AudioInputStream stream2, AudioFormat audioFormat) throws IOException {
+        stream1 = AudioSystem.getAudioInputStream(audioFormat, stream1);
+        stream2 = AudioSystem.getAudioInputStream(audioFormat, stream2);
+
+        byte[] bytes1 = stream1.readAllBytes();
+        byte[] bytes2 = stream2.readAllBytes();
+
+        int bitDepth = audioFormat.getSampleSizeInBits();
+        ByteBuffer buffer1 = ByteBuffer.wrap(bytes1).order(ByteOrder.LITTLE_ENDIAN);
+        ByteBuffer buffer2 = ByteBuffer.wrap(bytes2).order(ByteOrder.LITTLE_ENDIAN);
+        int bufferLength = Math.max(buffer1.remaining(), buffer2.remaining());
+        ByteBuffer resultBuffer = ByteBuffer.allocate(bufferLength).order(ByteOrder.LITTLE_ENDIAN);
+
+        int bytesPerSample = bitDepth / 8;
+        for (int i = 0; i < bufferLength; i += bytesPerSample) {
+            try {
+                long sample1 = buffer1.remaining() > i + bytesPerSample ? getSample(buffer1, i, bytesPerSample) : 0;
+                long sample2 = buffer2.remaining() > i + bytesPerSample ? getSample(buffer2, i, bytesPerSample) : 0;
+                long mixedSample = mixSamples(sample1, sample2, bytesPerSample);
+                putSample(resultBuffer, i, mixedSample, bytesPerSample);
+            } catch (Exception e) {
+                break;
+            }
         }
 
-        if (pcm16bit.length <= 1) {
-            return new byte[0];
-        } else if (pcm16bit.length % 2 != 0) {
-            pcm16bit = Arrays.copyOf(pcm16bit, pcm16bit.length - 1);
+        byte[] mixedBytes = resultBuffer.array();
+
+        ByteArrayInputStream mixedInput = new ByteArrayInputStream(mixedBytes);
+        return new AudioInputStream(mixedInput, audioFormat, mixedBytes.length);
+    }
+
+    private static long getSample(ByteBuffer buffer, int index, int byteSize) {
+        if (byteSize > 8) throw new IllegalArgumentException("byteSize must be less than 8");
+        long sample = 0;
+        for (int i = 0; i < byteSize; i++) {
+            sample |= (buffer.get(index + i) & 0xFFL) << (8 * i);
         }
 
-        byte[] pcm8bit = new byte[pcm16bit.length / 2];
-
-        for (int i = 0; i < pcm8bit.length; i++) {
-            int high = pcm16bit[2 * i + 1];
-            int low = pcm16bit[2 * i];
-            int sample16bit = (high << 8) | (low & 0xFF);
-
-            // 16비트 샘플 값을 -32768 ~ 32767 범위에서 0 ~ 255 범위로 스케일링
-            int sample8bit = (sample16bit + 32768) / 256;
-
-            pcm8bit[i] = (byte) sample8bit;
+        if ((sample & (1L << (byteSize * 8 - 1))) != 0) {
+            for (int i = byteSize * 8; i < 64; i++) {
+                sample |= 1L << i;
+            }
         }
+        return sample;
+    }
 
-        return pcm8bit;
+    private static void putSample(ByteBuffer buffer, int index, long value, int byteSize) {
+        if (byteSize > 8) throw new IllegalArgumentException("byteSize must be less than 8");
+        for (int i = 0; i < byteSize; i++) {
+            buffer.put(index + i, (byte) ((value >> (8 * i)) & 0xFF));
+        }
+    }
+
+    private static long mixSamples(long sample1, long sample2, int byteSize) {
+        long mixedSample = (sample1 / 2) + (sample2 / 2);
+        long maxSampleValue = (1L << (byteSize * 8 - 1)) - 1;
+        long minSampleValue = -(1L << (byteSize * 8 - 1));
+        if (mixedSample > maxSampleValue) {
+            return maxSampleValue;
+        } else if (mixedSample < minSampleValue) {
+            return minSampleValue;
+        } else {
+            return mixedSample;
+        }
     }
 }
