@@ -30,6 +30,7 @@ public abstract class ConfigReader {
         }
 
         this.filePath = filePath;
+        beforeFieldSetting();
         fieldSetting();
         afterFieldSetting();
         log.info("Config init done");
@@ -37,6 +38,13 @@ public abstract class ConfigReader {
     }
 
     protected abstract void fieldSetting() throws IOException, NoSuchFieldException;
+
+    /**
+     * 필드값 주입 이전에 수행되는 메서드.
+     * 필드값 세팅 전 추가적인 동작이 필요한 경우 오버라이딩하여 사용.
+     */
+    protected void beforeFieldSetting() {
+    }
 
     /**
      * 필드값 주입 이후에 수행되는 메서드.
@@ -56,6 +64,7 @@ public abstract class ConfigReader {
         this.fileWatcher = new FileWatcher(filePath);
         this.fileWatcher.startWatch(() -> {
             try {
+                beforeFieldSetting();
                 fieldSetting();
                 afterFieldSetting();
             } catch (Exception e) {
