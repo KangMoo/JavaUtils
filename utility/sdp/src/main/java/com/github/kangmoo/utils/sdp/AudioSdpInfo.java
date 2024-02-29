@@ -66,7 +66,12 @@ public class AudioSdpInfo {
         this.ip = ip;
         try {
             sdp.getOrigin().setAddress(ip);
-            Optional.ofNullable(this.md.getConnection()).orElse(this.sdp.getConnection()).setAddress(ip);
+            if (this.sdp.getConnection() != null) {
+                this.sdp.getConnection().setAddress(ip);
+            }
+            if (this.md.getConnection() != null) {
+                this.md.getConnection().setAddress(ip);
+            }
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
