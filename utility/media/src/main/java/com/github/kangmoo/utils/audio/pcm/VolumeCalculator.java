@@ -17,7 +17,7 @@ public class VolumeCalculator {
      * @return 평균 볼륨 레벨 (0 ~ 100)
      * @throws IllegalArgumentException 인자 값이 null이거나 비트 수가 잘못된 경우 발생
      */
-    public static int calculateVolumeLevel(byte[] bytes, int bitsPerSample) throws IllegalArgumentException {
+    public static double calculateVolumeLevel(byte[] bytes, int bitsPerSample) throws IllegalArgumentException {
         if (bytes == null) {
             throw new IllegalArgumentException("PCM data is null.");
         }
@@ -36,7 +36,7 @@ public class VolumeCalculator {
         double rms = Math.sqrt(totalSquared / (bytes.length / (double) bytesPerSample));
 
         double maxRms = Math.pow(2, bitsPerSample - 1.0);
-        return (int) (rms / maxRms * 100);
+        return (rms / maxRms * 100);
     }
 
     /**
