@@ -42,6 +42,12 @@ public class IniConfigInjector {
                     Class<?> fieldType = field.getType();
                     if (String.class.equals(fieldType)) {
                         field.set(target, value);
+                    } else if (char.class.equals(fieldType) || Character.class.equals(fieldType)) {
+                        field.set(target, value.charAt(0));
+                    } else if (byte.class.equals(fieldType) || Byte.class.equals(fieldType)) {
+                        field.set(target, Byte.parseByte(value));
+                    } else if (short.class.equals(fieldType) || Short.class.equals(fieldType)) {
+                        field.set(target, Short.parseShort(value));
                     } else if (int.class.equals(fieldType) || Integer.class.equals(fieldType)) {
                         field.set(target, Integer.parseInt(value));
                     } else if (long.class.equals(fieldType) || Long.class.equals(fieldType)) {
