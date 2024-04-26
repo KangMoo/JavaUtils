@@ -11,13 +11,10 @@ public class SysEnvInjector {
         Field[] fields = target.getClass().getDeclaredFields();
         for (Field field : fields) {
             SysEnv annotation = field.getAnnotation(SysEnv.class);
-            if (Objects.isNull(annotation)) {
-                continue;
-            }
+            if (Objects.isNull(annotation)) continue;
+
             String envVal = System.getenv(annotation.value());
-            if (envVal == null || envVal.isEmpty()) {
-                continue;
-            }
+            if (envVal == null || envVal.isEmpty()) continue;
 
             field.setAccessible(true);
             try {

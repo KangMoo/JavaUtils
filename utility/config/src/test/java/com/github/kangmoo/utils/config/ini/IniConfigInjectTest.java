@@ -3,7 +3,6 @@ package com.github.kangmoo.utils.config.ini;
 import com.github.kangmoo.utils.config.ConfigValue;
 import lombok.Data;
 import org.ini4j.Ini;
-import org.ini4j.Profile;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;

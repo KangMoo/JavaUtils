@@ -26,53 +26,53 @@ public class IniConfigInjector {
 
         for (Field field : fields) {
             ConfigValue annotation = field.getAnnotation(ConfigValue.class);
-            if (Objects.nonNull(annotation)) {
-                String configKey = annotation.value();
-                String[] tokens = configKey.split("\\.");
-                String sectionName = tokens[0];
-                String optionName = tokens[1];
+            if (Objects.isNull(annotation)) continue;
 
-                Section section = ini.get(sectionName);
-                if (section == null) continue;
-                String value = section.get(optionName);
-                if (value == null) continue;
+            String configKey = annotation.value();
+            String[] tokens = configKey.split("\\.");
+            String sectionName = tokens[0];
+            String optionName = tokens[1];
 
-                field.setAccessible(true);
-                try {
-                    Class<?> fieldType = field.getType();
-                    if (String.class.equals(fieldType)) {
-                        field.set(target, value);
-                    } else if (char.class.equals(fieldType) || Character.class.equals(fieldType)) {
-                        field.set(target, value.charAt(0));
-                    } else if (byte.class.equals(fieldType) || Byte.class.equals(fieldType)) {
-                        field.set(target, Byte.parseByte(value));
-                    } else if (short.class.equals(fieldType) || Short.class.equals(fieldType)) {
-                        field.set(target, Short.parseShort(value));
-                    } else if (int.class.equals(fieldType) || Integer.class.equals(fieldType)) {
-                        field.set(target, Integer.parseInt(value));
-                    } else if (long.class.equals(fieldType) || Long.class.equals(fieldType)) {
-                        field.set(target, Long.parseLong(value));
-                    } else if (double.class.equals(fieldType) || Double.class.equals(fieldType)) {
-                        field.set(target, Double.parseDouble(value));
-                    } else if (float.class.equals(fieldType) || Float.class.equals(fieldType)) {
-                        field.set(target, Float.parseFloat(value));
-                    } else if (boolean.class.equals(fieldType) || Boolean.class.equals(fieldType)) {
-                        field.set(target, Boolean.parseBoolean(value));
-                    } else {
-                        throw new UnsupportedOperationException("Unsupported field type: " + fieldType);
-                    }
-                    try {
-                        log.info("Config injected. [{}.{}] <- [{}]", target.getClass().getSimpleName(), field.getName(), field.get(target));
-                    } catch (Exception e) {
-                        // Do nothing
-                    }
-                } catch (Exception e) {
-                    NoSuchFieldException exception = new NoSuchFieldException("Fail to inject value. [Field : " + field.getName() + "], [ConfigValue : " + configKey + "]");
-                    exception.initCause(e);
-                    throw exception;
-                } finally {
-                    field.setAccessible(false);
+            Section section = ini.get(sectionName);
+            if (section == null) continue;
+            String value = section.get(optionName);
+            if (value == null) continue;
+
+            field.setAccessible(true);
+            try {
+                Class<?> fieldType = field.getType();
+                if (String.class.equals(fieldType)) {
+                    field.set(target, value);
+                } else if (char.class.equals(fieldType) || Character.class.equals(fieldType)) {
+                    field.set(target, value.charAt(0));
+                } else if (byte.class.equals(fieldType) || Byte.class.equals(fieldType)) {
+                    field.set(target, Byte.parseByte(value));
+                } else if (short.class.equals(fieldType) || Short.class.equals(fieldType)) {
+                    field.set(target, Short.parseShort(value));
+                } else if (int.class.equals(fieldType) || Integer.class.equals(fieldType)) {
+                    field.set(target, Integer.parseInt(value));
+                } else if (long.class.equals(fieldType) || Long.class.equals(fieldType)) {
+                    field.set(target, Long.parseLong(value));
+                } else if (double.class.equals(fieldType) || Double.class.equals(fieldType)) {
+                    field.set(target, Double.parseDouble(value));
+                } else if (float.class.equals(fieldType) || Float.class.equals(fieldType)) {
+                    field.set(target, Float.parseFloat(value));
+                } else if (boolean.class.equals(fieldType) || Boolean.class.equals(fieldType)) {
+                    field.set(target, Boolean.parseBoolean(value));
+                } else {
+                    throw new UnsupportedOperationException("Unsupported field type: " + fieldType);
                 }
+                try {
+                    log.info("Config injected. [{}.{}] <- [{}]", target.getClass().getSimpleName(), field.getName(), field.get(target));
+                } catch (Exception e) {
+                    // Do nothing
+                }
+            } catch (Exception e) {
+                NoSuchFieldException exception = new NoSuchFieldException("Fail to inject value. [Field : " + field.getName() + "], [ConfigValue : " + configKey + "]");
+                exception.initCause(e);
+                throw exception;
+            } finally {
+                field.setAccessible(false);
             }
         }
     }
