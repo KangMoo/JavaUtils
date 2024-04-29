@@ -31,59 +31,65 @@ import java.util.function.Consumer;
 @Slf4j
 @Getter
 public class RmqModule {
-    private ScheduledExecutorService connectRetryThread;
+    private static final BasicThreadFactory THREAD_FACTORY = new BasicThreadFactory.Builder().namingPattern("RMQ_SENDER_%d").daemon(true).build();
+
+    // RabbitMQ 서버와의 연결을 재시도하는 간격(단위:ms)
+    private static final int RECOVERY_INTERVAL = 1000;
+    // RabbitMQ 서버에게 전송하는 heartbeat 요청의 간격(단위:sec)
+    private static final int REQUESTED_HEARTBEAT = 5;
+    // RabbitMQ 서버와 연결을 시도하는 최대 시간(단위:ms)
+    private static final int CONNECTION_TIMEOUT = 2000;
 
     private final String host;
     private final String userName;
     private final String password;
-    private final int port;
-    private final int bufferCount;
-    private final int recoveryInterval; // RabbitMQ 서버와의 연결을 재시도하는 간격(단위:ms)
-    private final int requestedHeartbeat; // RabbitMQ 서버에게 전송하는 heartbeat 요청의 간격(단위:sec)
-    private final int connectionTimeout; // RabbitMQ 서버와 연결을 시도하는 최대 시간(단위:ms)
-    private final int qos;
-    @Setter
-    private Runnable onConnected;
-    @Setter
-    private Runnable onDisconnected;
+    private final Integer port;
 
-    protected final ArrayBlockingQueue<Runnable> queue;
+    private final ArrayBlockingQueue<Runnable> sendQueue;
+    private final ArrayBlockingQueue<Runnable> recvQueue;
+
     private ScheduledExecutorService rmqSender;
+    private ScheduledExecutorService rmqReceiver;
+
+    @Setter
+    private int qos = 100;
 
     // RabbitMQ 서버와의 연결과 채널을 관리하기 위한 변수
-    protected Connection connection;
-    protected Channel channel;
+    private Connection connection;
+    private Channel channel;
 
-    RmqModule(String host, String userName, String password, int port, int bufferCount, int recoveryInterval, int requestedHeartbeat, int connectionTimeout, Runnable onConnected, Runnable onDisconnected, int qos) {
+    /**
+     * @param host        RabbitMQ 서버의 호스트
+     * @param userName    RabbitMQ 서버에 연결할 사용자 이름
+     * @param password    해당 사용자의 비밀번호
+     * @param port        RabbitMQ 서버 포트
+     * @param bufferCount RMQ Send/Recv Buffer 크기
+     */
+    public RmqModule(String host, String userName, String password, Integer port, int bufferCount) {
         this.host = host;
         this.userName = userName;
         this.password = password;
         this.port = port;
-        this.bufferCount = bufferCount;
-        this.queue = new ArrayBlockingQueue<>(this.bufferCount);
-        this.recoveryInterval = recoveryInterval;
-        this.requestedHeartbeat = requestedHeartbeat;
-        this.connectionTimeout = connectionTimeout;
-        this.onConnected = onConnected;
-        this.onDisconnected = onDisconnected;
-        this.qos = qos;
+        this.sendQueue = new ArrayBlockingQueue<>(bufferCount);
+        this.recvQueue = new ArrayBlockingQueue<>(bufferCount);
     }
 
-    public static RmqModuleBuilder builder(String host, String userName, String password) {
-        return new RmqModuleBuilder(host, userName, password);
+    public RmqModule(String host, String userName, String password, int bufferCount) {
+        this(host, userName, password, null, bufferCount);
     }
 
     /**
      * RabbitMQ 서버에 연결을 수립하며 통신을 위한 채널을 생성하고, 연결에 대한 예외 처리기를 설정하고, 만약 연결이 복구 가능한 경우, 복구 리스너도 설정한다.
      * 연결과 채널이 성공적으로 수립되면 제공된 onConnected 콜백을, 연결에 실패하면 onDisconnected 콜백을 호출한다.
      *
+     * @param onConnected    연결과 채널이 성공적으로 수립되었을 때 호출되는 콜백함수
+     * @param onDisconnected 예기치 않은 연결 드라이버 예외가 발생했을 때 호출되는 콜백
      * @throws IOException      연결과 채널을 생성하는 동안 I/O 에러가 발생한 경우
      * @throws TimeoutException 연결과 채널을 생성하는 동안 타임아웃이 발생한 경우
      */
-    public void connect() throws IOException, TimeoutException {
+    public RmqModule connect(Runnable onConnected, Runnable onDisconnected) throws IOException, TimeoutException {
         if (isConnected()) {
-            log.warn("RMQ Already Connected");
-            return;
+            throw new IllegalStateException("RMQ Already Connected");
         }
 
         try {
@@ -93,19 +99,21 @@ public class RmqModule {
             factory.setHost(host);
             factory.setUsername(userName);
             factory.setPassword(password);
-            factory.setPort(port);
+            if (this.port != null) {
+                factory.setPort(this.port);
+            }
 
             // 자동 복구를 활성화하고, 네트워크 복구 간격, heartbeat 요청 간격, 연결 타임아웃 시간을 설정
             factory.setAutomaticRecoveryEnabled(true);
-            factory.setNetworkRecoveryInterval(recoveryInterval);
-            factory.setRequestedHeartbeat(requestedHeartbeat);
-            factory.setConnectionTimeout(connectionTimeout);
+            factory.setNetworkRecoveryInterval(RECOVERY_INTERVAL);
+            factory.setRequestedHeartbeat(REQUESTED_HEARTBEAT);
+            factory.setConnectionTimeout(CONNECTION_TIMEOUT);
 
             factory.setExceptionHandler(new DefaultExceptionHandler() {
                 @Override
                 public void handleUnexpectedConnectionDriverException(Connection con, Throwable exception) {
                     super.handleUnexpectedConnectionDriverException(con, exception);
-                    onDisconnected();
+                    onDisconnected.run();
                 }
             });
 
@@ -113,11 +121,11 @@ public class RmqModule {
             this.connection = factory.newConnection();
             ((Recoverable) connection).addRecoveryListener(new RecoveryListener() {
                 public void handleRecovery(Recoverable r) {
-                    onConnected();
+                    onConnected.run();
                 }
 
                 public void handleRecoveryStarted(Recoverable r) {
-                    onDisconnected();
+                    onDisconnected.run();
                 }
             });
 
@@ -129,11 +137,20 @@ public class RmqModule {
             } catch (Exception e) {
                 log.warn("Error while shutdown Scheduler.", e);
             }
-            this.rmqSender = Executors.newSingleThreadScheduledExecutor(new BasicThreadFactory.Builder().namingPattern("RMQ_SENDER_%d").daemon(true).build());
+            try {
+                if (this.rmqReceiver != null && !this.rmqReceiver.isShutdown()) {
+                    this.rmqReceiver.shutdown();
+                }
+            } catch (Exception e) {
+                log.warn("Error while shutdown Scheduler.", e);
+            }
+            this.rmqSender = Executors.newSingleThreadScheduledExecutor(THREAD_FACTORY);
+            this.rmqReceiver = Executors.newSingleThreadScheduledExecutor(THREAD_FACTORY);
+
             this.rmqSender.scheduleWithFixedDelay(() -> {
                 while (true) {
                     try {
-                        Runnable runnable = queue.poll();
+                        Runnable runnable = sendQueue.poll();
                         if (runnable == null) {
                             return;
                         }
@@ -143,32 +160,32 @@ public class RmqModule {
                     }
                 }
             }, 0, 10, TimeUnit.MILLISECONDS);
+
+            rmqReceiver.scheduleWithFixedDelay(() -> {
+                while (true) {
+                    try {
+                        Runnable runnable = recvQueue.poll();
+                        if (runnable == null) {
+                            return;
+                        }
+                        runnable.run();
+                    } catch (Exception e) {
+                        log.warn("Error Occurs", e);
+                    }
+                }
+            }, 0, 10, TimeUnit.MILLISECONDS);
+
             channel.basicQos(qos);
-            onConnected();
+            onConnected.run();
+            return this;
         } catch (Exception e) {
-            onDisconnected();
+            onDisconnected.run();
             throw e;
         }
     }
 
-    /**
-     * 비동기적으로 RabbitMQ 서버에 연결을 시도하고, 연결이 실패할 경우 1초 후에 재시도한다.
-     * 연결이 성공하면 onConnected 콜백을 호출하고, 연결 실패 시 onDisconnected 콜백을 호출한다.
-     * 본 메서드는 스레드 안전하게 동작한다.
-     */
-    @Synchronized
-    public void connectWithAsyncRetry() {
-        try {
-            if (this.connectRetryThread == null || this.connectRetryThread.isShutdown()) {
-                this.connectRetryThread = Executors.newSingleThreadScheduledExecutor(new BasicThreadFactory.Builder().namingPattern("RMQ_CONNECT_THREAD_%d").daemon(true).build());
-            }
-            connect();
-            this.connectRetryThread.shutdown();
-        } catch (Exception e) {
-            log.warn("Err Occurs while RMQ Connection", e);
-            close();
-            this.connectRetryThread.schedule(this::connectWithAsyncRetry, 1000, TimeUnit.MILLISECONDS);
-        }
+    public RmqModule connect() throws IOException, TimeoutException {
+        return this.connect(() -> log.debug("RabbitMQ Connected [{}]", host), () -> log.debug("RabbitMQ Disconnected [{}]", host));
     }
 
     /**
@@ -177,28 +194,19 @@ public class RmqModule {
      * @param queueName 생성할 큐의 이름
      * @throws IOException 큐 생성에 실패한 경우
      */
-    public void queueDeclare(String queueName) throws IOException {
+    public RmqModule queueDeclare(String queueName) throws IOException {
         this.queueDeclare(queueName, null);
+        return this;
     }
 
-    public void queueDeclare(String queueName, Map<String, Object> arguments) throws IOException {
-        channel.queueDeclare(queueName, true, false, false, arguments);
+    public RmqModule queueDeclare(String queueName, Map<String, Object> arguments) throws IOException {
+        channel.queueDeclare(queueName, false, false, false, arguments);
+        return this;
     }
 
-    public void queueDeclare(String queue, boolean durable, boolean exclusive, boolean autoDelete, Map<String, Object> arguments) throws IOException {
+    public RmqModule queueDeclare(String queue, boolean durable, boolean exclusive, boolean autoDelete, Map<String, Object> arguments) throws IOException {
         channel.queueDeclare(queue, durable, exclusive, autoDelete, arguments);
-    }
-
-    public AMQP.Queue.DeleteOk queueDelete(String queue) throws IOException {
-        return this.channel.queueDelete(queue);
-    }
-
-    public AMQP.Queue.DeleteOk queueDelete(String queue, boolean ifUnused, boolean ifEmpty) throws IOException {
-        return this.channel.queueDelete(queue, ifUnused, ifEmpty);
-    }
-
-    public void queueDeleteNoWait(String queue, boolean ifUnused, boolean ifEmpty) throws IOException {
-        this.channel.queueDeleteNoWait(queue, ifUnused, ifEmpty);
+        return this;
     }
 
     /**
@@ -207,14 +215,8 @@ public class RmqModule {
      * @param queueName 전송할 큐의 이름
      * @param message   전송할 메시지
      */
-    public void sendMessage(String queueName, String message) {
-        sendMessage(() -> {
-            try {
-                channel.basicPublish("", queueName, MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes());
-            } catch (Exception e) {
-                log.warn("Err Occurs", e);
-            }
-        });
+    public RmqModule sendMessage(String queueName, String message) {
+        return sendMessage(queueName, message.getBytes(StandardCharsets.UTF_8));
     }
 
     /**
@@ -224,15 +226,8 @@ public class RmqModule {
      * @param message    전송할 메시지
      * @param expiration 메시지의 만료 시간
      */
-    public void sendMessage(String queueName, String message, int expiration) {
-        sendMessage(() -> {
-            try {
-                AMQP.BasicProperties properties = new AMQP.BasicProperties.Builder().expiration(Integer.toString(expiration)).build();
-                channel.basicPublish("", queueName, properties, message.getBytes());
-            } catch (Exception e) {
-                log.warn("Err Occurs", e);
-            }
-        });
+    public RmqModule sendMessage(String queueName, String message, int expiration) {
+        return sendMessage(queueName, message.getBytes(StandardCharsets.UTF_8), expiration);
     }
 
 
@@ -242,8 +237,8 @@ public class RmqModule {
      * @param queueName 전송할 큐의 이름
      * @param message   전송할 메시지의 바이트 배열
      */
-    public void sendMessage(String queueName, byte[] message) {
-        sendMessage(() -> {
+    public RmqModule sendMessage(String queueName, byte[] message) {
+        return sendMessage(() -> {
             try {
                 channel.basicPublish("", queueName, MessageProperties.PERSISTENT_TEXT_PLAIN, message);
             } catch (Exception e) {
@@ -259,8 +254,8 @@ public class RmqModule {
      * @param message    전송할 메시지의 바이트 배열
      * @param expiration 메시지의 만료 시간
      */
-    public void sendMessage(String queueName, byte[] message, int expiration) {
-        sendMessage(() -> {
+    public RmqModule sendMessage(String queueName, byte[] message, int expiration) {
+        return sendMessage(() -> {
             try {
                 AMQP.BasicProperties properties = new AMQP.BasicProperties.Builder().expiration(Integer.toString(expiration)).build();
                 channel.basicPublish("", queueName, properties, message);
@@ -270,10 +265,11 @@ public class RmqModule {
         });
     }
 
-    private void sendMessage(Runnable runnable) {
-        if (!this.queue.offer(runnable)) {
+    private RmqModule sendMessage(Runnable runnable) {
+        if (!this.sendQueue.offer(runnable)) {
             log.warn("RMQ SND Queue full. Drop message.");
         }
+        return this;
     }
 
     /**
@@ -284,21 +280,16 @@ public class RmqModule {
      * @throws IOException 소비자 등록에 실패한 경우
      */
     @Synchronized
-    public void registerConsumer(String queueName, DeliverCallback deliverCallback, Map<String, Object> arguments) throws IOException {
-        channel.basicConsume(queueName, true, arguments, deliverCallback, consumerTag -> {
+    public RmqModule registerConsumer(String queueName, DeliverCallback deliverCallback, Map<String, Object> arguments) throws IOException {
+        channel.basicConsume(queueName, true, arguments, (s, delivery) -> recvQueue.add(() -> {
+            try {
+                deliverCallback.handle(s, delivery);
+            } catch (Exception e) {
+                log.warn("Error while handling message", e);
+            }
+        }), cancelCallback -> {
         });
-    }
-
-    /**
-     * 지정된 큐에 문자열 형태의 메시지를 처리할 소비자를 등록한다.
-     * 주로 텍스트 메시지를 받고 처리하는 경우에 사용한다.
-     *
-     * @param queueName   소비자를 등록할 큐의 이름
-     * @param msgCallback 메시지가 수신될 때 호출되는 콜백, 메시지는 문자열로 전달됨
-     * @throws IOException 소비자 등록에 실패한 경우
-     */
-    public void registerStringConsumer(String queueName, Consumer<String> msgCallback) throws IOException {
-        registerConsumer(queueName, (s, delivery) -> msgCallback.accept(new String(delivery.getBody(), StandardCharsets.UTF_8)), null);
+        return this;
     }
 
     /**
@@ -309,8 +300,8 @@ public class RmqModule {
      * @param msgCallback 메시지가 수신될 때 호출되는 콜백, 메시지는 바이트 배열로 전달됨
      * @throws IOException 소비자 등록에 실패한 경우
      */
-    public void registerByteConsumer(String queueName, Consumer<byte[]> msgCallback) throws IOException {
-        registerConsumer(queueName, (s, delivery) -> msgCallback.accept(delivery.getBody()), null);
+    public RmqModule registerConsumer(String queueName, Consumer<byte[]> msgCallback) throws IOException {
+        return this.registerConsumer(queueName, (s, delivery) -> msgCallback.accept(delivery.getBody()), null);
     }
 
     public boolean isConnected() {
@@ -324,7 +315,7 @@ public class RmqModule {
      * 연결이나 채널 종료 과정에서 오류가 발생하면 로그에 출력한다.
      */
     @Synchronized
-    public void close() {
+    public RmqModule close() {
         try {
             if (this.channel != null && this.channel.isOpen()) {
                 this.channel.close();
@@ -349,26 +340,7 @@ public class RmqModule {
             log.warn("Error while shutdown Scheduler.", e);
         }
         log.info("RMQ Module Closed");
-    }
-
-    private void onConnected() {
-        try {
-            if (onConnected != null) {
-                onConnected.run();
-            }
-        } catch (Exception e) {
-            log.warn("Err Occurs", e);
-        }
-    }
-
-    private void onDisconnected() {
-        try {
-            if (onDisconnected != null) {
-                onDisconnected.run();
-            }
-        } catch (Exception e) {
-            log.warn("Err Occurs", e);
-        }
+        return this;
     }
 
     //////////////////////////////////
@@ -378,12 +350,13 @@ public class RmqModule {
     /**
      * 지정된 이름의 메시지 스트림 큐를 생성한다.
      *
-     * @param queueName      생성할 큐의 이름
-     * @param maxLengthBytes 큐의 최대 총 크기(바이트)
-     * @param maxAge         메시지 수명. 가능한 단위: Y, M, D, h, m, s. (e.g. 7D = 일주일)
+     * @param queueName                 생성할 큐의 이름
+     * @param maxAge                    메시지 수명. 가능한 단위: Y, M, D, h, m, s. (e.g. 7D = 일주일)
+     * @param maxLengthBytes            큐의 최대 총 크기(바이트)
+     * @param streamMaxSegmentSizeBytes 스트림의 최대 세그먼트 크기(바이트)
      * @throws IOException 큐 생성에 실패한 경우
      */
-    public void queueDeclareAsStream(String queueName, String maxAge, Long maxLengthBytes, Long streamMaxSegmentSizeBytes) throws IOException {
+    public RmqModule queueDeclareAsStream(String queueName, String maxAge, Long maxLengthBytes, Long streamMaxSegmentSizeBytes) throws IOException {
         Map<String, Object> arguments = new HashMap<>();
         arguments.put("x-queue-type", "stream");
         if (maxAge != null) {
@@ -395,11 +368,12 @@ public class RmqModule {
         if (streamMaxSegmentSizeBytes != null) {
             arguments.put("x-stream-max-segment-size-bytes", streamMaxSegmentSizeBytes);
         }
-        this.queueDeclare(queueName, arguments);
+        this.queueDeclare(queueName, true, false, false, arguments);
+        return this;
     }
 
-    public void queueDeclareAsStream(String queueName) throws IOException {
-        queueDeclareAsStream(queueName, null, null, null);
+    public RmqModule queueDeclareAsStream(String queueName) throws IOException {
+        return queueDeclareAsStream(queueName, null, null, null);
     }
 
     /**
@@ -411,16 +385,21 @@ public class RmqModule {
      *                     null - "next"와 동일
      */
     @Synchronized
-    public void registerConsumerAsStream(String queueName, DeliverCallback deliverCallback, @NonNull Object streamOffset) throws IOException {
-        channel.basicConsume(queueName, false, Map.of("x-stream-offset", streamOffset), deliverCallback, consumerTag -> {
+    public RmqModule registerConsumerAsStream(String queueName, DeliverCallback deliverCallback, @NonNull Object streamOffset) throws IOException {
+        channel.basicConsume(queueName, false, new HashMap<String, Object>() {{
+            put("x-stream-offset", streamOffset);
+        }}, (s, delivery) -> recvQueue.add(() -> {
+            try {
+                deliverCallback.handle(s, delivery);
+            } catch (Exception e) {
+                log.warn("Error while handling message", e);
+            }
+        }), consumerTag -> {
         });
+        return this;
     }
 
-    public void registerStringConsumerAsStream(String queueName, Consumer<String> msgCallback) throws IOException {
-        registerConsumerAsStream(queueName, (s, delivery) -> msgCallback.accept(new String(delivery.getBody(), StandardCharsets.UTF_8)), "next");
-    }
-
-    public void registerByteConsumerAsStream(String queueName, Consumer<byte[]> msgCallback) throws IOException {
-        registerConsumerAsStream(queueName, (s, delivery) -> msgCallback.accept(delivery.getBody()), "next");
+    public RmqModule registerConsumerAsStream(String queueName, Consumer<byte[]> msgCallback) throws IOException {
+        return registerConsumerAsStream(queueName, (s, delivery) -> msgCallback.accept(delivery.getBody()), "next");
     }
 }
