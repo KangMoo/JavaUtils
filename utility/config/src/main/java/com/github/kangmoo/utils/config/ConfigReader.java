@@ -30,6 +30,7 @@ public abstract class ConfigReader {
         }
 
         this.filePath = filePath;
+        SysEnvInjector.inject(this);
         beforeFieldSetting();
         fieldSetting();
         afterFieldSetting();
