@@ -10,7 +10,7 @@ import java.nio.file.Path;
 public class FileLock {
 
     private static void processLock(String name) {
-        Path lockFilePath = Path.of(System.getProperty("java.io.tmpdir")).resolve(name);
+        Path lockFilePath = Path.of(System.getProperty("java.io.tmpdir")).resolve(name + ".lock");
 
         try {
             Files.createFile(lockFilePath);

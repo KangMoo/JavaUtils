@@ -4,8 +4,9 @@ import com.google.gson.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.StreamSupport;
 
 /**
  * Json 처리를 원할하게 하기 위한 유틸
@@ -177,6 +178,10 @@ public class JsonUtil {
                     .map(JsonElement::getAsJsonObject);
         }
         return optionalJsonObject.map(o -> o.get(element[element.length - 1]));
+    }
+
+    public static List<JsonElement> jsonArray2jsonElementList(JsonArray jsonArray) {
+        return StreamSupport.stream(jsonArray.spliterator(), false).toList();
     }
 
     public static Optional<String> toPrettyJson(String json) {
