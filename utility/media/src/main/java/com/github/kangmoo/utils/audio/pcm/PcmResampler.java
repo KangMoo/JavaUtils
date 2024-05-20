@@ -22,6 +22,9 @@ public class PcmResampler {
         if (bitsPerSample <= 0 || bitsPerSample > 16) {
             throw new IllegalArgumentException("The value of bitsPerSample is incorrect.");
         }
+        if (inSampleRate <= 0 || outSampleRate <= 0) {
+            throw new IllegalArgumentException("Sampling rate must be positive integer");
+        }
         this.inSampleRate = inSampleRate;
         this.outSampleRate = outSampleRate;
         this.numChannels = numChannels;
