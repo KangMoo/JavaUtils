@@ -23,6 +23,7 @@
         <module>media</module>
         <module>rmq</module>
         <module>ssh</module>
+        <module>hangul</module>
     </modules>
 
     <dependencies>
