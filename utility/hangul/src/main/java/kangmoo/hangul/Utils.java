@@ -1,8 +1,9 @@
 package kangmoo.hangul;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static kangmoo.hangul.Constants.*;
 
 public class Utils {
 
@@ -46,21 +47,41 @@ public class Utils {
         return getChosung(word);
     }
 
-    public static List<String> getChosungArray(String word) {
-        List<String> groups = Disassemble.disassembleHangulToGroups(word);
-        List<String> chosungArray = new ArrayList<>();
-        for (String group : groups) {
-            chosungArray.add(String.valueOf(group.charAt(0)));
-        }
-        return chosungArray;
+    public static boolean canBeChosung(char character) {
+        return canBeChosung(String.valueOf(character));
     }
 
-    public static boolean isHangul(String str) {
-        for (char c : str.toCharArray()) {
-            if (c < Constants.COMPLETE_HANGUL_START_CHARCODE || c > Constants.COMPLETE_HANGUL_END_CHARCODE) {
-                return false;
+    public static boolean canBeChosung(String character) {
+        return hasValueInReadOnlyStringList(HANGUL_CHARACTERS_BY_FIRST_INDEX, character);
+    }
+
+
+    public static boolean canBeJungsung(char character) {
+        return canBeJungsung(String.valueOf(character));
+    }
+
+    public static boolean canBeJungsung(String character) {
+        return hasValueInReadOnlyStringList(HANGUL_CHARACTERS_BY_MIDDLE_INDEX, character);
+    }
+
+    public static boolean canBeJongsung(char character) {
+        return canBeJongsung(String.valueOf(character));
+    }
+
+    public static boolean canBeJongsung(String character) {
+        return hasValueInReadOnlyStringList(HANGUL_CHARACTERS_BY_LAST_INDEX, character);
+    }
+
+    public static boolean hasProperty(Object obj, String key) {
+        return obj instanceof Map && ((Map<?, ?>) obj).containsKey(key);
+    }
+
+    public static boolean hasValueInReadOnlyStringList(List<String> list, String value) {
+        for (String item : list) {
+            if (item.equals(value)) {
+                return true;
             }
         }
-        return true;
+        return false;
     }
 }

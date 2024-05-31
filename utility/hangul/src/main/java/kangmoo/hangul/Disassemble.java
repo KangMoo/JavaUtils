@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static kangmoo.hangul.DisassembleCompleteHangulCharacter.disassembleCompleteHangulCharacter;
+
 public class Disassemble {
     public static List<String> disassembleHangulToGroups(String str) {
         List<String> result = new ArrayList<>();
 
         for (char letter : str.toCharArray()) {
-            Map<String, String> disassembledComplete = DisassembleCompleteHangulCharacter.disassembleCompleteHangulCharacter(letter);
+            Map<String, String> disassembledComplete = disassembleCompleteHangulCharacter(letter);
 
             if (disassembledComplete != null) {
                 result.add(disassembledComplete.get("first") + disassembledComplete.get("middle") + disassembledComplete.get("last"));
