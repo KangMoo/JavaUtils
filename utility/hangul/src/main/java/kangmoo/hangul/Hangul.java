@@ -149,8 +149,8 @@ import java.util.function.Function;
 import static kangmoo.hangul.CombineHangulCharacter.*;
 import static kangmoo.hangul.CombineHangulCharacter.curriedCombineHangulCharacter;
 import static kangmoo.hangul.Disassemble.disassembleHangulToGroups;
-import static kangmoo.hangul.Index.excludeLastElement;
-import static kangmoo.hangul.Index.joinString;
+import static kangmoo.hangul.Index.*;
+import static kangmoo.hangul.RemoveLastHangulCharacter.*;
 import static kangmoo.hangul.Utils.*;
 
 public class Hangul {
@@ -179,16 +179,10 @@ public class Hangul {
         String sourceJamo = disassembleHangulToGroups(source).get(0);
         String lastJamo = excludeLastElement(sourceJamo).second();
 
-        return joinString(RemoveLastHangulCharacter.removeLastHangulCharacter(source), combineHangulCharacter(lastJamo, nextCharacter));
+        return joinString(removeLastHangulCharacter(source), combineHangulCharacter(lastJamo, nextCharacter));
     }
 
     public static String binaryAssembleHangulCharacters(String source, String nextCharacter) {
-        if (!(isHangulCharacter(source) || isHangulAlphabet(source))) {
-            throw new IllegalArgumentException("Invalid source character: " + source + ". Source must be one character.");
-        }
-        if (!isHangulAlphabet(nextCharacter)) {
-            throw new IllegalArgumentException("Invalid next character: " + nextCharacter + ". Next character must be one of the chosung, jungsung, or jongsung.");
-        }
 
         String sourceJamos = disassembleHangulToGroups(source).get(0);
 
@@ -230,7 +224,44 @@ public class Hangul {
         }
 
         return joinString(source, nextCharacter);
+    }
 
+    // * @name binaryAssembleHangul
+// * @description
+// * 인자로 받은 한글 문장과 한글 문자 하나를 합성합니다.
+// * ```typescript
+// * binaryAssembleHangul(
+// *   // 한글 문장
+// *   source: string
+// *   // 한글 문자
+// *   nextCharacter: string
+// * ): string
+// * ```
+// * @example
+// * binaryAssembleHangul('저는 고양이를 좋아합닏', 'ㅏ') // 저는 고양이를 좋아합니다
+// * binaryAssembleHangul('저는 고양이를 좋아합', 'ㅅ') // 저는 고양이를 좋아핪
+// * binaryAssembleHangul('저는 고양이를 좋아하', 'ㅏ') // 저는 고양이를 좋아하ㅏ
+// */
+//export function binaryAssembleHangul(source: string, nextCharacter: string) {
+//  const [rest, lastCharacter] = excludeLastElement(source.split(''));
+//  const needJoinString = isBlank(lastCharacter) || isBlank(nextCharacter);
+//
+//    return joinString(
+//    ...rest,
+//            needJoinString
+//                    ? joinString(lastCharacter, nextCharacter)
+//                    : binaryAssembleHangulCharacters(lastCharacter, nextCharacter)
+//  );
+//}
+    public static String binaryAssembleHangul(String source, String nextCharacter) {
+        Pair<String, String> pair = excludeLastElement(source);
+        String rest = pair.first();
+        String lastCharacter = pair.second();
+        boolean needJoinString = source.isBlank() || nextCharacter.isBlank();
 
+        return joinString(rest.split("")).concat(
+                needJoinString
+                        ? joinString(lastCharacter, nextCharacter)
+                        : binaryAssembleHangulCharacters(lastCharacter, nextCharacter));
     }
 }

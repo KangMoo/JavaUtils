@@ -2,46 +2,27 @@ package kangmoo.hangul;
 
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
+import static kangmoo.hangul.Assemble.assembleHangul;
 import static kangmoo.hangul.CombineHangulCharacter.combineHangulCharacter;
+import static kangmoo.hangul.Disassemble.disassembleHangul;
+import static kangmoo.hangul.Disassemble.disassembleHangulToGroups;
+import static kangmoo.hangul.DisassembleCompleteHangulCharacter.disassembleCompleteHangulCharacter;
 import static kangmoo.hangul.Index.excludeLastElement;
 
 public class RemoveLastHangulCharacter {
     public static String removeLastHangulCharacter(String words) {
         if (words.isEmpty()) return words;
-        String[] split = words.split("");
+        if (words.length() == 1) {
+            String[] split = disassembleHangul(words).split("");
+            return assembleHangul(Arrays.copyOf(split, split.length - 1));
+        }
 
-        StringBuilder result = new StringBuilder();
-        Arrays.stream(Arrays.copyOf(split, split.length - 1))
-                .map(c -> c.charAt(0))
-                .map(DisassembleCompleteHangulCharacter::disassembleCompleteHangulCharacter)
-                .forEach(jamos -> {
-                    if (jamos == null) {
-                        result.append(split[result.length()]);
-                        return;
-                    }
-                    result.append(combineHangulCharacter(jamos.get("first"), jamos.get("middle"), jamos.get("last")));
-                });
-
-
-        StringBuilder firstCharacter = new StringBuilder();
-        StringBuilder middleCharacter = new StringBuilder();
-        StringBuilder lastCharacter = new StringBuilder();
-
-        excludeLastElement(split[split.length - 1]).first().chars().forEach(character -> {
-            if (Utils.canBeJungsung((char) character)) {
-                middleCharacter.append((char) character);
-            } else {
-                if (middleCharacter.isEmpty()) {
-                    firstCharacter.append((char) character);
-                } else {
-                    lastCharacter.append((char) character);
-                }
-            }
-        });
-
-        result.append(middleCharacter.isEmpty() ? firstCharacter : combineHangulCharacter(firstCharacter.toString(), middleCharacter.toString(), lastCharacter.toString()));
-
-        return result.toString();
+        List<String> disassembledGroups = disassembleHangulToGroups(words);
+        String lastCharacter = disassembledGroups.remove(disassembledGroups.size() - 1);
+        String withoutLastCharacter = disassembledGroups.stream().map(Assemble::assembleHangul).reduce(String::concat).orElse("");
+        return withoutLastCharacter + assembleHangul(excludeLastElement(lastCharacter).first());
     }
 }
