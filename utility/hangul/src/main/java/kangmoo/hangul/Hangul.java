@@ -1,15 +1,20 @@
 package kangmoo.hangul;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.function.Function;
 
 import static kangmoo.hangul.CombineHangulCharacter.*;
-import static kangmoo.hangul.CombineHangulCharacter.curriedCombineHangulCharacter;
 import static kangmoo.hangul.Disassemble.disassembleHangulToGroups;
-import static kangmoo.hangul.Index.*;
-import static kangmoo.hangul.RemoveLastHangulCharacter.*;
+import static kangmoo.hangul.Index.excludeLastElement;
+import static kangmoo.hangul.Index.joinString;
+import static kangmoo.hangul.RemoveLastHangulCharacter.removeLastHangulCharacter;
 import static kangmoo.hangul.Utils.*;
 
 public class Hangul {
+    private static final Logger log = LoggerFactory.getLogger(Hangul.class);
+
     public static boolean isHangulCharacter(String character) {
         return character.matches("^[가-힣]$");
     }
@@ -39,6 +44,14 @@ public class Hangul {
     }
 
     public static String binaryAssembleHangulCharacters(String source, String nextCharacter) {
+        if (!(isHangulCharacter(source) || isHangulAlphabet(source))) {
+            throw new IllegalArgumentException("Invalid source character: " + source + ". Source must be one character.");
+        }
+
+        if (!isHangulAlphabet(nextCharacter)) {
+            throw new IllegalArgumentException("Invalid next character: " + nextCharacter + ". Next character must be one of the chosung, jungsung, or jongsung.");
+        }
+
 
         String sourceJamos = disassembleHangulToGroups(source).get(0);
 
@@ -86,7 +99,7 @@ public class Hangul {
         Pair<String, String> pair = excludeLastElement(source);
         String rest = pair.first();
         String lastCharacter = pair.second();
-        boolean needJoinString = source.isBlank() || nextCharacter.isBlank();
+        boolean needJoinString = lastCharacter.isBlank() || nextCharacter.isBlank();
 
         return joinString(rest.split("")).concat(
                 needJoinString

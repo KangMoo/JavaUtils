@@ -9,7 +9,7 @@ public class Josa {
     static List<String> 로_조사 = List.of("으로/로", "으로서/로서", "으로써/로써", "으로부터/로부터");
 
     public static String josa(String word, String josa) {
-        if (word.length() == 0) {
+        if (word.isEmpty()) {
             return word;
         }
 
@@ -21,7 +21,7 @@ public class Josa {
     }
 
     private static String josaPicker(String word, String josa) {
-        if (word.length() == 0) {
+        if (word.isEmpty()) {
             return josa.split("/")[0];
         }
 

@@ -42,17 +42,12 @@ public class Utils {
         return chosung.toString();
     }
 
-    @Deprecated
-    public static String getFirstConsonants(String word) {
-        return getChosung(word);
-    }
-
     public static boolean canBeChosung(char character) {
         return canBeChosung(String.valueOf(character));
     }
 
     public static boolean canBeChosung(String character) {
-        return hasValueInReadOnlyStringList(HANGUL_CHARACTERS_BY_FIRST_INDEX, character);
+        return HANGUL_CHARACTERS_BY_FIRST_INDEX.contains(character);
     }
 
 
@@ -61,7 +56,7 @@ public class Utils {
     }
 
     public static boolean canBeJungsung(String character) {
-        return hasValueInReadOnlyStringList(HANGUL_CHARACTERS_BY_MIDDLE_INDEX, character);
+        return HANGUL_CHARACTERS_BY_MIDDLE_INDEX.contains(character);
     }
 
     public static boolean canBeJongsung(char character) {
@@ -69,11 +64,11 @@ public class Utils {
     }
 
     public static boolean canBeJongsung(String character) {
-        return hasValueInReadOnlyStringList(HANGUL_CHARACTERS_BY_LAST_INDEX, character);
+        return HANGUL_CHARACTERS_BY_LAST_INDEX.contains(character);
     }
 
-    public static boolean hasProperty(Object obj, String key) {
-        return obj instanceof Map && ((Map<?, ?>) obj).containsKey(key);
+    public static boolean hasProperty(Map<String, ?> map, String key) {
+        return map.containsKey(key);
     }
 
     public static boolean hasValueInReadOnlyStringList(List<String> list, String value) {

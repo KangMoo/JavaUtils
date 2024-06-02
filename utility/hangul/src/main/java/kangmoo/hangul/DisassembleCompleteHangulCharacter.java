@@ -4,12 +4,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DisassembleCompleteHangulCharacter {
-    public static Map<String, String> disassembleCompleteHangulCharacter(char character) {
-        if ((int) character < Constants.COMPLETE_HANGUL_START_CHARCODE || (int) character > Constants.COMPLETE_HANGUL_END_CHARCODE) {
+    public static Map<String, String> disassembleCompleteHangulCharacter(String letter) {
+        return disassembleCompleteHangulCharacter(letter.charAt(0));
+    }
+
+    public static Map<String, String> disassembleCompleteHangulCharacter(char letter) {
+        if ((int) letter < Constants.COMPLETE_HANGUL_START_CHARCODE || (int) letter > Constants.COMPLETE_HANGUL_END_CHARCODE) {
             return null;
         }
 
-        int index = (int) character - Constants.COMPLETE_HANGUL_START_CHARCODE;
+        int index = (int) letter - Constants.COMPLETE_HANGUL_START_CHARCODE;
         int firstIndex = index / (Constants.NUMBER_OF_JUNGSUNG * Constants.NUMBER_OF_JONGSUNG);
         int middleIndex = (index % (Constants.NUMBER_OF_JUNGSUNG * Constants.NUMBER_OF_JONGSUNG)) / Constants.NUMBER_OF_JONGSUNG;
         int lastIndex = index % Constants.NUMBER_OF_JONGSUNG;
