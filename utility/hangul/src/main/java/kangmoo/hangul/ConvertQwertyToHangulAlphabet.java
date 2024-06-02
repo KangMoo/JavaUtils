@@ -11,11 +11,10 @@ public class ConvertQwertyToHangulAlphabet {
                 .orElse("");
     }
 
-    // TODO
-//    public static String convertQwertyToHangul(String word) {
-//        if (word == null) {
-//            return "";
-//        }
-//        return Assemble.assembleHangul(convertQwertyToHangulAlphabet(word).split(""));
-//    }
+    public static String convertQwertyToHangul(String word) {
+        if (word == null) {
+            return "";
+        }
+        return Assemble.assembleHangul(convertQwertyToHangulAlphabet(word).split(""));
+    }
 }

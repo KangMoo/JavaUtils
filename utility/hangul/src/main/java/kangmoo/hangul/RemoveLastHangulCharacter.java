@@ -3,13 +3,10 @@ package kangmoo.hangul;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import static kangmoo.hangul.Assemble.assembleHangul;
-import static kangmoo.hangul.CombineHangulCharacter.combineHangulCharacter;
 import static kangmoo.hangul.Disassemble.disassembleHangul;
 import static kangmoo.hangul.Disassemble.disassembleHangulToGroups;
-import static kangmoo.hangul.DisassembleCompleteHangulCharacter.disassembleCompleteHangulCharacter;
 import static kangmoo.hangul.Index.excludeLastElement;
 
 public class RemoveLastHangulCharacter {
