@@ -65,7 +65,6 @@ public abstract class ConfigReader {
         this.fileWatcher = new FileWatcher(filePath);
         this.fileWatcher.startWatch(() -> {
             try {
-                SysEnvInjector.inject(this);
                 beforeFieldSetting();
                 fieldSetting();
                 afterFieldSetting();
