@@ -39,6 +39,7 @@ public class AudioSdpUtil {
         return attributeField;
     }
 
+    @SuppressWarnings("unchecked")
     public static List<Integer> getPayloadIds(AudioSdpInfo audioSdpInfo) {
         try {
             return ((Stream<String>) audioSdpInfo.getMd().getMedia().getMediaFormats(false).stream())
@@ -102,12 +103,12 @@ public class AudioSdpUtil {
                 .collect(Collectors.toList());
     }
 
-    public static Optional<Integer> findPayloadIdFromRtpMap(AudioSdpInfo audioSdpInfo, Predicate<String> filter) {
-        Set<Integer> mdFormats = AudioSdpUtil.getPayloadIds(audioSdpInfo).stream().collect(Collectors.toSet());
+    public static Optional<Integer> findPayloadIdFromRtpMap(AudioSdpInfo audioSdpInfo, Predicate<String> ... filter) {
+        Set<Integer> mdFormats = new HashSet<>(AudioSdpUtil.getPayloadIds(audioSdpInfo));
         return audioSdpInfo.getCopiedAttributeFields().stream()
                 .map(AttributeField::getAttribute)
                 .filter(o -> o.getName().equals(RTPMAP))
-                .filter(o -> filter.test(o.getValue()))
+                .filter(o -> Stream.of(filter).allMatch(f -> f.test(o.getValue())))
                 .map(o -> Integer.parseInt(o.getValue().split("\\s")[0]))
                 .filter(mdFormats::contains)
                 .findAny();
