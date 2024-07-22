@@ -52,16 +52,6 @@ public class AudioSdpInfo {
         this.port = md.getMedia().getMediaPort();
     }
 
-    public AudioSdpInfo setSdp(SessionDescriptionImpl sdp) {
-        this.sdp = sdp;
-        return this;
-    }
-
-    public AudioSdpInfo setMd(MediaDescription md) {
-        this.md = md;
-        return this;
-    }
-
     public AudioSdpInfo setIp(String ip) {
         this.ip = ip;
         try {

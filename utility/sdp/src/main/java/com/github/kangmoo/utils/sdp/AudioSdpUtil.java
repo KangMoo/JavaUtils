@@ -21,6 +21,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@SuppressWarnings("unused")
 public class AudioSdpUtil {
     private static final String RTPMAP = "rtpmap";
     private static final String FMTP = "fmtp";
