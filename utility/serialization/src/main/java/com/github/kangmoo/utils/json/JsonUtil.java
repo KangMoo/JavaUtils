@@ -162,19 +162,11 @@ public class JsonUtil {
         }
     }
 
-    public static Optional<String> json2StringWithDefault(String jsonStr, String... element) {
-        try {
-            return json2JsonElement(jsonStr, element)
-                    .map(JsonElement::getAsString);
-        } catch (Exception e) {
-            return Optional.empty();
-        }
-    }
-
     public static Optional<JsonElement> json2JsonElement(String jsonStr, String... element) {
         Optional<JsonObject> optionalJsonObject = Optional.ofNullable(new Gson().fromJson(jsonStr, JsonObject.class));
         for (AtomicInteger i = new AtomicInteger(); i.get() < element.length - 1; i.getAndIncrement()) {
-            optionalJsonObject = optionalJsonObject.map(o -> o.get(element[i.get()]))
+            optionalJsonObject = optionalJsonObject
+                    .map(o -> o.get(element[i.get()]))
                     .map(JsonElement::getAsJsonObject);
         }
         return optionalJsonObject.map(o -> o.get(element[element.length - 1]));
