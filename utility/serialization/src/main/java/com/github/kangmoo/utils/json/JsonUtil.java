@@ -6,12 +6,15 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.StreamSupport;
 
 /**
  * Json 처리를 원할하게 하기 위한 유틸
  */
 public class JsonUtil {
+    private static final Pattern arrayPattern = Pattern.compile("^(.*)\\[(\\d+)]$");
 
     private JsonUtil() {
     }
@@ -163,13 +166,21 @@ public class JsonUtil {
     }
 
     public static Optional<JsonElement> json2JsonElement(String jsonStr, String... element) {
-        Optional<JsonObject> optionalJsonObject = Optional.ofNullable(new Gson().fromJson(jsonStr, JsonObject.class));
-        for (AtomicInteger i = new AtomicInteger(); i.get() < element.length - 1; i.getAndIncrement()) {
+        Optional<JsonElement> optionalJsonObject = Optional.ofNullable(new Gson().fromJson(jsonStr, JsonElement.class));
+        for (String property : element) {
             optionalJsonObject = optionalJsonObject
-                    .map(o -> o.get(element[i.get()]))
-                    .map(JsonElement::getAsJsonObject);
+                    .map(JsonElement::getAsJsonObject)
+                    .map(o -> {
+                        Matcher matcher = arrayPattern.matcher(property.trim());
+                        if (matcher.find()) {
+                            String key = matcher.group(1);
+                            int index = Integer.parseInt(matcher.group(2));
+                            return o.getAsJsonArray(key).get(index);
+                        }
+                        return o.get(property);
+                    });
         }
-        return optionalJsonObject.map(o -> o.get(element[element.length - 1]));
+        return optionalJsonObject;
     }
 
     public static List<JsonElement> jsonArray2jsonElementList(JsonArray jsonArray) {
