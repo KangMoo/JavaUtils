@@ -166,7 +166,12 @@ public class JsonUtil {
     }
 
     public static Optional<JsonElement> json2JsonElement(String jsonStr, String... element) {
-        Optional<JsonElement> optionalJsonObject = Optional.ofNullable(new Gson().fromJson(jsonStr, JsonElement.class));
+        return json2JsonElement(new Gson().fromJson(jsonStr, JsonElement.class), element);
+    }
+
+    public static Optional<JsonElement> json2JsonElement(JsonElement jsonElement, String... element) {
+        if (element.length == 0) return Optional.ofNullable(jsonElement);
+        Optional<JsonElement> optionalJsonObject = Optional.ofNullable(jsonElement);
         for (String property : element) {
             optionalJsonObject = optionalJsonObject
                     .map(JsonElement::getAsJsonObject)
@@ -182,6 +187,7 @@ public class JsonUtil {
         }
         return optionalJsonObject;
     }
+
 
     public static List<JsonElement> jsonArray2jsonElementList(JsonArray jsonArray) {
         return StreamSupport.stream(jsonArray.spliterator(), false).toList();
