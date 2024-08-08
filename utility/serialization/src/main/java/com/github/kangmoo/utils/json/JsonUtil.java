@@ -176,7 +176,7 @@ public class JsonUtil {
             optionalJsonObject = optionalJsonObject
                     .map(JsonElement::getAsJsonObject)
                     .map(o -> {
-                        Matcher matcher = arrayPattern.matcher(property.trim());
+                        Matcher matcher = arrayPattern.matcher(property);
                         if (matcher.find()) {
                             String key = matcher.group(1);
                             int index = Integer.parseInt(matcher.group(2));
