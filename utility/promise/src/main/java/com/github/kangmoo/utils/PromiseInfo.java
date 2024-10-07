@@ -1,6 +1,8 @@
 package com.github.kangmoo.utils;
 
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
@@ -23,11 +25,18 @@ public class PromiseInfo {
     @Getter
     private final long timeoutMs;
     private final Consumer<Throwable> onError;
-    private final Map<String, Object> memRepo = new ConcurrentHashMap<>();
     private final AtomicBoolean isDone = new AtomicBoolean(false);
+    private Map<String, Object> memRepo;
 
+    public static PromiseInfoBuilder newBuilder() {
+        return new PromiseInfoBuilder();
+    }
 
-    public PromiseInfo(String key, Runnable onSuccess, Runnable onFail, Runnable onTimeout, long timeoutMs, Consumer<Throwable> onError) {
+    public PromiseInfo(@NonNull String key, Runnable onSuccess, Runnable onFail, Runnable onTimeout, long timeoutMs, Consumer<Throwable> onError) {
+        if (timeoutMs <= 0) {
+            throw new IllegalArgumentException("TimeoutMs must be greater than 0");
+        }
+
         this.key = key;
         this.onSuccess = onSuccess;
         this.onFail = onFail;
@@ -51,6 +60,14 @@ public class PromiseInfo {
         this.runProcess(onTimeout);
     }
 
+    public void cancel() {
+        if (!isDone.compareAndSet(false, true)) {
+            log.debug("[{}] Already Process done", key);
+            return;
+        }
+        promiseManager.removePromiseInfo(key);
+    }
+
     private void runProcess(Runnable runnable) {
         if (!isDone.compareAndSet(false, true)) {
             log.debug("[{}] Already Process done", key);
@@ -71,11 +88,19 @@ public class PromiseInfo {
         }
     }
 
+    @Synchronized
     public void putObject(String key, Object value) {
+        if (memRepo == null) {
+            memRepo = new ConcurrentHashMap<>();
+        }
         this.memRepo.put(key, value);
     }
 
+    @Synchronized
     public Optional<Object> getObject(String key) {
+        if (memRepo == null) {
+            return Optional.empty();
+        }
         return Optional.ofNullable(this.memRepo.get(key));
     }
 }

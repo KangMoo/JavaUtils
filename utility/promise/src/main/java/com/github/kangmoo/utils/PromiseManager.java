@@ -11,6 +11,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -22,7 +24,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 public class PromiseManager {
     private static final Logger log = getLogger(PromiseManager.class);
     private static final Map<String, PromiseInfo> promiseInfos = new ConcurrentHashMap<>();
-    private static ScheduledExecutorService executors = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors(), new BasicThreadFactory.Builder().namingPattern("Promise_Executor-%d").build());
+    private ScheduledExecutorService executors = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors(), new BasicThreadFactory.Builder().namingPattern("Promise_Executor-%d").build());
 
     private PromiseManager() {
     }
@@ -35,7 +37,7 @@ public class PromiseManager {
         return SingletonInstance.INSTANCE;
     }
 
-    public static void setThreadCount(int threadCount) {
+    public void setThreadCount(int threadCount) {
         if (executors != null) {
             executors.shutdown();
         }
@@ -84,27 +86,8 @@ public class PromiseManager {
         return Optional.ofNullable(promiseInfo);
     }
 
-    /**
-     * PromiseInfo 내의 Map에 객체 저장
-     *
-     * @param promiseKey PromiseInfo의 Key
-     * @param objectKey  저장할 객체의 Key
-     * @param object     저장할 객체
-     */
-    public void putObject(String promiseKey, String objectKey, Object object) {
-        findPromiseInfo(promiseKey).ifPresent(o -> o.putObject(objectKey, object));
-    }
-
-    /**
-     * PromiseInfo 내의 Map에서 지정된 키가 매핑된 값을 반환한다
-     * 이 맵에 키에 대한 매핑이 포함되어 있지 않으면 Optional.empty()를 반환합니다.
-     *
-     * @param promiseKey PromiseInfo의 Key
-     * @param objectKey  반환받을 객체의 Key
-     * @return 반환받을 객체
-     */
-    public Optional<Object> findObject(String promiseKey, String objectKey) {
-        return findPromiseInfo(promiseKey).flatMap(o -> o.getObject(objectKey));
+    public Set<PromiseInfo> findPromiseInfo(Predicate<PromiseInfo> predicate){
+        return promiseInfos.values().stream().filter(predicate).collect(Collectors.toSet());
     }
 
     /**
@@ -127,7 +110,7 @@ public class PromiseManager {
         return new HashSet<>(promiseInfos.keySet());
     }
 
-    private PromiseInfo registerPromise(String key, PromiseInfo promiseInfo) {
+    public PromiseInfo registerPromise(String key, PromiseInfo promiseInfo) {
         if (promiseInfos.putIfAbsent(key, promiseInfo) != null)
             throw new IllegalArgumentException("Already exist PromiseInfo [" + key + "]");
 
