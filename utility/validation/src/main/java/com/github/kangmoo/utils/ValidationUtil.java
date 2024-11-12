@@ -2,7 +2,7 @@ package com.github.kangmoo.utils;
 
 import lombok.extern.slf4j.Slf4j;
 
-import javax.validation.*;
+import jakarta.validation.*;
 import java.util.Locale;
 import java.util.Set;
 
