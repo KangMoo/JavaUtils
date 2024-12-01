@@ -3,7 +3,6 @@ package com.github.kangmoo.utils.config;
 import com.github.kangmoo.utils.config.yaml.YamlConfigInjector;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.concurrent.Executors;

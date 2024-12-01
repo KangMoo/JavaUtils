@@ -1,7 +1,8 @@
 package com.github.kangmoo.utils.config.ini;
 
 import com.github.kangmoo.utils.config.ConfigValue;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.ini4j.Ini;
 import org.junit.jupiter.api.Test;
 
@@ -13,12 +14,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author kangmoo Heo
  */
-@Data
+@Getter
+@Setter
 class IniConfigTest extends IniConfig {
     File iniFile = new File("src/test/resources/sample.ini");
-    @ConfigValue("database.url")
+    @ConfigValue({"database", "url"})
     private String url;
-    @ConfigValue("database.port")
+    @ConfigValue({"database", "port"})
     private int port;
 
     @Test

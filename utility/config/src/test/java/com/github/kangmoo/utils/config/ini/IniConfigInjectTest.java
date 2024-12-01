@@ -16,9 +16,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Data
 class IniConfigInjectTest {
     File iniFile = new File("src/test/resources/sample.ini");
-    @ConfigValue("database.url")
+    @ConfigValue({"database", "url"})
     private String url;
-    @ConfigValue("database.port")
+    @ConfigValue({"database", "port"})
     private int port;
 
     @Test

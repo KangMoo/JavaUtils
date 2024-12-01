@@ -1,0 +1,7 @@
+{
+    "database": {
+        "url": "jdbc:mysql://localhost/testdb",
+        "port": 15672,
+        "user": ["joe", "john"]
+    }
+}

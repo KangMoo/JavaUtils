@@ -19,11 +19,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Data
 class YamlConfigInjectTest {
     String yamlFilePath = "src/test/resources/sample.yml";
-    @ConfigValue("database.url")
+    @ConfigValue({"database","url"})
     private String url;
-    @ConfigValue("database.port")
+    @ConfigValue({"database","port"})
     private int port;
-    @ConfigValue("database.user")
+    @ConfigValue({"database","user"})
     private List<String> name;
 
     @Test

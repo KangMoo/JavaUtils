@@ -1,7 +1,8 @@
 package com.github.kangmoo.utils.config.yaml;
 
 import com.github.kangmoo.utils.config.ConfigValue;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.junit.jupiter.api.Test;
 import org.yaml.snakeyaml.Yaml;
 
@@ -16,14 +17,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author kangmoo Heo
  */
-@Data
+@Getter
+@Setter
 class YamlConfigTest extends YamlConfig {
     String yamlFilePath = "src/test/resources/sample.yml";
-    @ConfigValue("database.url")
+    @ConfigValue({"database","url"})
     private String url;
-    @ConfigValue("database.port")
+    @ConfigValue({"database","port"})
     private int port;
-    @ConfigValue("database.user")
+    @ConfigValue({"database","user"})
     private List<String> name;
 
     @Test
