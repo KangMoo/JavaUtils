@@ -2,7 +2,10 @@ package com.github.kangmoo.utils.config.ini;
 
 import com.github.kangmoo.utils.config.ConfigValue;
 import lombok.Data;
-import org.ini4j.Ini;
+import org.apache.commons.configuration2.INIConfiguration;
+import org.apache.commons.configuration2.SubnodeConfiguration;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.configuration2.io.FileHandler;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -22,13 +25,15 @@ class IniConfigInjectTest {
     private int port;
 
     @Test
-    public void test() throws IOException, NoSuchFieldException {
+    public void test() throws IOException, NoSuchFieldException, ConfigurationException {
         IniConfigInjectTest obj = new IniConfigInjectTest();
         IniConfigInjector.inject(obj, iniFile.toString());
 
-        Ini ini = new Ini(iniFile);
+        INIConfiguration iniConfig = new INIConfiguration();
+        new FileHandler(iniConfig).load(iniFile);
+        SubnodeConfiguration section = iniConfig.getSection("database");
 
-        assertThat(obj.url).isEqualTo(ini.get("database").get("url"));
-        assertThat(obj.port).isEqualTo(Integer.parseInt(ini.get("database").get("port")));
+        assertThat(obj.url).isEqualTo(section.getString("url"));
+        assertThat(obj.port).isEqualTo(section.getInt("port"));
     }
 }

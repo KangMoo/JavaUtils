@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -30,7 +31,7 @@ class JsonConfigTest extends JsonConfig {
     private List<String> name;
 
     @Test
-    public void test() throws IOException, NoSuchFieldException {
+    public void test() throws IOException, NoSuchFieldException, ConfigurationException {
         JsonConfigTest obj = new JsonConfigTest();
         obj.init(new File(jsonFilePath).toString());
         System.out.println(obj);

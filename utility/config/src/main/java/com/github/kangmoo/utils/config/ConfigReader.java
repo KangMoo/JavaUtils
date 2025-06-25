@@ -2,6 +2,7 @@ package com.github.kangmoo.utils.config;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -18,11 +19,11 @@ public abstract class ConfigReader {
     /**
      * Config 파일 설정 및 필드값 세팅
      */
-    public ConfigReader init(String filePath) throws IOException, NoSuchFieldException {
+    public ConfigReader init(String filePath) throws IOException, NoSuchFieldException, ConfigurationException {
         return init(Path.of(filePath));
     }
 
-    public ConfigReader init(Path filePath) throws IOException, NoSuchFieldException {
+    public ConfigReader init(Path filePath) throws IOException, NoSuchFieldException, ConfigurationException {
         if (this.filePath != null) {
             log.warn("Config Already initiated");
             return this;
@@ -37,7 +38,7 @@ public abstract class ConfigReader {
         return this;
     }
 
-    protected abstract void fieldSetting() throws IOException, NoSuchFieldException;
+    protected abstract void fieldSetting() throws IOException, NoSuchFieldException, ConfigurationException;
 
     /**
      * 필드값 주입 이전에 수행되는 메서드.

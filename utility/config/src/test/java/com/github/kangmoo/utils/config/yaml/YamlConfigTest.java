@@ -3,6 +3,7 @@ package com.github.kangmoo.utils.config.yaml;
 import com.github.kangmoo.utils.config.ConfigValue;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.junit.jupiter.api.Test;
 import org.yaml.snakeyaml.Yaml;
 
@@ -30,7 +31,7 @@ class YamlConfigTest extends YamlConfig {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void test() throws IOException, NoSuchFieldException {
+    public void test() throws IOException, NoSuchFieldException, ConfigurationException {
         YamlConfigTest obj = new YamlConfigTest();
         obj.init(new File(yamlFilePath).toString());
         System.out.println(obj);
